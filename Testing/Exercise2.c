@@ -92,14 +92,14 @@ random_list(){
 int main(){
 	srand((unsigned int)time(NULL));
 	int arr[] = {3, 2, 1};
-	int * zz;
-	zz = shellsort(arr, 3);
+	int * test;
+	test = shellsort(arr, 3);
 	for(int i=0; i<3; i++){
-		printf("%d ", zz[i]);
+		printf("%d ", test[i]);
 	}
 	printf("\n");
 
-	assert(cmp(shellsort(arr, 3), zz, 3) == 1);
+	assert(cmp(shellsort(arr, 3), test, 3) == 1);
 
 	// part 1
 	
@@ -111,11 +111,8 @@ int main(){
 	int l4[] = {};
 	
 	assert(cmp(shellsort(l1, 4), l1, 4) == 1);
-
 	assert(cmp(shellsort(l2, 2), l2s, 2) == 1);
-
 	assert(cmp(shellsort(l3, 3), l3s, 3) == 1);
-
 	assert(cmp(shellsort(l4, 0), l4, 0) == 1);
 	
 	// part 2
@@ -143,7 +140,7 @@ int main(){
 
 	assert(((is_sorted(sorted_ran, rand_len)) == 1) && (is_permutation(sorted_ran, rand_len, ran, rand_len)) == 1);
 	
-	for(int i=0; i<10000; i++){
+	for(int i=0; i<1000; i++){
 		int* elems = random_list();
 		int* sorted_elems = shellsort(elems, rand_len);
 	assert(((is_sorted(sorted_elems, rand_len)) == 1) && (is_permutation(sorted_elems, rand_len, elems, rand_len)) == 1);
