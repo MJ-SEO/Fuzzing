@@ -41,14 +41,10 @@ int cmp(int* arr1, int* arr2, int size){
 
 int
 is_sorted(int* arr, int size){
-	int check = 1;
 	for(int i=0; i<size-1; i++){
-		if(arr[i] > arr[i+1]){
-		       	check = 0;
-			break;
-		}
+		if(arr[i] > arr[i+1]) return 0;
 	}
-	return check;
+	return 1;
 }
 
 int count(int* arr, int target, int size){
@@ -124,21 +120,6 @@ int main(){
 	int dup1[] = {3, 2, 1};
 	int dup2[] = {1, 3, 2};
 	if(is_permutation(dup1, 3, dup2, 3) == 1) printf("P True\n");
-
-	int* ran;
-	int* sorted_ran;
-	ran = random_list();
-	
-	for(int i=0; i<rand_len; i++){
-		printf("%d ", ran[i]);
-	}
-	printf("\n");
-	sorted_ran= shellsort(ran, rand_len);
-	for(int i=0; i<rand_len; i++){
-		printf("%d ", sorted_ran[i]);
-	}
-
-	assert(((is_sorted(sorted_ran, rand_len)) == 1) && (is_permutation(sorted_ran, rand_len, ran, rand_len)) == 1);
 	
 	for(int i=0; i<1000; i++){
 		int* elems = random_list();
