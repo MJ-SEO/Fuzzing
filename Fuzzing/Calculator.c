@@ -17,13 +17,9 @@ int main(){
 
 	fprintf(fp, "%s", equation);
 	
-//	fseek(fp, 0, SEEK_END);
-//	int size = ftell(fp);
-//	fseek(fp, 0, SEEK_SET);
-//	fread(equation, size, 1, fp);
 	printf("Equation: %s", equation);
 	
-//	fclose(fp);	
+	fclose(fp);	
 
 	char buf[128];
 	

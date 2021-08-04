@@ -5,10 +5,10 @@
 
 char*
 fuzzer(int max_length, int start, int range){
-	int strlen = (rand()%max_length+1)+1;
-	char* out = (char*)malloc(sizeof(char) * strlen);
-	for(int i=0; i<strlen; i++){
-		out[i] = (char)((rand()%range) + (start+range)); 
+	int len = (rand()%max_length+1)+1;
+	char* out = (char*)malloc(sizeof(char) * len);
+	for(int i=0; i<len; i++){
+		out[i] = (char)((rand()%range) + start); 
 	}
 	return out;	
 }

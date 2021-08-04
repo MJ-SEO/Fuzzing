@@ -9,7 +9,7 @@ fuzzer(int max_length, int start, int range){
 	int strlen = (rand()%max_length+1)+1;
 	char* out = (char*)malloc(sizeof(char) * strlen);
 	for(int i=0; i<strlen; i++){
-		out[i] = (char)((rand()%range) + (start+range));
+		out[i] = (char)((rand()%range) + start);
 	}
 	return out;
 }
@@ -27,7 +27,7 @@ int main(){
 	char* path = (char*)malloc(sizeof(char) * 50);
 	strcpy(path, tempdir);
 	strcat(path, "/");
-	strcat(path, basename);
+	strcat(path, basename);	// sprintf();
 
 	FILE *fp;
 	fp = fopen(path, "w+");
