@@ -10,6 +10,7 @@
 
 int pipes[2];
 int error_pipes[2];
+int pass[101];
 
 char*
 fuzzer(int max_length, int start, int range){
@@ -52,6 +53,7 @@ parent_proc(char* tempdir, int num){
 
 	while((s = read(pipes[0], buf, 1023)) > 0){
 		fwrite(buf, 1, s, outf);
+		pass[num] = 1;
 	}
 	fclose(outf);
 	
@@ -61,6 +63,7 @@ parent_proc(char* tempdir, int num){
 	
 	while((s =read(error_pipes[0], buf, 1023)) > 0){
 		fwrite(buf, 1, s, errf);
+		pass[num] = 2;
 	}
 	fclose(errf);
 	
@@ -109,6 +112,7 @@ long_running_fuzzing(){
 		char basename[10];
 		sprintf(basename, "input%d", i);
 		char *data = fuzzer(100, 32, 32);
+		strcat(data, "\n");
 
 		char my_file[40];
 		strcpy(my_file, tempdir);
@@ -129,7 +133,27 @@ long_running_fuzzing(){
 	}
 }
 
+void
+print_result(){
+	int err = 0;
+	int output = 0;
+	int etc = 0;
+	for(int i=1; i<=100; i++){
+		if(pass[i] == 0){
+			etc++;
+		}
+		else if(pass[i] == 1){
+			output++;
+		}
+		else{
+			err++;
+		}	
+	}
+	printf("Error:%d Output:%d Etc:%d\n", err, output, etc); 
+}
+
 int main(){
 	srand((unsigned int)time(NULL));
 	long_running_fuzzing();
+	print_result();
 }
