@@ -7,7 +7,7 @@ double my_sqrt(int x){
 	double guess = x/2;
 
 	while(apporx != guess){
-//		printf("[DEBUG] apporx = %lf\n", apporx);
+		printf("[DEBUG] apporx = %lf\n", apporx);
 		apporx = guess;
 		guess = (apporx + x / apporx) / 2;
 	}
@@ -43,7 +43,7 @@ void quadratic_solver(int a, int b, int c){
 
 double* 
 fixed_quadratic_solver(int a, int b, int c){
-	double* answer = (double*)malloc(sizeof(double)*2);
+	double *answer = (double*)malloc(sizeof(double)*2);
 	if(a==0){
 		if(b==0){
 			if(c==0){
@@ -76,8 +76,8 @@ fixed_quadratic_solver(int a, int b, int c){
 		return answer;
 	}
 
-	answer[0] = (-b + my_sqrt_fixed(q)) / (2*a);
-	answer[1] = (-b - my_sqrt_fixed(q)) / (2*a);
+	double answer[0] = (-b + my_sqrt_fixed(q)) / (2*a);
+	double answer[1] = (-b - my_sqrt_fixed(q)) / (2*a);
 	
 	return answer;
 }
@@ -87,26 +87,16 @@ int main(){
 
 	// part 1
 	
-//	quadratic_solver(0, 2, 1); // divide by 0
-//	quadratic_solver(3, 2, 1); // violate my_sqrt_fixed() q has to more than 0
+	quadratic_solver(0, 2, 1); // divide by 0
+	quadratic_solver(3, 2, 1); // violate my_sqrt_fixed() q has to more than 0
 	
 	// part 2
 	
 	double *zz;
-	zz = fixed_quadratic_solver(3, 4, 1);
-	zz = fixed_quadratic_solver(0, 0, 1);
-	zz = fixed_quadratic_solver(3, 2, 1);
-
+	zz =fixed_quadratic_solver(3, 4, 1);
+	
+	
 	// part 3
-	unsigned long long combination = 1;
-	combination = (combination << 63);
-	unsigned long long tests_per_second = 1000000000;
-	unsigned long long seconds_per_year = (60 * 60 * 24 * 365);
-	unsigned long long tests_per_year = tests_per_second * seconds_per_year;
-	
-	unsigned long long year = ((combination/tests_per_year) * 2);
-	
-	printf("%lld\n", year);
 
 	return 0;
 }
