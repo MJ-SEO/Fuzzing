@@ -6,4 +6,4 @@
 
 [1. Introduction to Software Testing](https://github.com/MJ-SEO/Fuzzing/tree/master/1.Testing)
 
-[2.Fuzzing: Breaking Things with Random Inputs](https://github.com/MJ-SEO/Fuzzing/tree/master/2.Fuzzing)
+[2. Fuzzing: Breaking Things with Random Inputs](https://github.com/MJ-SEO/Fuzzing/tree/master/2.Fuzzing)
