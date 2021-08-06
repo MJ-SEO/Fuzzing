@@ -8,12 +8,8 @@
 
 char*
 heartbeat(char* reply, int length, char* mem){
-	char* temp = (char*)malloc(sizeof(char) * 2500);
-	strcpy(temp, reply);
-	strcat(temp, mem);
-	mem = temp;	
-	free(temp);
-
+	strncpy(mem, reply, strlen(reply));
+	
 	char* str = (char*)malloc(sizeof(char) * length+1);
 	strncpy(str, mem, length);
 	return str;
@@ -29,16 +25,19 @@ int main(){
 		strcat(secrets, uninitialized_memory_marker);
 	}	
 
-	printf("%s\n", heartbeat("potato", 6, secrets));
+	printf("%s\n", heartbeat("POTATO", 6, secrets));
+	printf("%s\n", heartbeat("BIRD", 4, secrets));
+	printf("%s\n", heartbeat("HAT", 500, secrets));
 
 	for(int i=0; i<10; i++){
 		char* s = (char*)malloc(sizeof(char) * 2500);
 		s = heartbeat(fuzzer(MAX_LEN, START, RANGE), rand()%500+1, secrets);
-		assert(!(strstr(s, uninitialized_memory_marker) != NULL));
-		assert(!(strstr(s, "secret") != NULL));
+		assert((strstr(s, uninitialized_memory_marker) == NULL));
+		assert((strstr(s, "secret") == NULL));
 		free(s);
 	}
 
 	free(secrets);
 	return 0;
 }
+
