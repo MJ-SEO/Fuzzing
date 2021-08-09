@@ -12,6 +12,14 @@ typedef struct map_air{
 	int capacity;
 } airport_code;
 
+typedef struct air_list{
+	int size;
+	int capacity;
+	airport_code* list;
+} air_list;
+
+
+
 int 
 code_repOK(char* code){
 	assert(strlen(code) == 3 && "Airport code must have three characters");
