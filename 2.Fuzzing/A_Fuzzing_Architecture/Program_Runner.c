@@ -20,7 +20,7 @@ typedef struct prunner{
 prunner* rtable;
 
 prunner* 
-init(prunner* self, char* program){
+init(char* program){
 	prunner* temp = (prunner*)malloc(sizeof(prunner) * 1);
 	temp->outcome = "PASS";
 	temp->program = program;
@@ -36,11 +36,11 @@ free_prunner(){
 }
 
 void
-child_proc(prunner* self, char* input){
+child_proc(prunner* self){
 	dup2(in_pipes[0], 0);
 	close(in_pipes[0]);
 	close(in_pipes[1]);
-
+	
 	close(out_pipes[0]);
 	close(error_pipes[0]);
 	
@@ -98,7 +98,7 @@ run_process(prunner* self, char* input){
 
 	pid_t child = fork();
 	if(child == 0){
-		child_proc(self, input);
+		child_proc(self);
 	}
 	else if(child > 0){
 		parent_proc(self, input);
@@ -128,10 +128,10 @@ printf("(CompletedProcess(args = '%s', returncode = %d, stdout ='%s', stderr='%s
 }
 
 
-int main(){
-	prunner* p = init(p, "cat");
+int main(){	
+	prunner* p = init("cat");
 //	printf("[DEBUG] %s %s %d\n", p->outcome, p->program, p->returncode);
-	runn(p, "WOOSAM");
+	runn(p, "help me!!");
 	
 	return 0;
 }
