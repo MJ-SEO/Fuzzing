@@ -5,7 +5,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-int pipes[2];
+int in_pipes[2];
+int out_pipes[2];
 int error_pipes[2];
 
 typedef struct prunner{
@@ -36,27 +37,31 @@ free_prunner(){
 
 void
 child_proc(prunner* self, char* input){
-	close(pipes[0]);
+	dup2(in_pipes[0], 0);
+	close(in_pipes[0]);
+	close(in_pipes[1]);
+
+	close(out_pipes[0]);
 	close(error_pipes[0]);
-	dup2(pipes[1], 1);
+	
+	dup2(out_pipes[1], 1);
 	dup2(error_pipes[1], 2);
 
-	execlp(self->program, self->program, input, NULL);
+	execlp(self->program, self->program, NULL);
 }
 
 void 
-parent_proc(prunner* self){
-	int exit_code;
-	pid_t term_pid = wait(&exit_code);
-	printf("Process %d is exit with %d\n", getpid(), exit_code);
-	self->returncode = exit_code;
+parent_proc(prunner* self, char* input){
 
-	close(pipes[1]);
+	close(out_pipes[1]);
 	close(error_pipes[1]);
+
+	write(in_pipes[1], input, strlen(input));
+	close(in_pipes[1]);
 
 	char buf[1024];
 	ssize_t s;
-	while((s = read(pipes[0], buf, 1023)) > 0){
+	while((s = read(out_pipes[0], buf, 1023)) > 0){
 			printf("[STDOUT] %s\n", buf);
 			self->sout = buf; //TODO append
 	}
@@ -65,13 +70,23 @@ parent_proc(prunner* self){
 			printf("[STDERR] %s\n", buf);
 			self->serr = buf;
 	}
+	
+	int exit_code;
+	pid_t term_pid = wait(&exit_code);
+//	printf("Process %d is exit with %d\n", getpid(), exit_code);
+	self->returncode = exit_code;
+	
 	return;
 }
 
 void
 run_process(prunner* self, char* input){
+	if(pipe(in_pipes) < 0){
+		perror("pipe error\n");
+		exit(1);
+	}
 
-	if(pipe(pipes) < 0){
+	if(pipe(out_pipes) < 0){
 		perror("pipe error\n");
 		exit(1);
 	}
@@ -86,7 +101,7 @@ run_process(prunner* self, char* input){
 		child_proc(self, input);
 	}
 	else if(child > 0){
-		parent_proc(self);
+		parent_proc(self, input);
 	}
 	else{
 		perror("fork error\n");
@@ -115,10 +130,8 @@ printf("(CompletedProcess(args = '%s', returncode = %d, stdout ='%s', stderr='%s
 
 int main(){
 	prunner* p = init(p, "cat");
-	printf("[DEBUG] %s %s %d\n", p->outcome, p->program, p->returncode);
-	
-	runn(p, "hello");
-	//printf("[DEBUG] %s %s %d %s\n", p->outcome, p->program, p->returncode, p->sout);
+//	printf("[DEBUG] %s %s %d\n", p->outcome, p->program, p->returncode);
+	runn(p, "WOOSAM");
 	
 	return 0;
 }
