@@ -26,9 +26,9 @@ typedef struct prunner{
 char* 
 RandomFuzzer(int min_len, int max_len, int start, int range){
 	int len = rand()%(max_len - min_len + 1) + min_len;
-	char* out = (char*)malloc(sizeof(char)*len);
+	char* out = (char*)malloc(sizeof(char)*(len + 1));
 	for(int i=0; i<len; i++){
-		out[i] = rand()%range + start;
+		out[i] = rand()%(range + 1) + start;
 	}
 	return out;
 }
@@ -36,10 +36,10 @@ RandomFuzzer(int min_len, int max_len, int start, int range){
 prunner*
 init(){
 	prunner* p = (prunner*)malloc(sizeof(prunner) * 1);
-	p->outcome = "FAIL";
-	p->program = "";
-	p->sout = "";
-	p->serr = "";
+	p->outcome = (char*)malloc(sizeof(char) * 15);
+	p->program = (char*)malloc(sizeof(char) * 20);
+	p->sout = (char*)malloc(sizeof(char) * 20);
+	p->serr = (char*)malloc(sizeof(char) * 20);
 	p->returncode = -1;
 	return p;
 }
@@ -64,7 +64,7 @@ parent_proc(prunner* self){
 	close(out_pipes[1]);
 	close(err_pipes[1]);
 	
-	char* data = RandomFuzzer(MIN_LAN, MAX_LEN, START, RANGE);
+	char* data = RandomFuzzer(20, 20, START, RANGE);
 	write(in_pipes[1], data, strlen(data));
 	close(in_pipes[1]);
 
@@ -72,11 +72,11 @@ parent_proc(prunner* self){
 	ssize_t s;
 
 	while((s = read(out_pipes[0], buffer, 1023) > 0)){
-		self->sout = buffer;
+		strcpy(self->sout, buffer);
 	}
 
 	while((s = read(err_pipes[0], buffer, 1023) > 0)){
-		self->serr = buffer;
+		strcpy(self->serr, buffer);
 	}
 
 	close(out_pipes[0]);
@@ -124,9 +124,9 @@ runner(prunner* self, char* program){
 	self->program = program;
 	run_process(self);
 	
-	if(self->returncode == 0) self->outcome = "PASS";
-	else if(self->returncode < 0) self->outcome = "FAIL";
-	else self->outcome = "UNRESOLVED";
+	if(self->returncode == 0) strcpy(self->outcome, "PASS");
+	else if(self->returncode < 0) strcpy(self->outcome, "FAIL");
+	else strcpy(self->outcome, "UNRESOLVED");
 
 	printf("(CompletedProcess(args = '%s', returncode = %d, stdout ='%s', stderr='%s'),'%s')\n", self->program, self->returncode, self->sout, self->serr, self->outcome);
 	return;
@@ -143,7 +143,7 @@ runs(char* program, int num){
 
 int main(){
 	srand((unsigned int)time(NULL));	
-
+/*
 	for(int i=0; i<10; i++){
 		char* data = RandomFuzzer(MIN_LAN, MAX_LEN, START, RANGE);
 		prunner * p = init();
@@ -153,7 +153,7 @@ int main(){
 		assert(strcmp(p->outcome, "PASS") == 0);
 		free(p);
 	}
-
+*/
 	prunner * p = init();
 	runner(p, "cat");
 	free(p);

@@ -5,6 +5,10 @@
 int
 backslashD(char* str){
 	char* pattern = "\\D";
+	int len = strlen(str);
+
+	char* index = strstr(str, pattern);
+	if(index == NULL || strlen(index) strlen(str))
 
 }
 

@@ -20,12 +20,18 @@ typedef struct prunner{
 prunner* 
 init(char* program){
 	prunner* temp = (prunner*)malloc(sizeof(prunner) * 1);
-	temp->outcome = "FAIL";
-	temp->program = program;
+	temp->outcome = (char*)malloc(sizeof(char) * 15);
+	temp->program = (char*)malloc(sizeof(char) * (strlen(program) + 1));
+	temp->sout = (char*)malloc(sizeof(char) * 200);
+	temp->serr = (char*)malloc(sizeof(char) * 200);
 	temp->returncode = 0;
-	temp->sout = "";
-	temp->serr = "";
+	strcpy(temp->program, program);
 	return temp;
+}
+
+void
+free_p(prunner* p){
+
 }
 
 void
@@ -55,11 +61,11 @@ parent_proc(prunner* self, char* input){
 	char buf[1024];
 	ssize_t s;
 	while((s = read(out_pipes[0], buf, 1023)) > 0){
-			self->sout = buf; 	//TODO append
+		strcpy(self->sout, buf); //TODO append
 	}
 
 	while((s = read(error_pipes[0], buf, 1023)) > 0){
-			self->serr = buf;
+		strcpy(self->serr, buf);
 	}
 	
 	int exit_code;
@@ -104,13 +110,13 @@ runn(prunner* self, char* input){
 	run_process(self, input);
 	
 	if(self->returncode == 0){
-		self->outcome = "PASS";
+		strcpy(self->outcome, "PASS");
 	}
 	else if(self->returncode < 0){
-		self->outcome = "FAIL";
+		strcpy(self->outcome, "FAIL");
 	}
 	else{
-		self->outcome = "UNRESOLVED";
+		strcpy(self->outcome, "UNRESOLVED");
 	}
 
 printf("(CompletedProcess(args = '%s', returncode = %d, stdout ='%s', stderr='%s'),'%s')\n", self->program, self->returncode, self->sout, self->serr, self->outcome);
@@ -119,8 +125,8 @@ printf("(CompletedProcess(args = '%s', returncode = %d, stdout ='%s', stderr='%s
 
 int main(){	
 	prunner* p = init("cat");
-//	printf("[DEBUG] %s %s %d\n", p->outcome, p->program, p->returncode);
-	runn(p, "help me!!");
+//	printf("[DEBUG] %s %s %d\n", p->outcome, p->program, p->returncode);	
+	runn(p, "hello");
 	
 	return 0;
 }
