@@ -12,27 +12,20 @@ int error_pipes[2];
 typedef struct prunner{
 	char* outcome;
 	char* program;
-	int returncode;
 	char* sout;
 	char* serr;
+	int returncode;
 } prunner;
-
-prunner* rtable;
 
 prunner* 
 init(char* program){
 	prunner* temp = (prunner*)malloc(sizeof(prunner) * 1);
-	temp->outcome = "PASS";
+	temp->outcome = "FAIL";
 	temp->program = program;
 	temp->returncode = 0;
 	temp->sout = "";
 	temp->serr = "";
 	return temp;
-}
-
-void
-free_prunner(){
-	return;
 }
 
 void
@@ -62,12 +55,10 @@ parent_proc(prunner* self, char* input){
 	char buf[1024];
 	ssize_t s;
 	while((s = read(out_pipes[0], buf, 1023)) > 0){
-			printf("[STDOUT] %s\n", buf);
-			self->sout = buf; //TODO append
+			self->sout = buf; 	//TODO append
 	}
 
 	while((s = read(error_pipes[0], buf, 1023)) > 0){
-			printf("[STDERR] %s\n", buf);
 			self->serr = buf;
 	}
 	
@@ -75,7 +66,6 @@ parent_proc(prunner* self, char* input){
 	pid_t term_pid = wait(&exit_code);
 //	printf("Process %d is exit with %d\n", getpid(), exit_code);
 	self->returncode = exit_code;
-	
 	return;
 }
 
@@ -111,7 +101,6 @@ run_process(prunner* self, char* input){
 
 void
 runn(prunner* self, char* input){
-	//prunner* result = (prunner*)malloc(sizeof(prunner) * 1);
 	run_process(self, input);
 	
 	if(self->returncode == 0){

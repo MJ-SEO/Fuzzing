@@ -9,6 +9,8 @@
 
 #include "../fuzzer.h"
 
+#define MIN_LAN 10
+
 int in_pipes[2];
 int out_pipes[2];
 int err_pipes[2];
@@ -62,8 +64,7 @@ parent_proc(prunner* self){
 	close(out_pipes[1]);
 	close(err_pipes[1]);
 	
-	char* data = RandomFuzzer(20, 20, 32, 32);
-	printf("[DEBUG] %s\n", data);
+	char* data = RandomFuzzer(MIN_LAN, MAX_LEN, START, RANGE);
 	write(in_pipes[1], data, strlen(data));
 	close(in_pipes[1]);
 
@@ -119,7 +120,7 @@ run_process(prunner* self){
 }
 
 void 
-runn(prunner* self, char* program){
+runner(prunner* self, char* program){
 	self->program = program;
 	run_process(self);
 	
@@ -135,7 +136,7 @@ void
 runs(char* program, int num){
 	for(int i=0; i<num; i++){
 		prunner* p = init();	
-		runn(p, program);
+		runner(p, program);
 		free(p);
 	}
 }
@@ -143,21 +144,18 @@ runs(char* program, int num){
 int main(){
 	srand((unsigned int)time(NULL));	
 
-//	for(int i=0; i<10; i++){
-//	printf("%s\n", RandomFuzzer(20, 20, 32, 32));	
-//	}
-
-/*
 	for(int i=0; i<10; i++){
+		char* data = RandomFuzzer(MIN_LAN, MAX_LEN, START, RANGE);
 		prunner * p = init();
-		runn(p, "cat");
-		printf("[DEBUG] %s\n", p->sout);
-		assert(strcmp(p->sout, data) == 0);
+		runner(p, "cat");
+	//	printf("[DEBUG] %s\n", p->sout);
+	//	assert(strcmp(p->sout, data) == 0);
 		assert(strcmp(p->outcome, "PASS") == 0);
+		free(p);
 	}
-*/
+
 	prunner * p = init();
-	runn(p, "cat");
+	runner(p, "cat");
 	free(p);
 
 	printf("==============================\n");

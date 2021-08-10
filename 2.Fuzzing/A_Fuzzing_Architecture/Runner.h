@@ -6,16 +6,14 @@ typedef struct prunner{
 	int returncode;
 }prunner;
 
-prunner* init(prunner* self, char* program);
+prunner* R_init(prunner* self, char* program);
 
-void free_prunner();
+void R_child_proc(prunner* self);
 
-void child_proc(prunner* self);
-
-void parent_proc(prunner* self, char* input);
+void R_parent_proc(prunner* self, char* input);
 // void parent_proc(prunner* self); FUZZER
 
-void run_process(prunner* self, char* input);
+void R_run_process(prunner* self, char* input);
 // void run_process(prunner* self);
 
 void runn(prunner* self, char* input);
