@@ -38,8 +38,8 @@ init(){
 	prunner* p = (prunner*)malloc(sizeof(prunner) * 1);
 	p->outcome = (char*)malloc(sizeof(char) * 15);
 	p->program = (char*)malloc(sizeof(char) * 20);
-	p->sout = (char*)malloc(sizeof(char) * 20);
-	p->serr = (char*)malloc(sizeof(char) * 20);
+	p->sout = (char*)malloc(sizeof(char) * 200);
+	p->serr = (char*)malloc(sizeof(char) * 200);
 	p->returncode = -1;
 	return p;
 }

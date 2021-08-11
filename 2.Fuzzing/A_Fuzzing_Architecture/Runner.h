@@ -1,26 +1,19 @@
-typedef struct prunner{
-	char* outcome;
-	char* program;
-	char* sout;
-	char* serr;
-	int returncode;
-}prunner;
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-prunner* R_init(prunner* self, char* program);
+#define PASS "PASS"
+#define FAIL "FAIL"
+#define UNRESOLVED "UNRESOLVED" 
 
-void R_child_proc(prunner* self);
+typedef struct Runner {
+	int input_size;
+	char * input ;
+	char * outcome ;
 
-void R_parent_proc(prunner* self, char* input);
-// void parent_proc(prunner* self); FUZZER
+	int (*free_input) (struct Runner runner);	
+	int (*run) (struct Runner *, char *, int) ;  // int : length of the input
+} Runner ;
 
-void R_run_process(prunner* self, char* input);
-// void run_process(prunner* self);
-
-void runn(prunner* self, char* input);
-// void runn(prunner* self, char* program);
-
-
-
-
-
+void Runner_init (Runner * runner) ;  // run 꼽아주기 
 

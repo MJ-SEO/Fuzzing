@@ -24,7 +24,7 @@ init(char* program){
 	temp->program = (char*)malloc(sizeof(char) * (strlen(program) + 1));
 	temp->sout = (char*)malloc(sizeof(char) * 200);
 	temp->serr = (char*)malloc(sizeof(char) * 200);
-	temp->returncode = 0;
+	temp->returncode = -1;
 	strcpy(temp->program, program);
 	return temp;
 }
