@@ -2,14 +2,24 @@
 
 int
 run(Runner * runner, char* input, int input_size){
+	if(input_size < 0){
+		perror("Negative Input Size Error\n");
+		return -1;
+	}
+
 	runner->input = (char*)malloc(sizeof(char) * input_size);	
-	printf("[INPUT] %s\n", input);	
+	if(runner->input == NULL){
+		perror("Alloc failed\n");
+		return -1;
+	}
 	
 	for(int i=0; i<input_size; i++){
 		runner->input[i] = input[i];
+		putc(runner->input[i], stdout);
 	}
 
 	runner->outcome = UNRESOLVED;
+	return 1;
 }
 
 int 
@@ -28,14 +38,13 @@ void PrintRunner_init(Runner * runner){
 }	
 
 int main(){
-	Runner runner;
-	PrintRunner_init(&runner);	
+	Runner print_runner;
+	PrintRunner_init(&print_runner);	
 
-	char input[] = "hello";	
-	runner.run(&runner, input, sizeof(input));
+	char input[] = "help\0 me!! plz\n";	
+	runner.run(&print_runner, input, sizeof(input));
 
-	printf("[DEBUG] %s %s\n", runner.input, runner.outcome);
-
+//	printf("[DEBUG] %s %s\n", runner.input, runner.outcome);
 	free_input(runner);	
 	return 0;
 }
