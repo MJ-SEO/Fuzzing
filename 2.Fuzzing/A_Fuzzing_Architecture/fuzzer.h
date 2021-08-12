@@ -1,6 +1,10 @@
-#include "create_input.h"
-//#include "run.h"
+#ifndef FUZZER
+#define FUZZER
 
-void fuzzer_init(test_config_t *config);
+#include "create_input.h" // config.h
 
-void fuzzer_main();
+void fuzzer_init(test_config_t *config, char* dir_name);
+
+void fuzzer_main(test_config_t *config);
+
+#endif

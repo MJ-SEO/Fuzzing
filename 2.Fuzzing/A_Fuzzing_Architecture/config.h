@@ -1,3 +1,6 @@
+#ifndef CONFIG
+#define CONFIG
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,8 +17,13 @@ typedef struct test_config{
 
 	char binary_path[PATH_MAX] ;
 
+	char* cmd_args;
+
 	int trial;
 	int timeout;
 	int (* oracle) (char* dir_name);
 } test_config_t;
 
+void config_init(test_config_t * config);
+
+#endif

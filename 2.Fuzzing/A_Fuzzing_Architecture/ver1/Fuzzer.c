@@ -137,7 +137,7 @@ runs(char* program, int num){
 	for(int i=0; i<num; i++){
 		prunner* p = init();	
 		runner(p, program);
-		free(p);
+	
 	}
 }
 
