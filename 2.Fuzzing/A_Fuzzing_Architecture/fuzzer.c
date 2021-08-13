@@ -6,6 +6,9 @@
 #include <unistd.h>
 
 static test_config_t fuzz_config; 
+static int in_pipes[2] ;
+static int out_pipes[2] ;
+static int err_pipes[2] ;
 
 void
 make_tempdir(char* dir_name){
@@ -25,8 +28,12 @@ fuzzer_init(test_config_t * config, char* dir_name){
 	   1. check some conditions
 	   - binary path validity
 	   - default values
-	   2. make result directory
 	   */
+	if(config->f_min_len < MINLEN || config->f_max_len < MAXLEN){
+		perror("Fuzzer Length Error\n");
+		exit(1);
+	}
+		
 
 	fuzz_config.f_min_len = config->f_min_len;
 	fuzz_config.f_max_len = config->f_max_len;
@@ -44,7 +51,7 @@ fuzzer_init(test_config_t * config, char* dir_name){
 }
 
 void
-execute_prog(test_config_t * config, char* input, int *in_pipes, int *out_pipes, int *err_pipes){
+execute_prog(test_config_t * config, char* input){
 	dup2(in_pipes[0], 0);
 	close(in_pipes[0]);
 	close(in_pipes[1]);
@@ -55,16 +62,19 @@ execute_prog(test_config_t * config, char* input, int *in_pipes, int *out_pipes,
 	dup2(out_pipes[1], 1);
 	dup2(out_pipes[1], 2);
 
-	execlp(config->binary_path, config->binary_path, NULL);
+	execl(config->binary_path, config->binary_path, "-b" ,NULL);
 }
 
-void
-get_info(test_config_t * config, char* input, int input_size, int *in_pipes, int *out_pipes, int *err_pipes, char* dir_name, int file_num){
+int
+get_info(test_config_t * config, char* input, int input_size, char* dir_name, int file_num){
 	close(out_pipes[1]);
 	close(err_pipes[1]);
-
+	
 	write(in_pipes[1], input, input_size);
 	close(in_pipes[1]);
+	
+	int exit_code;
+	wait(&exit_code);
 
 	char buffer[1024];
 	ssize_t s;
@@ -73,8 +83,9 @@ get_info(test_config_t * config, char* input, int input_size, int *in_pipes, int
 	sprintf(output_name, "%s/output%d", dir_name, file_num);
 	FILE* output_file = fopen(output_name, "ab");
 	
+//	fprintf(output_file, "%d ", exit_code);
+
 	while((s = read(out_pipes[0], buffer, 1024))> 0){
-//		printf("[DEBUG] STDOUT: %s\n", buffer);
 		fwrite(buffer, 1, s, output_file);
 	}
 	
@@ -83,30 +94,23 @@ get_info(test_config_t * config, char* input, int input_size, int *in_pipes, int
 	FILE* err_file = fopen(err_name, "ab");
 
 	while((s = read(err_pipes[0], buffer, 1024)) > 0){
-//		printf("[DEBUG] ERROR: %s\n", buffer);
 		fwrite(buffer, 1, s, output_file);
 	}
 	
 	close(out_pipes[0]);
 	close(out_pipes[0]);
 
-	int exit_code;
-	wait(&exit_code);
-	
 	free(output_name);
 	free(err_name);
 	fclose(output_file);
 	fclose(err_file);
 
-	return;
+	return exit_code;
 }
 
-void 
-run(test_config_t* config, char* input, int input_size, char* dir_name, int file_num){
-	int in_pipes[2] ;
-	int out_pipes[2] ;
-	int err_pipes[2] ;
 
+int
+run(test_config_t* config, char* input, int input_size, char* dir_name, int file_num){
 	if (pipe(in_pipes) != 0) {
 		perror("Pipe Error\n") ;
 		exit(1) ;
@@ -119,23 +123,30 @@ run(test_config_t* config, char* input, int input_size, char* dir_name, int file
 		perror("Pipe Error\n") ;
 		exit(1) ;
 	}
+	
+	int return_code;
 
 	pid_t child_pid = fork();
 	if (child_pid == 0) {
-		execute_prog(config, input, in_pipes, out_pipes, err_pipes) ;
+		execute_prog(config, input) ;
 	}
 	else if (child_pid > 0) {
-		get_info(config, input, input_size, in_pipes, out_pipes, err_pipes, dir_name, file_num) ;
+		return_code = get_info(config, input, input_size, dir_name, file_num) ;
 	}
 	else {
 		perror("Fork Error\n") ;
 		exit(1) ;
 	}
+	
+	return return_code;
 }
 
-void 
-show_result(){
 
+void 
+show_result(int* return_code, int* prog_results, int trial){
+	for(int i=1; i<=trial; i++){
+		printf("[%d] Return code: %d, Result: %d\n", i, return_code[i], prog_results[i]);
+	}	
 }
 
 void
@@ -144,24 +155,27 @@ fuzzer_main(test_config_t* config){
 
 	char dir_name[20];
 	fuzzer_init(config, dir_name);	
-
-	for(int i = 0; i < fuzz_config.trial; i++){
+	int prog_results[fuzz_config.trial];
+	int return_code[fuzz_config.trial];
+	for(int i = 1; i <= fuzz_config.trial; i++){
 		char* input = (char*)malloc(sizeof(char)*(fuzz_config.f_max_len + 1)); 
+	
 		int fuzz_len = create_input(&fuzz_config, input);
 		
 		char* input_name = (char*)malloc(sizeof(char)*15);
-		sprintf(input_name, "%s/input%d", dir_name, i+1);
+		sprintf(input_name, "%s/input%d", dir_name, i);
 		FILE* input_file = fopen(input_name, "wb");
 	
 		fwrite(input, 1, fuzz_len, input_file);
-
-		run(&fuzz_config, input, fuzz_len, dir_name, i+1);
 		
-		// oracle(dir_name);	
-		
-		free(input);
 		fclose(input_file);
+
+		return_code[i] = run(&fuzz_config, input, fuzz_len, dir_name, i);
+
+		fuzz_config.oracle(dir_name, i, prog_results);
+
+		free(input);
 	}
 
-	show_result();
+	show_result(return_code, prog_results, fuzz_config.trial);
 }

@@ -1,33 +1,94 @@
 #include "fuzzer.h"
+#include <dirent.h>
+#include <sys/types.h>
 
 int 
-oracle(char* dir_name){
-	printf("Hello oracle\n");
+oracle(char* dir_name, int file_num, int* result){
+	char input_file[25];
+	sprintf(input_file, "%s/input%d", dir_name, file_num);    
+	
+	char output_file[25];
+	sprintf(output_file, "%s/output%d", dir_name, file_num);    
+
+	char err_file[25]; 
+	sprintf(err_file, "%s/error%d", dir_name, file_num);   
+
+	FILE* fp = fopen(err_file, "rb");
+	if(fp == NULL){
+		perror("Error file Open Failed\n");
+		result[file_num] = 2;
+		return 1;
+	}
+
+	char buffer[1024];
+	size_t s;
+
+	if((s = fread(buffer, 1, sizeof(buffer), fp)) > 0){
+		result[file_num] = 2;
+		return 0;	
+	}
+	else{
+		fclose(fp);
+	
+		char a, b;
+		FILE* input_fp = fopen(input_file, "rb");
+		FILE* output_fp = fopen(output_file, "rb");
+
+		if(input_fp == NULL || output_fp == NULL){
+			perror("INPUT/OUTPUT file Open Failed\n");
+			result[file_num] = 2;
+			return 1;
+		}
+		while(1){
+			if(feof(input_fp) == 0 && feof(output_fp) == 0){
+				a = fgetc(input_fp);
+				b = fgetc(output_fp);
+				if(a!=b){
+					result[file_num] = 1;
+					return 1;
+				}
+			}
+			else if(feof(input_fp) != 0 && feof(output_fp) == 0){
+				result[file_num] = 1;
+				return 1;
+			}
+			else if(feof(input_fp) == 0 && feof(output_fp) != 0){
+				result[file_num] = 1;
+				return 1;
+			}
+			else{
+				result[file_num] = 0;
+				return 0;
+			}
+		}
+
+		fclose(input_fp);
+		fclose(output_fp);
+	}
+	return 0;
 }
 
 void
 config_setting(test_config_t* config){
 	config->f_min_len = 1030;
 	config->f_max_len = 1030;
+	
 	config->f_char_start = 32;
-	config->f_char_range = 32;
+
+	strcpy(config->cmd_args, "-b\0");
+	config->option_num = 1;
 
 	strcpy(config->binary_path, "/bin/cat");
-
-	config->trial = 10;
-	config->timeout = 5;
 
 	config->oracle = oracle;
 }
 
 int main(){
 	test_config_t config;
-	
+
 	config_init(&config);
 
 	config_setting(&config);
-	
-//	printf("[DEBUG] %d %d %d %d %s %d %d\n", config.f_min_len, config.f_max_len, config.f_char_start, config.f_char_range, config.binary_path, config.trial, config.timeout);
-	
+
 	fuzzer_main(&config);
 }

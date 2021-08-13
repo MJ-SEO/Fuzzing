@@ -5,9 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MINLEN 10
-#define MAXLEN 100
+#define MINLEN 2
+#define MAXLEN 4000
 #define PATH_MAX 4096
+#define ARG_MAX 1024
 
 typedef struct test_config{
 	int f_min_len;
@@ -17,11 +18,12 @@ typedef struct test_config{
 
 	char binary_path[PATH_MAX] ;
 
-	char* cmd_args;
+	char cmd_args[ARG_MAX];
 
+	int option_num;
 	int trial;
 	int timeout;
-	int (* oracle) (char* dir_name);
+	int (* oracle) (char*, int, int*);
 } test_config_t;
 
 void config_init(test_config_t * config);
