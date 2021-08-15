@@ -45,20 +45,20 @@ oracle(char* dir_name, int file_num, int* result){
 				b = fgetc(output_fp);
 				if(a!=b){
 					result[file_num] = 1;
-					return 1;
+					break;
 				}
 			}
 			else if(feof(input_fp) != 0 && feof(output_fp) == 0){
 				result[file_num] = 1;
-				return 1;
+				break;
 			}
 			else if(feof(input_fp) == 0 && feof(output_fp) != 0){
 				result[file_num] = 1;
-				return 1;
+				break;
 			}
 			else{
 				result[file_num] = 0;
-				return 0;
+				break;
 			}
 		}
 
@@ -75,8 +75,8 @@ config_setting(test_config_t* config){
 	
 	config->f_char_start = 32;
 
-	strcpy(config->cmd_args, "-b\0");
-	config->option_num = 1;
+	strcpy(config->cmd_args, "-b -e");
+	config->option_num = 2;
 
 	strcpy(config->binary_path, "/bin/cat");
 
