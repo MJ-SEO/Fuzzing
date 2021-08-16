@@ -1,10 +1,9 @@
 #include "config.h"
 
 int
-default_oracle(char* dir_name, int file_num, int* result){
-	printf("PLZ make a test driver oracle\n");
-	result[file_num] = 1;
-	return 1;
+default_oracle(char* dir_name, int file_num, int* result, int return_code){
+	if(return_code == 0) return 0;
+	else return -1;
 }
 
 void 

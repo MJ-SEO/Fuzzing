@@ -46,7 +46,7 @@ fuzzer_init(test_config_t * config, char* dir_name){
 		perror("[fuzzer_init] - Fuzzer Config Error\n");
 		exit(1);
 	}
-	if(config->f_char_range < 0 || (config->f_char_start + config->f_char_range) > 127){
+	if(config->f_char_range < 0 || (config->f_char_start + config->f_char_range) > 255){
 		perror("[fuzzer_init] - Fuzzer Range Error\n");
 		exit(1);
 	}
@@ -214,7 +214,7 @@ fuzzer_main(test_config_t* config){
 		return_code[i] = run(&fuzz_config, input, fuzz_len, dir_name, i);
 		free(input);
 
-		fuzz_config.oracle(dir_name, i, prog_results);
+		fuzz_config.oracle(dir_name, i, prog_results, return_code[i]);
 	}
 
 	show_result(return_code, prog_results, fuzz_config.trial);

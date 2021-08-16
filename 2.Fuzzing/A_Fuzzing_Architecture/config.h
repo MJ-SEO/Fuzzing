@@ -22,7 +22,7 @@ typedef struct test_config{
 	int option_num;
 	int trial;
 	int timeout;
-	int (* oracle) (char*, int, int*);
+	int (* oracle) (char*, int, int*, int);
 } test_config_t;
 
 void config_init(test_config_t * config);

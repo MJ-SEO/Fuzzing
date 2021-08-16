@@ -3,7 +3,7 @@
 #include <sys/types.h>
 
 int 
-oracle(char* dir_name, int file_num, int* result){
+oracle(char* dir_name, int file_num, int* result, int return_code){
 	char input_file[25];
 	sprintf(input_file, "%s/input%d", dir_name, file_num);    
 	
