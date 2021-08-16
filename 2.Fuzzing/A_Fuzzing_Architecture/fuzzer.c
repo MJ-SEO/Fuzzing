@@ -15,7 +15,7 @@ static pid_t child_pid;
 void
 time_handler(int sig){
 	if(sig == SIGALRM){
-		perror("timeout\n");
+		perror("timeout ");
 		kill(child_pid, SIGINT);
 	}
 }
@@ -62,7 +62,27 @@ fuzzer_init(test_config_t * config, char* dir_name){
 
 	strcpy(fuzz_config.binary_path, config->binary_path);
 
+	if(config->cmd_args != NULL) {
+		fuzz_config.cmd_args = (char **)malloc(sizeof(char *) * (config->option_num + 2)) ; 
+		fuzz_config.cmd_args[0] = (char *)malloc(sizeof(char) * (strlen(config->binary_path) + 1)) ;
+		strcpy(fuzz_config.cmd_args[0], config->binary_path);
+
+		for(int i = 0 ; i < config->option_num; i++) {
+			int length = strlen(config->cmd_args[i]) + 1; 
+			fuzz_config.cmd_args[i+1] = (char *)malloc(sizeof(char) * length) ; 
+			strcpy(fuzz_config.cmd_args[i+1], config->cmd_args[i]) ;
+		}
+		fuzz_config.cmd_args[config->option_num + 1] = NULL; 
+	}
+	else{
+		fuzz_config.cmd_args = (char **)malloc(sizeof(char *) * 2); 
+		fuzz_config.cmd_args[0] = (char *)malloc(sizeof(char) * (strlen(config->binary_path) + 1)); 
+		strcpy(fuzz_config.cmd_args[0], config->binary_path); 
+		fuzz_config.cmd_args[1] = NULL; 
+	}	
+
 	fuzz_config.trial = config->trial;
+
 	fuzz_config.timeout = config->timeout;
 
 	fuzz_config.oracle = config->oracle;
@@ -77,7 +97,7 @@ execute_prog(test_config_t * config, char* input, int input_size, char* dir_name
 	FILE* input_file = fopen(input_name, "wb");
 
 	fwrite(input, 1, input_size, input_file);
-	
+
 	fclose(input_file);
 
 	dup2(in_pipes[0], 0);
@@ -90,7 +110,7 @@ execute_prog(test_config_t * config, char* input, int input_size, char* dir_name
 	dup2(out_pipes[1], 1);
 	dup2(out_pipes[1], 2);
 
-	execl(config->binary_path, config->binary_path ,NULL);
+	execv(config->binary_path, config->cmd_args);
 	perror("[excute_prog] - Execute Error\n");
 	exit(1);
 }
@@ -99,32 +119,36 @@ int
 get_info(test_config_t * config, char* input, int input_size, char* dir_name, int file_num){
 	close(out_pipes[1]);
 	close(err_pipes[1]);
-	
+
 	write(in_pipes[1], input, input_size);
 	close(in_pipes[1]);
-	
+
 	int exit_code;
 	wait(&exit_code);
 
 	char buffer[1024];
 	ssize_t s;
-	
+
 	char* output_name = (char*)malloc(sizeof(char)*15);
 	sprintf(output_name, "%s/output%d", dir_name, file_num);
 	FILE* output_file = fopen(output_name, "wb");
-	
+
 	while((s = read(out_pipes[0], buffer, 1024))> 0){
-		fwrite(buffer, 1, s, output_file);
+		if(fwrite(buffer, 1, s, output_file) != s){
+			perror("Output File Make Error");
+		}
 	}
-	
+
 	char* err_name = (char*)malloc(sizeof(char)*15);
 	sprintf(err_name, "%s/error%d", dir_name, file_num);
 	FILE* err_file = fopen(err_name, "wb");
 
 	while((s = read(err_pipes[0], buffer, 1024)) > 0){
-		fwrite(buffer, 1, s, output_file);
+		if(fwrite(buffer, 1, s, err_file) != s){
+			perror("Error File Make Error");
+		}
 	}
-	
+
 	close(out_pipes[0]);
 	close(err_pipes[0]);
 
@@ -146,14 +170,7 @@ run(test_config_t* config, char* input, int input_size, char* dir_name, int file
 
 	int return_code;
 
-	struct itimerval t;
-	signal(SIGALRM, time_handler);
-
-	t.it_value.tv_sec = config->timeout;
-	t.it_value.tv_usec = 0;
-	t.it_interval = t.it_value;
-
-	setitimer(ITIMER_REAL, &t, NULL);
+	alarm(config->timeout);
 
 	child_pid = fork();
 	if (child_pid == 0) {
@@ -166,7 +183,7 @@ run(test_config_t* config, char* input, int input_size, char* dir_name, int file
 		perror("Fork Error\n") ;
 		exit(1) ;
 	}
-	
+
 	return return_code;
 }
 
@@ -181,6 +198,8 @@ show_result(int* return_code, int* prog_results, int trial){
 void
 fuzzer_main(test_config_t* config){
 	srand((unsigned int)time(NULL));
+
+	signal(SIGALRM, time_handler);
 
 	char dir_name[20];
 	fuzzer_init(config, dir_name);	

@@ -16,12 +16,13 @@ config_init(test_config_t * config){
 
     strcpy(config->binary_path, "") ;
     
-    strcpy(config->cmd_args, "") ; 
+    config->cmd_args = 0x0;
+    
     config->option_num = 0;
 
     config->trial = 10 ; 
 
-    config->timeout = 5 ; 
+    config->timeout = 4 ; 
 
     config->oracle = default_oracle ;    
 }

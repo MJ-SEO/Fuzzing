@@ -73,7 +73,8 @@ config_setting(test_config_t* config){
 	
 	config->f_char_start = 32;
 
-	strcpy(config->cmd_args, "-b");
+	char* options[4] = {"-b"};
+	config->cmd_args = options;
 	config->option_num = 1;
 
 	strcpy(config->binary_path, "/bin/cat");

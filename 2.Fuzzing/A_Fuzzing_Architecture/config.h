@@ -8,7 +8,6 @@
 #define MINLEN 2
 #define MAXLEN 4000
 #define PATH_MAX 4096
-#define ARG_MAX 1024
 
 typedef struct test_config{
 	int f_min_len;
@@ -18,7 +17,7 @@ typedef struct test_config{
 
 	char binary_path[PATH_MAX] ;
 
-	char cmd_args[ARG_MAX];
+	char** cmd_args;
 
 	int option_num;
 	int trial;
