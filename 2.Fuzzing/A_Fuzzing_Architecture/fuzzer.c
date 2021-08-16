@@ -187,7 +187,6 @@ fuzzer_main(test_config_t* config){
 	int* prog_results = (int*)malloc(sizeof(int) * (fuzz_config.trial + 1));
 	int* return_code = (int*)malloc(sizeof(int) * (fuzz_config.trial + 1));
 
-	printf(" "); // ????
 	for(int i = 1; i <= fuzz_config.trial; i++){
 		char* input = (char*)malloc(sizeof(char)*(fuzz_config.f_max_len + 1)); 
 

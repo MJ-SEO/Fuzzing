@@ -29,11 +29,9 @@ oracle(char* dir_name, int file_num, int* result){
 	}
 	else{
 		fclose(fp);
-	
 		char a, b;
 		FILE* input_fp = fopen(input_file, "rb");
 		FILE* output_fp = fopen(output_file, "rb");
-
 		if(input_fp == NULL || output_fp == NULL){
 			perror("INPUT/OUTPUT file Open Failed\n");
 			result[file_num] = 2;
@@ -75,8 +73,8 @@ config_setting(test_config_t* config){
 	
 	config->f_char_start = 32;
 
-	strcpy(config->cmd_args, "-b -e");
-	config->option_num = 2;
+	strcpy(config->cmd_args, "-b");
+	config->option_num = 1;
 
 	strcpy(config->binary_path, "/bin/cat");
 

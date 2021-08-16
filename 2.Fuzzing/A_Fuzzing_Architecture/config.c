@@ -3,6 +3,7 @@
 int
 default_oracle(char* dir_name, int file_num, int* result){
 	printf("PLZ make a test driver oracle\n");
+	result[file_num] = 1;
 	return 1;
 }
 
