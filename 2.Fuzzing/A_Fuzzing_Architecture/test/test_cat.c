@@ -1,4 +1,4 @@
-#include "fuzzer.h"
+#include "../include/fuzzer.h"
 #include <dirent.h>
 #include <sys/types.h>
 

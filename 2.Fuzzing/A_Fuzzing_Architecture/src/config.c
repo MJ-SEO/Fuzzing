@@ -1,4 +1,4 @@
-#include "config.h"
+#include "../include/config.h"
 
 int
 default_oracle(char* dir_name, int file_num, int* result, int return_code){

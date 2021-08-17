@@ -1,5 +1,5 @@
-#include "fuzzer.h"
-#include "create_input.h"
+#include "../include/fuzzer.h"
+#include "../include/create_input.h"
 #include <time.h>
 #include <sys/time.h>
 #include <sys/stat.h>
