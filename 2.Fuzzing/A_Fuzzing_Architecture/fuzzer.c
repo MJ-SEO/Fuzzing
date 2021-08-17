@@ -196,6 +196,29 @@ show_result(int* return_code, int* prog_results, int trial){
 }
 
 void
+show_stat(int* return_code, int trial){
+	int no_backslash_d_failures = 0;
+	int no_8bit_failures = 0;
+	int no_dot_failures = 0;
+	int normal_case = 0;
+
+	for(int i=0; i<trial; i++){
+		if(return_code[i] == 256) no_dot_failures++;
+		else if(return_code[i] == 512) no_8bit_failures++;
+		else if(return_code[i] == 768) no_backslash_d_failures++;
+		else normal_case++;	
+	}
+
+	printf("==========Fuzzer Summary===========\n");
+	printf("Number of Tests: %d\n", trial);
+	printf("No_dat_Failures: %d\n", no_dot_failures);
+	printf("No_8bit_Failures: %d\n", no_8bit_failures);
+	printf("No_backslash_d_Failures: %d\n", no_backslash_d_failures);
+	printf("Normal cases: %d\n", normal_case);
+	printf("===================================\n");
+}
+
+void
 fuzzer_main(test_config_t* config){
 	srand((unsigned int)time(NULL));
 
@@ -217,7 +240,8 @@ fuzzer_main(test_config_t* config){
 		fuzz_config.oracle(dir_name, i, prog_results, return_code[i]);
 	}
 
-	show_result(return_code, prog_results, fuzz_config.trial);
+	//show_result(return_code, prog_results, fuzz_config.trial);
+	show_stat(return_code, fuzz_config.trial);
 	free(prog_results);
 	free(return_code);
 }

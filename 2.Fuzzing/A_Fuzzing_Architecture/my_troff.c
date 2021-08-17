@@ -31,12 +31,12 @@ int main(){
 				perror("No_dot_Failures");
 				return 1;
 			}
-			if(data[i-1] >= 127){ 			// =?
+			if(data[i-1] > 127 || data[i-1] < 0){ 			
 				perror("No_8bit_Failures\n");
 				return 2;
 			}
 		}
-		else if(i > 0 && data[i] == '\\' && i < len-2){
+		else if(data[i] == '\\' && i <= len-2){
 			if(data[i+1] == 'D'){
 				if(data[i+2] <= 31){
 					perror("No_Backslash_D_Failures\n");
