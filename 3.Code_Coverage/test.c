@@ -91,10 +91,6 @@ blackbox_testing(){
 
 void
 read_gcov_coverage(char* c_file){
-	compile_cgi(c_file);
-	exec_cgi(c_file);
-	exec_gcov(c_file);
-	
 	char gcov_file[30];
 	strcpy(gcov_file, c_file);
 	strcat(gcov_file, ".gcov");
@@ -120,8 +116,7 @@ read_gcov_coverage(char* c_file){
 		int flag = 0;
 		while(ptr != NULL){
 		//	printf("[DEBUG] [%d] ptr:%s\n", flag, ptr);
-			
-			if(flag == 0 && (ptr[0] == '-' || ptr[0] == '#')) break;
+			if(flag == 0 && atoi(ptr) == 0) break;
 
 			if(flag == 1){
 				strcpy(cov_list[index].c_file, c_file);
@@ -137,12 +132,18 @@ read_gcov_coverage(char* c_file){
 	for(int i=0; i<index; i++){
 		printf("%s %d\n", cov_list[i].c_file, cov_list[i].line_number);
 	}
+	
+	fclose(fp);
 }
 
 int main(){
 	testing();
 	
 	blackbox_testing();
+	
+	compile_cgi("cgi_test.c");
+	exec_cgi("cgi_test.c");
+	exec_gcov("cgi_test.c");
 	
 	read_gcov_coverage("cgi_test.c");
 }
