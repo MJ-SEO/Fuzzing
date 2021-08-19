@@ -17,6 +17,9 @@ typedef struct test_config{
 
 	char binary_path[PATH_MAX] ;
 
+	int is_source;
+	char* source;
+
 	char** cmd_args;
 
 	int option_num;

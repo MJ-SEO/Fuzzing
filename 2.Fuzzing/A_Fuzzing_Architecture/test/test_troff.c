@@ -1,4 +1,5 @@
 #include "../include/fuzzer.h"
+
 #include <dirent.h>
 #include <sys/types.h>
 
@@ -11,7 +12,8 @@ config_setting(test_config_t* config){
 	config->f_char_start = 0;
 	config->f_char_range = 255;
 
-	config->trial = 100;
+	config->trial = 10;
+	config->source = "my_troff.c";
 
 	strcpy(config->binary_path, "./mytroff");
 }

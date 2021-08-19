@@ -11,6 +11,7 @@ static int in_pipes[2] ;
 static int out_pipes[2] ;
 static int err_pipes[2] ;
 static pid_t child_pid;
+static int gcov_flag;
 
 void
 time_handler(int sig){
@@ -33,7 +34,7 @@ make_tempdir(char* dir_name){
 }
 
 void
-fuzzer_init(test_config_t * config, char* dir_name){
+fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 	if(config->f_min_len < MINLEN || config->f_max_len > MAXLEN){
 		perror("[fuzzer_init] - Fuzzer Length Error\n");
 		exit(1);
@@ -86,6 +87,14 @@ fuzzer_init(test_config_t * config, char* dir_name){
 	fuzz_config.timeout = config->timeout;
 
 	fuzz_config.oracle = config->oracle;
+	
+	if(config->source == 0x0){
+		gcov_flag = 0;
+	}
+	else{
+		gcov_flag = 1;
+		fuzz_config.source = config->source;
+	}
 
 	make_tempdir(dir_name);
 }
@@ -161,8 +170,33 @@ get_info(test_config_t * config, char* input, int input_size, char* dir_name, in
 }
 
 
+void
+run_gcov(char* target){
+	pid_t gcov_child = fork();
+	
+	printf("[DEBUG] targer:%s\n", target);
+
+	if(gcov_child == 0){
+		execl("/usr/bin/gcov", "gcov", target, NULL);
+		perror("run_gcov: Execution Error!");
+		return;
+	}
+	else if(gcov_child > 0){
+		int exit_code;
+		wait(&exit_code);
+		if(exit_code != 0){
+			perror("GCOV Execute Error!");
+			return;
+		}
+	}
+	else{
+		perror("run_gcov: Fork Error!");
+		exit(1);
+	}
+}
+
 int
-run(test_config_t* config, char* input, int input_size, char* dir_name, int file_num){
+run(test_config_t* config, char* input, int input_size, char* dir_name, int file_num, int gcov_flag){
 	if (pipe(in_pipes) != 0 || pipe(out_pipes) != 0 || pipe(err_pipes) != 0) {
 		perror("Pipe Error\n") ;
 		exit(1) ;
@@ -182,6 +216,10 @@ run(test_config_t* config, char* input, int input_size, char* dir_name, int file
 	else {
 		perror("Fork Error\n") ;
 		exit(1) ;
+	}
+	
+	if(gcov_flag == 1){
+		run_gcov(config->source);
 	}
 
 	return return_code;
@@ -220,21 +258,22 @@ show_stat(int* return_code, int trial){
 
 void
 fuzzer_main(test_config_t* config){
-	srand((unsigned int)time(NULL));
 
 	signal(SIGALRM, time_handler);
 
 	char dir_name[20];
-	fuzzer_init(config, dir_name);	
+	
+	fuzzer_init(config, dir_name, &gcov_flag);	
+	
 	int* prog_results = (int*)malloc(sizeof(int) * (fuzz_config.trial + 1));
 	int* return_code = (int*)malloc(sizeof(int) * (fuzz_config.trial + 1));
 
 	for(int i = 1; i <= fuzz_config.trial; i++){
 		char* input = (char*)malloc(sizeof(char)*(fuzz_config.f_max_len + 1)); 
-
+		
 		int fuzz_len = create_input(&fuzz_config, input);
 
-		return_code[i] = run(&fuzz_config, input, fuzz_len, dir_name, i);
+		return_code[i] = run(&fuzz_config, input, fuzz_len, dir_name, i, gcov_flag);
 		free(input);
 
 		fuzz_config.oracle(dir_name, i, prog_results, return_code[i]);

@@ -19,9 +19,13 @@ config_init(test_config_t * config){
     
     config->option_num = 0;
 
+    config->is_source = 0;
+    config->source = 0X0;
+
     config->trial = 10 ; 
 
     config->timeout = 4 ; 
 
     config->oracle = default_oracle ;    
 }
+
