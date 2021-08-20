@@ -1,5 +1,3 @@
-#include "make_gcov.h"
-#include "mydecoder.c"
 #include <assert.h>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -8,21 +6,6 @@ typedef struct coverage{
 	char c_file[64];
 	int line_number;
 } coverage_t;
-
-void
-testing(){
-	char* buf = cgi_decode("Hello%2c+World%21");
-	printf("%s\n", buf);
-}
-
-void
-blackbox_testing(){
-	assert(strcmp(cgi_decode("+")," ") == 0);
-	assert(strcmp(cgi_decode("%20"), " ") == 0);
-	assert(strcmp(cgi_decode("abc"), "abc") == 0);
-
-	assert((cgi_decode("%?a")) == NULL);
-}
 
 void
 read_gcov_coverage(char* c_file){
@@ -67,15 +50,5 @@ read_gcov_coverage(char* c_file){
 	}
 
 	fclose(fp);
-}
-
-int main(){
-	testing();
-
-	blackbox_testing();
-
-	make_gcov("cgi_decoder.c", "cgi_decode", "Send+mail+to+me%40fuzzingbook.org");
-
-	read_gcov_coverage("cgi_decoder.c");
 }
 

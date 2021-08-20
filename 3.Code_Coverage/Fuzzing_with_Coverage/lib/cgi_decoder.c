@@ -48,6 +48,7 @@ int main(int argc, char *argv[]) {
 		char *t = malloc(strlen(s) + 1); /* output is at most as long as input */
 		int ret = cgi_decode(s, t);
 		printf("%s\n", t);
+		free(t);
 		return ret;
 	}
 	else
