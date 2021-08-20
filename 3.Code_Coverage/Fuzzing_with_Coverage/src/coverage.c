@@ -84,7 +84,16 @@ read_gcov_coverage(char* c_file, gcov_t* curr_info, int idx){
 	}
 	
 	curr_info[idx].line = n_line;
-	curr_info[idx].union_line = union_bits(bitmask, curr_mask);
+	curr_info[idx].union_line = union_bits(bitmap, curr_mask);
 
 	fclose(fp);
+}
+
+int
+gcda_remove(char* gcda){
+
+
+
+
+	return 0;
 }

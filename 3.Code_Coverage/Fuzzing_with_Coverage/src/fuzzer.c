@@ -14,9 +14,6 @@ static int out_pipes[2] ;
 static int err_pipes[2] ;
 static pid_t child_pid;
 static int gcov_flag;
-//static int gcov_line;
-//static int gcov_line_for_ratio;
-//static int* bitmask;
 
 void
 time_handler(int sig){
@@ -75,8 +72,10 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 	fuzz_config.oracle = config->oracle;
 	
 	if(config->source != 0x0){
+		// TODO access
 		gcov_flag = 1;
 		fuzz_config.source = config->source;
+		
 	}
 
 	make_tempdir(dir_name);
@@ -203,36 +202,6 @@ run(test_config_t* config, char* input, int input_size, char* dir_name, int file
 	return return_code;
 }
 
-void 
-show_result(int* return_code, int* prog_results, int trial){
-	for(int i=1; i<=trial; i++){
-		printf("[%d] Return code: %d, Result: %d\n", i, return_code[i], prog_results[i]);
-	}	
-}
-
-void
-show_stat(int* return_code, int trial){
-	int no_backslash_d_failures = 0;
-	int no_8bit_failures = 0;
-	int no_dot_failures = 0;
-	int normal_case = 0;
-
-	for(int i=0; i<trial; i++){
-		if(return_code[i] == 256) no_dot_failures++;
-		else if(return_code[i] == 512) no_8bit_failures++;
-		else if(return_code[i] == 768) no_backslash_d_failures++;
-		else normal_case++;	
-	}
-
-	printf("==========Fuzzer Summary===========\n");
-	printf("Number of Tests: %d\n", trial);
-	printf("No_dat_Failures: %d\n", no_dot_failures);
-	printf("No_8bit_Failures: %d\n", no_8bit_failures);
-	printf("No_backslash_d_Failures: %d\n", no_backslash_d_failures);
-	printf("Normal cases: %d\n", normal_case);
-	printf("===================================\n");
-}
-
 void
 show_gcov(int* return_code, gcov_t* gcov_result, int trial){
 	printf("=============Fuzzer Summary==============\n");
@@ -266,22 +235,20 @@ fuzzer_main(test_config_t* config){
 
 		if(gcov_flag == 1){
 		       	run_gcov(fuzz_config.source);
-			if(i==1) {
+			if(i==1){
 				gcov_line = get_gcov_line(fuzz_config.source);
-				bitmask = (int*)malloc(sizeof(int) * gcov_line);
-				memset(bitmask, 0, sizeof(int)*gcov_line);
+				bitmap = (int*)malloc(sizeof(int) * gcov_line);
+				memset(bitmap, 0, sizeof(int)*gcov_line);
 			}
 			read_gcov_coverage(fuzz_config.source, gcov_results, i);
-			if(remove("cgi_decoder.gcda") != 0){
-				perror("GCDA deletes FAILED");
+			if(remove("cgi_decoder.gcda") != 0){	// TODO gcda_remove
+				perror("GCDA delete FAILED");
 			}
 		}	
 
 		fuzz_config.oracle(dir_name, i, prog_results, return_code[i]);
 	}
 
-	//show_result(return_code, prog_results, fuzz_config.trial);
-	//show_stat(return_code, fuzz_config.trial);
 	show_gcov(return_code, gcov_results, fuzz_config.trial);
 	free(prog_results);
 	free(return_code);

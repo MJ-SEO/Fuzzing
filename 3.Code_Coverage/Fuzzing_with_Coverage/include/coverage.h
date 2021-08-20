@@ -6,7 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 
-int* bitmask;
+int* bitmap;
 int gcov_line;
 int gcov_line_for_ratio;
 
@@ -20,5 +20,7 @@ int get_gcov_line(char* c_file);
 int union_bits(int* dest, int* src);
 
 void read_gcov_coverage(char* c_file, gcov_t* curr_infor, int idx);
+
+int gcda_remove(char* gcda);
 
 #endif
