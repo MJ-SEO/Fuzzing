@@ -8,4 +8,3 @@
 
 [2. Fuzzing: Breaking Things with Random Inputs](https://github.com/MJ-SEO/Fuzzing/tree/master/2.Fuzzing)
 
-[3. Code Coverage](https://github.com/MJ-SEO/Fuzzing/tree/master/3.Code_Coverage)

@@ -13,7 +13,7 @@ config_setting(test_config_t* config){
 	config->f_char_range = 255;
 
 	config->trial = 10;
-	config->source = "my_troff.c";
+//	config->source = "my_troff.c";
 
 	strcpy(config->binary_path, "./mytroff");
 }

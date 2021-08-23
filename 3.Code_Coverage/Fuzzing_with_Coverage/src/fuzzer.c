@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <assert.h>
 
 static test_config_t fuzz_config; 
 static int in_pipes[2] ;
@@ -67,15 +68,58 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 
 	fuzz_config.trial = config->trial;
 
+	if(config->cmd_args != NULL) {
+		if(config->source != 0x0){
+			fuzz_config.cmd_args = (char **)malloc(sizeof(char *) * (config->option_num + 3)) ; 
+			fuzz_config.cmd_args[0] = (char *)malloc(sizeof(char) * (strlen(config->binary_path) + 1)) ;
+			strcpy(fuzz_config.cmd_args[0], config->binary_path);
+
+			for(int i = 0 ; i < config->option_num; i++) {
+				int length = strlen(config->cmd_args[i]) + 1; 
+				fuzz_config.cmd_args[i+1] = (char *)malloc(sizeof(char) * length) ; 
+				strcpy(fuzz_config.cmd_args[i+1], config->cmd_args[i]) ;
+			}
+			fuzz_config.cmd_args[config->option_num + 2] = NULL; 
+			
+		}
+		else{
+			fuzz_config.cmd_args = (char **)malloc(sizeof(char *) * (config->option_num + 2)) ; 
+			fuzz_config.cmd_args[0] = (char *)malloc(sizeof(char) * (strlen(config->binary_path) + 1)) ;
+			strcpy(fuzz_config.cmd_args[0], config->binary_path);
+
+			for(int i = 0 ; i < config->option_num; i++) {
+				int length = strlen(config->cmd_args[i]) + 1; 
+				fuzz_config.cmd_args[i+1] = (char *)malloc(sizeof(char) * length) ; 
+				strcpy(fuzz_config.cmd_args[i+1], config->cmd_args[i]) ;
+			}
+			fuzz_config.cmd_args[config->option_num + 1] = NULL; 
+		}
+	}
+	else{
+		if(config->source != 0x0){
+			fuzz_config.cmd_args = (char **)malloc(sizeof(char *) * 3); 
+			fuzz_config.cmd_args[0] = (char *)malloc(sizeof(char) * (strlen(config->binary_path) + 1)); 
+			strcpy(fuzz_config.cmd_args[0], config->binary_path); 
+			fuzz_config.cmd_args[2] = NULL; 
+			
+		}
+		else{
+			fuzz_config.cmd_args = (char **)malloc(sizeof(char *) * 2); 
+			fuzz_config.cmd_args[0] = (char *)malloc(sizeof(char) * (strlen(config->binary_path) + 1)); 
+			strcpy(fuzz_config.cmd_args[0], config->binary_path); 
+			fuzz_config.cmd_args[1] = NULL; 
+		}
+	}
+
 	fuzz_config.timeout = config->timeout;
 
 	fuzz_config.oracle = config->oracle;
-	
+
 	if(config->source != 0x0){
-		// TODO access
+		assert(access(config->source_path, F_OK) == 0 && "Target Source Not Exiset!");	
 		gcov_flag = 1;
 		fuzz_config.source = config->source;
-		
+
 	}
 
 	make_tempdir(dir_name);
@@ -102,7 +146,7 @@ execute_prog(test_config_t * config, char* input, int input_size, char* dir_name
 	dup2(out_pipes[1], 2);
 
 
-	execl(config->binary_path, config->binary_path, input, NULL);
+	execv(config->binary_path, config->cmd_args);
 	perror("[excute_prog] - Execution Error\n");
 	exit(1);
 }
@@ -156,9 +200,9 @@ get_info(test_config_t * config, char* input, int input_size, char* dir_name, in
 void
 run_gcov(char* source){
 	pid_t gcov_child = fork();
-	
+
 	if(gcov_child == 0){
-		execl("/usr/bin/gcov", "gcov", "-c", source, NULL);
+		execl("/usr/bin/gcov", "gcov", "-b", "-c", source, NULL);
 		perror("run_gcov: Execution Error!");
 		return;
 	}
@@ -202,54 +246,71 @@ run(test_config_t* config, char* input, int input_size, char* dir_name, int file
 	return return_code;
 }
 
+void 
+show_result(int* return_code, int* prog_results, int trial){
+	for(int i=1; i<=trial; i++){
+		printf("[%d] Return code: %d, Result: %d\n", i, return_code[i], prog_results[i]);
+	}	
+}
+
 void
 show_gcov(int* return_code, gcov_t* gcov_result, int trial){
-	printf("=============Fuzzer Summary==============\n");
+	printf("=====================================Fuzzer Summary======================================\n");
 	for(int i=1; i<=trial; i++){
-		printf("[Try %d] Line: %d Union: %d Latio:%lf\n", i, gcov_result[i].line, gcov_result[i].union_line, (double)gcov_result[i].union_line/gcov_line_for_ratio);
+		printf("[Input %d] Line: %d/%d Union: %d Latio:%lf   Branch: %d/%d Union: %d Latio:%lf\n", i, gcov_result[i].line, gcov_line_for_ratio ,gcov_result[i].union_line, (double)gcov_result[i].union_line/gcov_line_for_ratio, gcov_result[i].branch_line, gcov_line_for_branch, gcov_result[i].branch_union_line, (double)gcov_result[i].branch_union_line/gcov_line_for_branch );
 	}
-	printf("=========================================\n");
+	printf("=========================================================================================\n");
 }
 
 void
 fuzzer_main(test_config_t* config){
 	srand((unsigned int)time(NULL));
-	
+
 	signal(SIGALRM, time_handler);
 
 	char dir_name[20];
 
 	fuzzer_init(config, dir_name, &gcov_flag);	
-	
+
 	int* prog_results = (int*)malloc(sizeof(int) * (fuzz_config.trial + 1));
 	int* return_code = (int*)malloc(sizeof(int) * (fuzz_config.trial + 1));
 	gcov_t* gcov_results= (gcov_t*)malloc(sizeof(gcov_t) * (fuzz_config.trial + 1));
 
 	for(int i = 1; i <= fuzz_config.trial; i++){
 		char* input = (char*)malloc(sizeof(char)*(fuzz_config.f_max_len + 1)); 
-		
-		int fuzz_len = create_input(&fuzz_config, input);
 
+		int fuzz_len = create_input(&fuzz_config, input);
+		
+		if(gcov_flag == 1) 
+			fuzz_config.cmd_args[fuzz_config.option_num + 1] = input; 
+		
 		return_code[i] = run(&fuzz_config, input, fuzz_len, dir_name, i);
 		free(input);
 
 		if(gcov_flag == 1){
-		       	run_gcov(fuzz_config.source);
+			run_gcov(fuzz_config.source);
 			if(i==1){
 				gcov_line = get_gcov_line(fuzz_config.source);
 				bitmap = (int*)malloc(sizeof(int) * gcov_line);
 				memset(bitmap, 0, sizeof(int)*gcov_line);
+				
+				branch_bitmap = (int*)malloc(sizeof(int) * gcov_line);
+				memset(branch_bitmap, 0, sizeof(int) * gcov_line);
 			}
 			read_gcov_coverage(fuzz_config.source, gcov_results, i);
-			if(remove("cgi_decoder.gcda") != 0){	// TODO gcda_remove
-				perror("GCDA delete FAILED");
-			}
+			gcda_remove(fuzz_config.source);
 		}	
 
 		fuzz_config.oracle(dir_name, i, prog_results, return_code[i]);
 	}
 
-	show_gcov(return_code, gcov_results, fuzz_config.trial);
+	if(gcov_flag == 1){
+		show_gcov(return_code, gcov_results, fuzz_config.trial);
+	}
+	else{
+		show_result(return_code, prog_results, fuzz_config.trial);
+	}
+
 	free(prog_results);
 	free(return_code);
 	free(gcov_results);

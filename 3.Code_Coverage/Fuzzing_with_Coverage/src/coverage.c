@@ -22,7 +22,10 @@ get_gcov_line(char* c_file){
 		char* ptr = strtok(line, ":");
 		int flag = 0;
 		while(ptr != NULL){
-			if(flag == 0 && ((atoi(ptr) > 0)) || strstr(ptr, "#") != NULL) gcov_line_for_ratio++;		
+			if((flag == 0 && atoi(ptr) > 0 ) || (flag == 0 && strstr(ptr, "#") != NULL)){
+			       	gcov_line_for_ratio++;		
+			}
+			if(flag == 0 && strstr(ptr, "branch") != NULL) gcov_line_for_branch++;
 			if(flag == 0) n_line++;		
 			ptr = strtok(NULL, ":");
 			flag++;
@@ -62,12 +65,13 @@ read_gcov_coverage(char* c_file, gcov_t* curr_info, int idx){
 	size_t size = 0;
 	int n_bit = 0;
 	int n_line = 0;
+	int n_branch = 0;
 
 	int* curr_mask = (int*)malloc(sizeof(int) * gcov_line);
-	//memset(curr_mask, 0, sizeof(gcov_line));
-	for(int i=0; i<gcov_line; i++){
-		curr_mask[i] = 0;
-	}
+	memset(curr_mask, 0, sizeof(int) * gcov_line);
+	
+	int* branch_mask = (int*)malloc(sizeof(int) * gcov_line);
+	memset(branch_mask, 0, sizeof(int) * gcov_line);
 
 	while((ret = getline(&line, &size, fp)) != -1){
 		char* ptr = strtok(line, ":");
@@ -76,6 +80,10 @@ read_gcov_coverage(char* c_file, gcov_t* curr_info, int idx){
 			if(flag == 0 && atoi(ptr) > 0){
 				curr_mask[n_bit] = 1;
 				n_line++;			
+			}
+			if(flag == 0 && strstr(ptr, "taken") != NULL){
+				branch_mask[n_bit] = 1;
+				n_branch++;	
 			}
 			ptr = strtok(NULL, ":");
 			flag++;
@@ -86,14 +94,24 @@ read_gcov_coverage(char* c_file, gcov_t* curr_info, int idx){
 	curr_info[idx].line = n_line;
 	curr_info[idx].union_line = union_bits(bitmap, curr_mask);
 
+	curr_info[idx].branch_line = n_branch;
+	curr_info[idx].branch_union_line = union_bits(branch_bitmap, branch_mask);
+
+	free(curr_mask);
+	free(branch_mask);	
 	fclose(fp);
 }
 
-int
-gcda_remove(char* gcda){
+void
+gcda_remove(char* c_file){
+	char* gcda_file = (char*)malloc(sizeof(char) * strlen(c_file) + 4);
+	
+	strncpy(gcda_file, c_file, strlen(c_file) - 2);
+	strcat(gcda_file, ".gcda");
+	
+	if(remove(gcda_file) != 0){
+		perror("GCDA delete failed");
+	}
 
-
-
-
-	return 0;
+	free(gcda_file);
 }
