@@ -1,8 +1,8 @@
-#include "mutating.h"
+#include "../include/mutating.h"
 
 char*
 delete_random_character(char* str){
-	if(str == NULL) return NULL;
+	if(str == NULL) return NULL; // TODO strlen
 
 	int pos;
 	pos = rand()%strlen(str); // 0 ~ strlen(str)
@@ -19,7 +19,7 @@ insert_random_character(char* str){
 	int pos;
 	pos = rand()%strlen(str); // 0 ~ strlen(str)
 
-	char rand_char = rand()%96 + 32; // 32 ~ 127
+	char rand_char = rand()%95 + 32; // 32 ~ 127
 	
 	char* s = (char*)malloc(sizeof(char) * strlen(str) + 2); // free?
 	memcpy(s, str, sizeof(char) * strlen(str));
@@ -69,31 +69,4 @@ mutate(char* str){
 
 //	printf("%s\n", mutate);
 	return mutate;
-}
-
-int main(){
-	srand((unsigned int)time(NULL));
-	
-	char* seed = "A quick brown fox";
-	char* temp;
-
-/*	for(int i=0; i<10; i++){
-		temp = delete_random_character(seed);
-		printf("%s\n", temp);
-	}
-	printf("======================\n");
-	for(int i=0; i<10; i++){
-		temp = insert_random_character(seed);
-		printf("%s\n", temp);
-	}
-	printf("======================\n");
-	for(int i=0; i<10; i++){
-		temp = flip_random_character(seed);
-		printf("%s\n", temp);
-	}
-	printf("======================\n");
-*/
-	for(int i=0; i<10; i++){
-		printf("%s\n", mutate(seed));
-	}
 }

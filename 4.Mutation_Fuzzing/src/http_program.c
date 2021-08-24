@@ -1,15 +1,6 @@
-#include "http_program.h"
+#include "../include/http_program.h"
 
 #define DEBUG
-
-typedef struct url{
-	int url_status;
-	char schema[10];
-	char netloc[50];
-	char path[150];
-	char query[30];
-	char fragment[30];
-} url_t;
 
 url_t
 url_parser(char* target_url){
@@ -43,14 +34,4 @@ http_program(char* target_url){
 	}
 
 	return 0;
-}
-
-int main(){
-
-//	char* url = "http://www.google.com/search?q=fuzzing#frag";
-	char* url = "https://www.fuzzingbook.org/html/MutationFuzzer.html";
-
-	http_program(url);	
-	
-	return 0;    
 }
