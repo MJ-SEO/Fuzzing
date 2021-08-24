@@ -13,11 +13,6 @@ config_setting(test_config_t* config){
 	config->f_char_range = 255;
 
 	config->trial = 10;
-	
-	config->option_num = 1;
-	char* option[1] = {"-b"};
-	config->cmd_args = option;  
-
 //	config->source = "my_troff.c";
 
 	strcpy(config->binary_path, "./mytroff");

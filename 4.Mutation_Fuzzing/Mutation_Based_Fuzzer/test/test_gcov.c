@@ -11,7 +11,7 @@ config_setting(test_config_t* config){
 	config->f_char_start = 32;
 	config->f_char_range = 127;
 
-	config->trial = 100;
+	config->trial = 20;
 	config->source = "cgi_decoder.c";
 	config->source_path = "../lib/cgi_decoder.c";
 
@@ -24,6 +24,6 @@ int main(){
 	config_init(&config);
 
 	config_setting(&config);
-
+	
 	fuzzer_main(&config);
 }
