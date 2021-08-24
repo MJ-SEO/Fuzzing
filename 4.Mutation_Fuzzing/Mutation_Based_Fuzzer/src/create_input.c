@@ -15,3 +15,8 @@ int
 create_input(test_config_t * config, char* fuzz){
 	return RandomFuzzer(config->f_min_len, config->f_max_len, config->f_char_start, config->f_char_range, fuzz);	
 }
+
+int 
+create_input(test_config_t * config, char* fuzz){
+	
+}

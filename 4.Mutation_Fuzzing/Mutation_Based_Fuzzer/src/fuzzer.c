@@ -38,6 +38,21 @@ make_tempdir(char* dir_name){
 
 void
 fuzzer_init(test_config_t * config, char* dir_name, int* flag){
+	if(config->mutation == 1){	// Mutation
+		DIR* inp_dir;
+		struct dirent* dp = NULL;
+		if((inp_dir = opendir(config->mutation_dir)) == NULL){
+			perror("Target dir open failed");
+			exit(1);
+		}
+
+		while((dp = readdir(inp_dir)) != NULL){
+			if(dp->d_type == 8){
+				printf("[FILE] %s\n", dp->d_name);
+			}		
+		}
+	}
+
 	if(config->f_min_len < MINLEN || config->f_max_len > MAXLEN){
 		perror("[fuzzer_init] - Fuzzer Length Error\n");
 		exit(1);

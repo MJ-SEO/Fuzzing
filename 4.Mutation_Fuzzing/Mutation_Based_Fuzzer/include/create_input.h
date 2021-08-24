@@ -7,4 +7,6 @@ int RandomeFuzzer(int min_len, int max_len, int start, int range);
 
 int create_input(test_config_t * config, char* input);
 
+int MutationFuzzer();
+
 #endif

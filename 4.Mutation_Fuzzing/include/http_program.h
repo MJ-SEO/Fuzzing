@@ -16,8 +16,10 @@ typedef struct url{
 	char fragment[30];
 } url_t;
 
-url_t url_parser(char* target_url);
+url_t* url_parser(char* target_url);
 
 int http_program(char* target_url);
+
+int is_valid_url(char* target_url);
 
 #endif

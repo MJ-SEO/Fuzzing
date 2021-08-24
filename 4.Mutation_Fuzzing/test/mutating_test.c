@@ -6,6 +6,6 @@ int main(){
 	char* seed = "A quick brown fox";
 
 	for(int i=0; i<10; i++){
-		printf("%s\n", mutate(seed));
+		printf("%s\n", mutate(seed, strlen(seed)));
 	}
 }

@@ -13,6 +13,9 @@ config_init(test_config_t * config){
     config->f_char_start = 32 ;
     config->f_char_range = 32 ;
 
+    config->mutation_dir = 0x0;
+    config->mutation = 0;
+
     strcpy(config->binary_path, "") ;
     
     config->cmd_args = 0x0;

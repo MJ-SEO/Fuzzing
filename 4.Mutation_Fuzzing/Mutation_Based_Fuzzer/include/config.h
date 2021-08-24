@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 
 #define MINLEN 2
 #define MAXLEN 4000
@@ -15,10 +16,13 @@ typedef struct test_config{
 	int f_char_start ; 
 	int f_char_range ;
 
+	char* mutation_dir 	// for mutation
+	int mutation;
+
 	char binary_path[PATH_MAX] ;
 
 	char* source;
-	char* source_path;
+	char* source_path;	// for coverage
 
 	char** cmd_args;
 
