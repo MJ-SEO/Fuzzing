@@ -1,18 +1,21 @@
 #include "../include/fuzzer.h"
+
 #include <dirent.h>
 #include <sys/types.h>
 
 
 void
 config_setting(test_config_t* config){
-	config->mutation_dir = "./input/http_inp";
-	config->mutation = 1;
+	config->f_min_len = 10;
+	config->f_max_len = 100;
+	
+	config->f_char_start = 0;
+	config->f_char_range = 255;
 
 	config->trial = 10;
-//	config->source = "cgi_decoder.c";
-//	config->source_path = "../lib/cgi_decoder.c";
+//	config->source = "my_troff.c";
 
-//	strcpy(config->binary_path, "./decoder");
+	strcpy(config->binary_path, "./mytroff");
 }
 
 int main(){

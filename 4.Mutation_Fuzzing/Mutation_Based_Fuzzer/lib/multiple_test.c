@@ -6,18 +6,13 @@
 int main(){
 	srand((unsigned int)time(NULL));
 	
-	char* seed_input;  		//= "http://www.google.com/search?q=fuzzing";
+	char* seed_input;
 	scanf("%s", seed_input);       
-	printf("RAELZZ debug SEDD: %s\n", seed_input);
-	
 	char* inp = (char*)malloc(sizeof(char) * (strlen(seed_input) + 1));
-	printf("N debug inp: %s |()| %s\n", inp, seed_input);
 	strncpy(inp, seed_input, strlen(seed_input));
-	
-	printf("A debug inp: %s |()| %s\n", inp, seed_input);
 
 	int valid = 0;
-	int trial = 1;
+	int trial = 16;
 	
 	for(int i=0; i<trial; i++){
 		strcpy(inp, mutate(inp, strlen(inp)));
@@ -26,4 +21,6 @@ int main(){
 			valid++;
 		}
 	}
+
+	free(inp);
 }

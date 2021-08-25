@@ -12,7 +12,9 @@ int main(){
 	assert(is_valid_url("xyzzy") != 0);
 */
 	
-	char* seed_input = "http://www.google.com/search?q=fuzzing";
+	char* seed_input; // = "http://www.google.com/search?q=fuzzing";
+	scanf("%s", seed_input);
+
 	int valid = 0;
 	int trial = 20;
 	for(int i=0; i<trial; i++){

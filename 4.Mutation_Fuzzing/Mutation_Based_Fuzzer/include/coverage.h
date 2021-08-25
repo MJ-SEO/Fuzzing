@@ -6,11 +6,13 @@
 #include <string.h>
 #include <unistd.h>
 
+/*
 int* bitmap;
 int* branch_bitmap;
 int gcov_line;
 int gcov_line_for_ratio;
 int gcov_line_for_branch;
+*/
 
 typedef struct gcov_info{
 	int line;
@@ -19,11 +21,11 @@ typedef struct gcov_info{
 	int branch_union_line;
 } gcov_t;
 
-int get_gcov_line(char* c_file);
+int get_gcov_line(char* c_file, int* line, int* branch);
 
-int union_bits(int* dest, int* src);
+int union_bits(int* dest, int* src, int lines);
 
-void read_gcov_coverage(char* c_file, gcov_t* curr_infor, int idx);
+void read_gcov_coverage(char* c_file, gcov_t* curr_infor, int idx, int lines, int* bitmap, int* branch_bitmap);
 
 void gcda_remove(char* c_file);
 

@@ -16,7 +16,7 @@ typedef struct test_config{
 	int f_char_start ; 
 	int f_char_range ;
 
-	char* mutation_dir 	// for mutation
+	char* mutation_dir; 	// for mutation
 	int mutation;
 
 	char binary_path[PATH_MAX] ;

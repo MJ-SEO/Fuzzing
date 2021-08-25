@@ -1,4 +1,6 @@
 #include "../include/create_input.h"
+#include "../include/mutating.h"
+#include "../src/mutating.c" // ...
 
 int
 RandomFuzzer(int min_len, int max_len, int start, int range, char* fuzz){
@@ -17,6 +19,27 @@ create_input(test_config_t * config, char* fuzz){
 }
 
 int 
-create_input(test_config_t * config, char* fuzz){
-	
+mutational_input(char* fuzz, char* input_file, int trial){
+	FILE* fp;
+	fp = fopen(input_file, "rb");
+	if(fp == NULL){
+		perror("mutationl_input: File open failed");
+		exit(1);
+	}
+
+	int len = 0;
+	char* seed = (char*)malloc(sizeof(char) * 1024);	// TODO realloc?
+	while((seed[len] = getc(fp)) != EOF){
+		len++;
+	}
+
+	for(int i=1; i<=trial; i++){
+		strcpy(seed, mutate(seed, len));	// TODO Mutate len
+	//	if(i%5 == 0) printf("[DEUBG] %d mutatations: %s\n", i, seed);
+	}
+	strcpy(fuzz, seed);
+
+	free(seed);
+	fclose(fp);
+	return len;
 }

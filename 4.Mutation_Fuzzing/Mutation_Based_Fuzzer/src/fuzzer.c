@@ -2,6 +2,8 @@
 #include "../include/create_input.h"
 #include "../include/coverage.h"
 
+#define DEBUG
+
 #include <time.h>
 #include <sys/time.h>
 #include <sys/stat.h>
@@ -14,7 +16,15 @@ static int in_pipes[2] ;
 static int out_pipes[2] ;
 static int err_pipes[2] ;
 static pid_t child_pid;
+static char input_files[100][4096];
+
 static int gcov_flag;
+static int* bitmap;
+static int* branch_bitmap;
+static int gcov_line;
+static int gcov_line_for_ratio;
+static int gcov_line_for_branch;
+
 
 void
 time_handler(int sig){
@@ -41,6 +51,8 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 	if(config->mutation == 1){	// Mutation
 		DIR* inp_dir;
 		struct dirent* dp = NULL;
+		int n_inputs = 0;
+		
 		if((inp_dir = opendir(config->mutation_dir)) == NULL){
 			perror("Target dir open failed");
 			exit(1);
@@ -48,9 +60,14 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 
 		while((dp = readdir(inp_dir)) != NULL){
 			if(dp->d_type == 8){
-				printf("[FILE] %s\n", dp->d_name);
+//				printf("[FILE] %s\n", dp->d_name);
+				sprintf(input_files[n_inputs], "%s/%s", config->mutation_dir, dp->d_name);
+//				printf("[REal] %s\n", input_files[n_inputs]);
+				n_inputs++;
 			}		
 		}
+		
+		fuzz_config.mutation = n_inputs;
 	}
 
 	if(config->f_min_len < MINLEN || config->f_max_len > MAXLEN){
@@ -157,9 +174,8 @@ execute_prog(test_config_t * config, char* input, int input_size, char* dir_name
 	close(out_pipes[0]);
 	close(err_pipes[0]);
 
-	dup2(out_pipes[1], 1);
-	dup2(out_pipes[1], 2);
-
+	dup2(out_pipes[1], 1);	
+	dup2(err_pipes[1], 2);
 
 	execv(config->binary_path, config->cmd_args);
 	perror("[excute_prog] - Execution Error\n");
@@ -215,7 +231,7 @@ get_info(test_config_t * config, char* input, int input_size, char* dir_name, in
 void
 run_gcov(char* source){
 	pid_t gcov_child = fork();
-
+	
 	if(gcov_child == 0){
 		execl("/usr/bin/gcov", "gcov", "-b", "-c", source, NULL);
 		perror("run_gcov: Execution Error!");
@@ -263,7 +279,7 @@ run(test_config_t* config, char* input, int input_size, char* dir_name, int file
 
 void 
 show_result(int* return_code, int* prog_results, int trial){
-	for(int i=1; i<=trial; i++){
+	for(int i=0; i<trial; i++){
 		printf("[%d] Return code: %d, Result: %d\n", i, return_code[i], prog_results[i]);
 	}	
 }
@@ -271,7 +287,7 @@ show_result(int* return_code, int* prog_results, int trial){
 void
 show_gcov(int* return_code, gcov_t* gcov_result, int trial){
 	printf("=====================================Fuzzer Summary======================================\n");
-	for(int i=1; i<=trial; i++){
+	for(int i=0; i<trial; i++){
 		printf("[Input %d] Line: %d/%d Union: %d Latio:%lf   Branch: %d/%d Union: %d Latio:%lf\n", i, gcov_result[i].line, gcov_line_for_ratio ,gcov_result[i].union_line, (double)gcov_result[i].union_line/gcov_line_for_ratio, gcov_result[i].branch_line, gcov_line_for_branch, gcov_result[i].branch_union_line, (double)gcov_result[i].branch_union_line/gcov_line_for_branch );
 	}
 	printf("=========================================================================================\n");
@@ -290,12 +306,20 @@ fuzzer_main(test_config_t* config){
 	int* prog_results = (int*)malloc(sizeof(int) * (fuzz_config.trial + 1));
 	int* return_code = (int*)malloc(sizeof(int) * (fuzz_config.trial + 1));
 	gcov_t* gcov_results= (gcov_t*)malloc(sizeof(gcov_t) * (fuzz_config.trial + 1));
-
-	for(int i = 1; i <= fuzz_config.trial; i++){
+	
+	for(int i = 0; i < fuzz_config.trial; i++){
 		char* input = (char*)malloc(sizeof(char)*(fuzz_config.f_max_len + 1)); 
-
-		int fuzz_len = create_input(&fuzz_config, input);
 		
+		int fuzz_len;
+		if(fuzz_config.mutation > 0){
+			fuzz_len = mutational_input(input, input_files[i%(fuzz_config.mutation)], 1);
+		}
+		else{
+			fuzz_len = create_input(&fuzz_config, input);
+		}
+		
+		printf("[Trial %d]Input: %s\n", i, input);
+
 		if(gcov_flag == 1) 
 			fuzz_config.cmd_args[fuzz_config.option_num + 1] = input; 
 		
@@ -304,15 +328,16 @@ fuzzer_main(test_config_t* config){
 
 		if(gcov_flag == 1){
 			run_gcov(fuzz_config.source);
-			if(i==1){
-				gcov_line = get_gcov_line(fuzz_config.source);
+			if(i==0){
+				gcov_line = get_gcov_line(fuzz_config.source, &gcov_line_for_ratio, &gcov_line_for_branch);
+				printf("[DEBUG] fuzzer_main, lines:%d\n", gcov_line);
 				bitmap = (int*)malloc(sizeof(int) * gcov_line);
 				memset(bitmap, 0, sizeof(int)*gcov_line);
 				
 				branch_bitmap = (int*)malloc(sizeof(int) * gcov_line);
 				memset(branch_bitmap, 0, sizeof(int) * gcov_line);
 			}
-			read_gcov_coverage(fuzz_config.source, gcov_results, i);
+			read_gcov_coverage(fuzz_config.source, gcov_results, i, gcov_line, bitmap, branch_bitmap);
 			gcda_remove(fuzz_config.source);
 		}	
 
