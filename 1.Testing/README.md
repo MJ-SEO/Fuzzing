@@ -22,7 +22,7 @@ def shellsort(elems):
     return sorted_elems
 ```
 
-### Part1: Manual Test Cases
+## Part1: Manual Test Cases
 
 ### Part2: Random Inputs
 
