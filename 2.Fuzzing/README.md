@@ -48,6 +48,7 @@ result = subprocess.run([program, FILE],
 1. Generic Checkers
 
 	Checking Memory Accesses
+	
 	Information Leaks	
 
 2. Program-Specific Checkers

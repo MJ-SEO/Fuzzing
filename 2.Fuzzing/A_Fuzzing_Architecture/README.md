@@ -1,5 +1,7 @@
 # A Fuzzing Architecture
 
+## Architecture
+
 ## Include
 
 - config.h
