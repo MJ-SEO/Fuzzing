@@ -5,13 +5,16 @@
 
 void
 config_setting(test_config_t* config){
-	config->f_min_len = 10;
-	config->f_max_len = 20;
+	//config->f_min_len = 10;
+	//config->f_max_len = 20;
 	
-	config->f_char_start = 32;
-	config->f_char_range = 127;
+	//config->f_char_start = 32;
+	//config->f_char_range = 127;
 
-	config->trial = 20;
+	config->mutation_dir = "./input/http_inp";
+	config->mutation = 1;
+
+	config->trial = 100;
 	config->source = "cgi_decoder.c";
 	config->source_path = "../lib/cgi_decoder.c";
 

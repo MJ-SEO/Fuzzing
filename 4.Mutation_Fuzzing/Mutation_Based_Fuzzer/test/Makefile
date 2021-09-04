@@ -1,4 +1,4 @@
-all: test_cat.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../lib/my_troff.c test_troff.c test_gcov.c ../lib/cgi_decoder.c ../lib/http_test.c
+all: test_cat.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../lib/my_troff.c test_troff.c test_gcov.c ../lib/cgi_decoder.c 
 	gcc -o cat_test test_cat.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c
 	gcc -o troff_test test_troff.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c
 	gcc --coverage -o mytroff ../lib/my_troff.c

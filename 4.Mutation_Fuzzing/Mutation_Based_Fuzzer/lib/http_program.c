@@ -39,11 +39,10 @@ http_program(char* target_url){
 
 int
 is_valid_url(char* target_url){
-	if(http_program(target_url) == 0){
+	if(http_program(target_url) != 0){
 		perror("Is_valid_url: Invalid URL Format"); 
 		return 1;
 	}
-	
 	return 0;
 }
 
@@ -53,7 +52,10 @@ main(){
 	scanf("%s", url);
 	printf("[DEBUG] Received URL: %s\n", url);
 	http_program(url);
-	is_valid_url(url);	
+	if(is_valid_url(url) == 1){
+		free(url);
+		return 1;
+	}	
 	free(url);
 	return 0;
 }

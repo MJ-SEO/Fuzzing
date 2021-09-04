@@ -286,11 +286,11 @@ show_result(int* return_code, int* prog_results, int trial){
 
 void
 show_gcov(int* return_code, gcov_t* gcov_result, int trial){
-	printf("=====================================Fuzzer Summary======================================\n");
+	printf("===================================Fuzzer Summary====================================\n");
 	for(int i=0; i<trial; i++){
 		printf("[Input %d] Line: %d/%d Union: %d Latio:%lf   Branch: %d/%d Union: %d Latio:%lf\n", i, gcov_result[i].line, gcov_line_for_ratio ,gcov_result[i].union_line, (double)gcov_result[i].union_line/gcov_line_for_ratio, gcov_result[i].branch_line, gcov_line_for_branch, gcov_result[i].branch_union_line, (double)gcov_result[i].branch_union_line/gcov_line_for_branch );
 	}
-	printf("=========================================================================================\n");
+	printf("=====================================================================================\n");
 }
 
 void
@@ -345,6 +345,7 @@ fuzzer_main(test_config_t* config){
 	}
 
 	if(gcov_flag == 1){
+		show_result(return_code, prog_results, fuzz_config.trial);
 		show_gcov(return_code, gcov_results, fuzz_config.trial);
 	}
 	else{

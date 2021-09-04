@@ -17,7 +17,7 @@ int main(){
 	printf("A debug inp: %s |()| %s\n", inp, seed_input);
 
 	int valid = 0;
-	int trial = 1;
+	int trial = 50;
 	
 	for(int i=0; i<trial; i++){
 		strcpy(inp, mutate(inp, strlen(inp)));
