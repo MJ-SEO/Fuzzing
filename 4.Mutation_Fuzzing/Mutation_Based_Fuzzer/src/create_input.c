@@ -22,6 +22,7 @@ int
 mutational_input(char* fuzz, char* input_file, int trial){
 	FILE* fp;
 	fp = fopen(input_file, "rb");
+	printf("[DEBUG] mutational_input fname: %s\n", input_file);
 	if(fp == NULL){
 		perror("mutationl_input: File open failed");
 		exit(1);

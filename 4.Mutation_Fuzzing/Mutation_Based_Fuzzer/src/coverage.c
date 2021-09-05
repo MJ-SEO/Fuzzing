@@ -48,12 +48,10 @@ union_bits(int* dest, int* src, int lines){
 }
 
 void
-read_gcov_coverage(char* c_file, gcov_t* curr_info, int idx, int lines, int* bitmap, int* branch_bitmap){
+read_gcov_coverage(char* c_file, gcov_t* curr_info, int idx, int lines, int* bitmap, int* branch_bitmap, int* new_mutate){
 	char gcov_file[64];
 	strcpy(gcov_file, c_file);
 	strcat(gcov_file, ".gcov");
-
-//	printf("[DEBUG] read_gcov_coverage, gcov_file: %s\n", gcov_file);
 
 	FILE* fp;
 	fp = fopen(gcov_file, "rb");
@@ -69,7 +67,6 @@ read_gcov_coverage(char* c_file, gcov_t* curr_info, int idx, int lines, int* bit
 	int n_line = 0;
 	int n_branch = 0;
 
-//printf("[DEBUG] read_gcov_coverage, lines: %d\n", lines);
 	int* curr_mask = (int*)malloc(sizeof(int) * lines);
 	memset(curr_mask, 0, sizeof(int) * lines);
 	
@@ -95,10 +92,30 @@ read_gcov_coverage(char* c_file, gcov_t* curr_info, int idx, int lines, int* bit
 	}
 	
 	curr_info[idx].line = n_line;
-	curr_info[idx].union_line = union_bits(bitmap, curr_mask, lines);
+	if(idx == 0){
+		curr_info[idx].union_line = union_bits(bitmap, curr_mask, lines);
+	}
+	else{
+		int before_lines = curr_info[idx-1].union_line;
+		curr_info[idx].union_line = union_bits(bitmap, curr_mask, lines);
+		int after_lines = curr_info[idx].union_line;
+		if(after_lines > before_lines){	
+			*new_mutate = 1;
+		}
+	}
 
 	curr_info[idx].branch_line = n_branch;
-	curr_info[idx].branch_union_line = union_bits(branch_bitmap, branch_mask, lines);
+	if(idx == 0){
+		curr_info[idx].branch_union_line = union_bits(branch_bitmap, branch_mask, lines);
+	}
+	else{
+		int before_branch_lines = curr_info[idx-1].branch_union_line;
+		curr_info[idx].branch_union_line = union_bits(branch_bitmap, branch_mask, lines);
+		int after_branch_lines = curr_info[idx].branch_union_line;
+		if(after_branch_lines > before_branch_lines){
+			*new_mutate = 1;	//TODO line, branch 따로?
+		}	
+	}
 
 	free(curr_mask);
 	free(branch_mask);	

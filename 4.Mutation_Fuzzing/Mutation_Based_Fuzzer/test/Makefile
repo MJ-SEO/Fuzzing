@@ -17,7 +17,7 @@ decoder: ../lib/cgi_decoder.c
 	gcc --coverage -o decoder ../lib/cgi_decoder.c
 
 http: ../lib/http_program.c
-	gcc -o http_mutation ../lib/http_program.c
+	gcc --coverage -o http_mutation ../lib/http_program.c
 
 trof_test: test_troff.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c
 	gcc -o troff_test test_troff.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c
@@ -26,6 +26,7 @@ gcov_test: test_gcov.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ...
 	gcc -o gcov_test test_gcov.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c
 
 http_test: test_http.c ../src/fuzzer.c ../src/create_input.c ../src/config.c
+	gcc --coverage -o http_mutation ../lib/http_program.c
 	gcc -o http_test test_http.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c
 
 clean:
