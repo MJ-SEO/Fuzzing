@@ -11,7 +11,7 @@ config_setting(test_config_t* config){
 	//config->f_char_start = 32;
 	//config->f_char_range = 127;
 
-	config->mutation_dir = "./input/http_inp";
+	config->mutation_dir = "./input/cgi_inp";
 	config->mutation = 1;
 
 	config->trial = 100;

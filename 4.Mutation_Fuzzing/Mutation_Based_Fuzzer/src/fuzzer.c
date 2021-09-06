@@ -314,7 +314,7 @@ fuzzer_main(test_config_t* config){
 		
 		int fuzz_len;
 		if(fuzz_config.mutation > 0){
-	//		printf("[DEBUG] mute: %d i: %d file num: %d\n", fuzz_config.mutation, i,  i%fuzz_config.mutation);
+			printf("[DEBUG] i: %d mute: %d file num: %d\n", fuzz_config.mutation, i,  i%fuzz_config.mutation);
 			fuzz_len = mutational_input(input, input_files[i%(fuzz_config.mutation)], 1);		// Generate Mutational Input
 		}
 		else{
@@ -343,8 +343,8 @@ fuzzer_main(test_config_t* config){
 			read_gcov_coverage(fuzz_config.source, gcov_results, i, gcov_line, bitmap, branch_bitmap, &new_mutate);
 			if(new_mutate == 1){
 				printf("[DEBUG] new_mutate_inp\n");
-				sprintf(input_files[fuzz_config.mutation], "%s/input%d", config->mutation_dir, fuzz_config.mutation); 
 				fuzz_config.mutation++;
+				sprintf(input_files[fuzz_config.mutation-1], "%s/input%d", config->mutation_dir, fuzz_config.mutation); 
 				
 				char* input_name = (char*)malloc(sizeof(char)*25);
 				sprintf(input_name, "%s/input%d", fuzz_config.mutation_dir, fuzz_config.mutation);

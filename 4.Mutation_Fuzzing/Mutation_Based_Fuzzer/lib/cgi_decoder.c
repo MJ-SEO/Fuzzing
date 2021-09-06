@@ -23,7 +23,7 @@ int cgi_decode(char *s, char *t) {
 	while (*s != '\0') {
 		if (*s == '+')
 			*t++ = ' ';
-		else if (*s == '%') {	// TODO Exercise 1
+		else if (*s == '%') {
 			int digit_high = *++s;
 			int digit_low = *++s;
 			if (hex_values[digit_high] >= 0 && hex_values[digit_low] >= 0) {
