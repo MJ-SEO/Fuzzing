@@ -1,6 +1,6 @@
 #include "../include/create_input.h"
 #include "../include/mutating.h"
-#include "../src/mutating.c" // ...
+// #include "../src/mutating.c" // ...
 
 int
 RandomFuzzer(int min_len, int max_len, int start, int range, char* fuzz){

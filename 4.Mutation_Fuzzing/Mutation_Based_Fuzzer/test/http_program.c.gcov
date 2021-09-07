@@ -1,0 +1,66 @@
+        -:    0:Source:../lib/http_program.c
+        -:    0:Graph:http_program.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    0:Programs:0
+        -:    1:#include "../include/http_program.h"
+        -:    2:
+        -:    3:#define DEBUG
+        -:    4:
+        -:    5:url_t*
+    #####:    6:url_parser(char* target_url){
+    #####:    7:	url_t* url = (url_t*)malloc(sizeof(url_t) * 1);
+        -:    8:	
+    #####:    9:	url->url_status = sscanf(target_url, "%10[^:]%*[^a-z|^A-Z]%50[^/]%150[^?]?%30[^#]#%s", url->schema, url->netloc, url->path, url->query, url->fragment);
+        -:   10:
+    #####:   11:	return url;
+        -:   12:}
+        -:   13:
+        -:   14:int 
+    #####:   15:http_program(char* target_url){
+    #####:   16:	url_t* result = url_parser(target_url);
+        -:   17:
+        -:   18:#ifdef DEBUG
+    #####:   19:	printf("[info] Schemas : '%s'\n", result->schema);
+    #####:   20:	printf("[info] Netloc: '%s'\n", result->netloc);
+    #####:   21:	printf("[info] Path : '%s'\n", result->path);
+    #####:   22:	printf("[info] Query : '%s'\n", result->query);
+    #####:   23:	printf("[info] Fragment : '%s'\n", result->fragment);
+        -:   24:#endif
+        -:   25:	
+    #####:   26:	if((strcmp(result->schema, "http") != 0) && (strcmp(result->schema, "https") != 0)){
+    #####:   27:		perror("Schemae must be 'http' or 'https'");
+    #####:   28:		return 1;
+        -:   29:	}
+        -:   30:
+    #####:   31:	if(strlen(result->netloc) < 1){
+    #####:   32:		perror("Host must be non-empty");
+    #####:   33:		return 2;
+        -:   34:	}
+        -:   35:
+    #####:   36:	free(result);
+    #####:   37:	return 0;
+        -:   38:}
+        -:   39:
+        -:   40:int
+    #####:   41:is_valid_url(char* target_url){
+    #####:   42:	if(http_program(target_url) != 0){
+    #####:   43:		perror("Is_valid_url: Invalid URL Format"); 
+    #####:   44:		return 1;
+        -:   45:	}
+    #####:   46:	return 0;
+        -:   47:}
+        -:   48:
+        -:   49:int
+    #####:   50:main(){
+    #####:   51:	char* url = (char*)malloc(sizeof(char)* 1024);
+    #####:   52:	scanf("%s", url);
+    #####:   53:	printf("[DEBUG] Received URL: %s\n", url);
+    #####:   54:	http_program(url);
+    #####:   55:	if(is_valid_url(url) == 1){
+    #####:   56:		free(url);
+    #####:   57:		return 1;
+        -:   58:	}	
+    #####:   59:	free(url);
+    #####:   60:	return 0;
+        -:   61:}

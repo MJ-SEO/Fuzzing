@@ -1,0 +1,11 @@
+[DEBUG] Received URL: http://4www.google.com/search?q=fuzzing
+[info] Schemas : 'http'
+[info] Netloc: 'www.google.com'
+[info] Path : '/search'
+[info] Query : 'q=fuzzing'
+[info] Fragment : ''
+[info] Schemas : 'http'
+[info] Netloc: 'www.google.com'
+[info] Path : '/search'
+[info] Query : 'q=fuzzing'
+[info] Fragment : ''
