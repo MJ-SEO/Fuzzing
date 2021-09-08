@@ -35,10 +35,11 @@ mutational_input(char* fuzz, char* input_file, int trial){
 	}
 
 	for(int i=1; i<=trial; i++){
-		strcpy(seed, mutate(seed, len));	// TODO Mutate len
+	len = mutate(seed, fuzz, len);
+	//	strcpy(seed, mutate(seed, len));	// TODO Mutate len
 	//	if(i%5 == 0) printf("[DEUBG] %d mutatations: %s\n", i, seed);
 	}
-	strcpy(fuzz, seed);
+//	strcpy(fuzz, seed);
 
 	free(seed);
 	fclose(fp);
