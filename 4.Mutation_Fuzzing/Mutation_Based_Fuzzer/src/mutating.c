@@ -1,10 +1,16 @@
 #include "../include/mutating.h"
 
-static int8_t interesting_8[] = { INTERESTING_8 };
-static int16_t interesting_16[] = { INTERESTING_8, INTERESTING_16 };
-static int32_t interesting_32[] = { INTERESTING_8, INTERESTING_16, INTERESTING_32 };int
+#define DEBUG
 
+static uint8_t interesting_8[] = { INTERESTING_8 };
+static uint16_t interesting_16[] = { INTERESTING_8, INTERESTING_16 };
+static uint32_t interesting_32[] = { INTERESTING_8, INTERESTING_16, INTERESTING_32 };
+
+int
 delete_random_character(char* seed, char* mutated_inp, int length){
+#ifdef DEBUG
+	printf("[Mutating] Delete\n");
+#endif
 	if(length < 1) {
 		perror("delete_random_character: length error");
 		return length;
@@ -21,6 +27,9 @@ delete_random_character(char* seed, char* mutated_inp, int length){
 
 int
 insert_random_character(char* seed, char* mutated_inp, int length){
+#ifdef DEBUG
+	printf("[Mutating] Insert\n");
+#endif
 	int pos;
 	pos = rand()%length; // 0 ~ seedlen(seed)
 
@@ -39,6 +48,9 @@ insert_random_character(char* seed, char* mutated_inp, int length){
 
 int
 flip_random_character(char* seed, char* mutated_inp, int length){
+#ifdef DEBUG
+	printf("[Mutating] Flip_1bit\n");
+#endif
 	if(length < 1){
 		perror("filp_random_character: length error"); // TODO return
 		return length;
@@ -59,6 +71,9 @@ flip_random_character(char* seed, char* mutated_inp, int length){
 
 int
 flip_two_bits(char* seed, char* mutated_inp, int length){
+#ifdef DEBUG
+	printf("[Mutating] Filp_2bits\n");
+#endif
 	if(length < 1){
 		memcpy(mutated_inp, seed, sizeof(char) * length);
 		return length;
@@ -83,6 +98,9 @@ flip_two_bits(char* seed, char* mutated_inp, int length){
 
 int
 flip_on_bytes(char* seed, char* mutated_inp, int length){
+#ifdef DEBUG
+	printf("[Mutating] Flip a bytes\n");
+#endif
 	if(length < 1){
 		memcpy(mutated_inp, seed, sizeof(char) * length);
 		return length;
@@ -138,6 +156,9 @@ flip_on_bytes(char* seed, char* mutated_inp, int length){
 
 int
 simple_arithmetics(char* seed, char* mutated_inp, int length){
+#ifdef DEBUG
+	printf("[Mutating] Simple Arithmetics\n");
+#endif
 	if(length < 1){
 		memcpy(mutated_inp, seed, sizeof(char) * length);
 		return length;
@@ -158,7 +179,10 @@ simple_arithmetics(char* seed, char* mutated_inp, int length){
 }
 
 int
-known_integers(char* seed, char* mutated_inp, int length){
+known_integers(char* seed, char* mutated_inp, int length){	// TODO test
+#ifdef DEBUG
+	printf("[Mutating] Known_Integers\n");
+#endif
 	if(length < 1){
 		memcpy(mutated_inp, seed, sizeof(char) * length);
 		return length;
@@ -172,6 +196,9 @@ known_integers(char* seed, char* mutated_inp, int length){
 
 		memcpy(mutated_inp, seed, length);
 
+#ifdef DEBUG
+	printf("[Known] int:%d\n", interesting_32[rand()%27]);
+#endif
 		*(uint32_t*)(mutated_inp + pos) = interesting_32[rand()%27];
 
 		return length;
@@ -179,7 +206,9 @@ known_integers(char* seed, char* mutated_inp, int length){
 	else if(bytes == 2 && (length-pos) >= 2){
 
 		memcpy(mutated_inp, seed, length);
-
+#ifdef DEBUG
+	printf("[Known] int:%d\n", interesting_16[rand()%19]);
+#endif
 		*(uint16_t*)(mutated_inp + pos) = interesting_16[rand()%19];
 
 		return length;
@@ -187,7 +216,9 @@ known_integers(char* seed, char* mutated_inp, int length){
 	else{
 
 		memcpy(mutated_inp, seed, length);
-
+#ifdef DEBUG
+	printf("[Known] int:%d\n", interesting_8[rand()%9]);
+#endif
 		*(uint8_t*)(mutated_inp + pos) = interesting_8[rand()%9];
 
 		return length;
