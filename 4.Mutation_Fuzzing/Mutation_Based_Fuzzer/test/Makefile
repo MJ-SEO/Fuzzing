@@ -30,4 +30,4 @@ http_test: test_http.c ../src/fuzzer.c ../src/create_input.c ../src/config.c
 	gcc -o http_test test_http.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c
 
 clean:
-	rm -rf cat_test tmp.* a.out mytroff troff_test *.gcno *.gcda decoder gcov_test *.gcov http_test http_mutation a t
+	rm -rf cat_test tmp.* a.out mytroff troff_test *.gcno *.gcda decoder gcov_test *.gcov http_test http_mutation a b

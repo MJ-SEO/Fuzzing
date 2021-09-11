@@ -1,0 +1,165 @@
+File '../lib/http_program.c'
+Lines executed:76.47% of 34
+Branches executed:100.00% of 10
+Taken at least once:50.00% of 10
+Calls executed:78.57% of 14
+Creating 'http_program.c.gcov'
+
+File '../lib/http_program.c'
+Lines executed:76.47% of 34
+Branches executed:100.00% of 10
+Taken at least once:50.00% of 10
+Calls executed:78.57% of 14
+Creating 'http_program.c.gcov'
+
+File '../lib/http_program.c'
+Lines executed:76.47% of 34
+Branches executed:80.00% of 10
+Taken at least once:40.00% of 10
+Calls executed:78.57% of 14
+Creating 'http_program.c.gcov'
+
+File '../lib/http_program.c'
+Lines executed:76.47% of 34
+Branches executed:100.00% of 10
+Taken at least once:50.00% of 10
+Calls executed:78.57% of 14
+Creating 'http_program.c.gcov'
+
+File '../lib/http_program.c'
+Lines executed:76.47% of 34
+Branches executed:100.00% of 10
+Taken at least once:50.00% of 10
+Calls executed:78.57% of 14
+Creating 'http_program.c.gcov'
+
+File '../lib/http_program.c'
+Lines executed:76.47% of 34
+Branches executed:80.00% of 10
+Taken at least once:40.00% of 10
+Calls executed:92.86% of 14
+Creating 'http_program.c.gcov'
+
+File '../lib/http_program.c'
+Lines executed:76.47% of 34
+Branches executed:100.00% of 10
+Taken at least once:50.00% of 10
+Calls executed:78.57% of 14
+Creating 'http_program.c.gcov'
+
+File '../lib/http_program.c'
+Lines executed:76.47% of 34
+Branches executed:80.00% of 10
+Taken at least once:40.00% of 10
+Calls executed:78.57% of 14
+Creating 'http_program.c.gcov'
+
+File '../lib/http_program.c'
+Lines executed:76.47% of 34
+Branches executed:100.00% of 10
+Taken at least once:50.00% of 10
+Calls executed:78.57% of 14
+Creating 'http_program.c.gcov'
+
+File '../lib/http_program.c'
+Lines executed:76.47% of 34
+Branches executed:80.00% of 10
+Taken at least once:40.00% of 10
+Calls executed:92.86% of 14
+Creating 'http_program.c.gcov'
+
+[DEBUG] i: 4 mute: 0 file num: 0
+[DEBUG] mutational_input fname: ./input/http_inp/input3
+[Mutating] Flip a bytes
+[Trial 0]Input: https://github.com/MJ-SEO/Fuzzing/blob/master/4.Mutation_Fuzzing/mutatiëò.c
+
+[DEBUG] run_gcov: source http_program.c
+[DEBUG] fuzzer_main, lines:94
+[DEBUG] i: 4 mute: 1 file num: 1
+[DEBUG] mutational_input fname: ./input/http_inp/input2
+[Mutating] Insert
+[Trial 1]Input: https://www.fuzzingbook.org/httml/MutationFuzzer.html
+on_Fuzzing/mutatiëò.c
+
+[DEBUG] run_gcov: source http_program.c
+[DEBUG] i: 4 mute: 2 file num: 2
+[DEBUG] mutational_input fname: ./input/http_inp/input1
+[Mutating] Filp_2bits
+[Trial 2]Input: http://www.google.com/search?q=euzzing
+ionFuzzer.html
+on_Fuzzing/mutatiëò.c
+
+[DEBUG] run_gcov: source http_program.c
+[DEBUG] i: 4 mute: 3 file num: 3
+[DEBUG] mutational_input fname: ./input/http_inp/input4
+[Mutating] Flip_1bit
+[Trial 3]Input: https://man7.org/linux/man-pages/man3.regexec.3.html
+
+on_Fuzzing/mutatiëò.c
+
+[DEBUG] run_gcov: source http_program.c
+[DEBUG] i: 4 mute: 4 file num: 0
+[DEBUG] mutational_input fname: ./input/http_inp/input3
+[Mutating] Delete
+[Trial 4]Input: https://github.om/MJ-SEO/Fuzzing/blob/master/4.Mutation_Fuzzing/mutating.c
+
+[DEBUG] run_gcov: source http_program.c
+[DEBUG] i: 4 mute: 5 file num: 1
+[DEBUG] mutational_input fname: ./input/http_inp/input2
+[Mutating] Filp_2bits
+[Trial 5]Input: htxps://www.fuzzingbook.org/html/MutationFuzzer.html
+ion_Fuzzing/mutating.c
+
+[DEBUG] run_gcov: source http_program.c
+[DEBUG] new_mutate_inp
+[DEBUG] new_inp_file: ./input/http_inp/input5
+[DEBUG] new_inp: htxps://www.fuzzingbook.org/html/MutationFuzzer.html
+ion_Fuzzing/mutating.c
+n_srcn[DEBUG] i: 5 mute: 6 file num: 1
+[DEBUG] mutational_input fname: ./input/http_inp/input2
+[Mutating] Known_Integers
+[Known] int:1
+[Trial 6]Input: https://www.fuzzingbook.org/html/M
+[DEBUG] run_gcov: source http_program.c
+[DEBUG] i: 5 mute: 7 file num: 2
+[DEBUG] mutational_input fname: ./input/http_inp/input1
+[Mutating] Known_Integers
+[Known] int:1
+[Trial 7]Input: http://www.google.com/search?q=
+[DEBUG] run_gcov: source http_program.c
+[DEBUG] i: 5 mute: 8 file num: 3
+[DEBUG] mutational_input fname: ./input/http_inp/input4
+[Mutating] Delete
+[Trial 8]Input: https://man7.org/linux/man-pages/man3/regexec..html
+ion_Fuzzing/mutating.c
+
+[DEBUG] run_gcov: source http_program.c
+[DEBUG] i: 5 mute: 9 file num: 4
+[DEBUG] mutational_input fname: ./input/http_inp/input5
+[Mutating] Flip a bytes
+[Trial 9]Input: htxps://www.fuzzingùook.org/html/MutationFuzzer.html
+ion_Fuzzing/mutating.c
+
+[DEBUG] run_gcov: source http_program.c
+[0] Return code: 0, Result: 0
+[1] Return code: 0, Result: 0
+[2] Return code: 0, Result: 0
+[3] Return code: 0, Result: 0
+[4] Return code: 0, Result: 0
+[5] Return code: 256, Result: 0
+[6] Return code: 0, Result: 0
+[7] Return code: 0, Result: 0
+[8] Return code: 0, Result: 0
+[9] Return code: 256, Result: 0
+===================================Fuzzer Summary====================================
+[Input 0] Line: 26/34 Union: 26 Latio:0.764706   Branch: 10/10 Union: 10 Latio:1.000000
+[Input 1] Line: 26/34 Union: 26 Latio:0.764706   Branch: 10/10 Union: 10 Latio:1.000000
+[Input 2] Line: 26/34 Union: 26 Latio:0.764706   Branch: 8/10 Union: 10 Latio:1.000000
+[Input 3] Line: 26/34 Union: 26 Latio:0.764706   Branch: 10/10 Union: 10 Latio:1.000000
+[Input 4] Line: 26/34 Union: 26 Latio:0.764706   Branch: 10/10 Union: 10 Latio:1.000000
+[Input 5] Line: 26/34 Union: 32 Latio:0.941176   Branch: 8/10 Union: 10 Latio:1.000000
+[Input 6] Line: 26/34 Union: 32 Latio:0.941176   Branch: 10/10 Union: 10 Latio:1.000000
+[Input 7] Line: 26/34 Union: 32 Latio:0.941176   Branch: 8/10 Union: 10 Latio:1.000000
+[Input 8] Line: 26/34 Union: 32 Latio:0.941176   Branch: 10/10 Union: 10 Latio:1.000000
+[Input 9] Line: 26/34 Union: 32 Latio:0.941176   Branch: 8/10 Union: 10 Latio:1.000000
+=====================================================================================

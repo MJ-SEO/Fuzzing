@@ -10,8 +10,19 @@ config_setting(test_config_t* config){
 
 	config->trial = 10;
 
-	config->source = "http_program.c";
-	config->source_path = "../lib/http_program.c";
+	int n_src = 1;
+
+	config->number_of_source = n_src;
+
+	char** src_arr = (char**)malloc(sizeof(char*) * n_src);
+	for(int i =0; i<n_src; i++){
+		src_arr[i] = (char*)malloc(sizeof(char) * 1024);
+	}
+
+	src_arr[0] = "http_program.c";
+
+	config->sources = src_arr;
+	config->source_path = "../lib/";
 
 	strcpy(config->binary_path, "./http_mutation");
 }

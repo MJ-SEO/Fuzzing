@@ -15,7 +15,17 @@ config_setting(test_config_t* config){
 	config->mutation = 1;
 
 	config->trial = 100;
-	config->source = "cgi_decoder.c";
+
+	config->number_of_source = 1;
+	
+	char** src_arr = (char**)malloc(sizeof(char*) * 1);	// TODO free
+	for(int i=0; i<1; i++){
+		src_arr[i] = (char*)malloc(sizeof(char) * 1024);
+	}
+	
+	src_arr[0] = "cgi_decoder.c";
+
+	config->sources = src_arr;
 	config->source_path = "../lib/cgi_decoder.c";
 
 	strcpy(config->binary_path, "./decoder");

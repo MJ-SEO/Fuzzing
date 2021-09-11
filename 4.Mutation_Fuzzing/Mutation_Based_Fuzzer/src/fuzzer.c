@@ -52,7 +52,7 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 		DIR* inp_dir;
 		struct dirent* dp = NULL;
 		int n_inputs = 0;
-		
+
 		if((inp_dir = opendir(config->mutation_dir)) == NULL){
 			perror("Target dir open failed");
 			exit(1);
@@ -62,13 +62,13 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 
 		while((dp = readdir(inp_dir)) != NULL){
 			if(dp->d_type == 8){
-//				printf("[FILE] %s\n", dp->d_name);
+				//				printf("[FILE] %s\n", dp->d_name);
 				sprintf(input_files[n_inputs], "%s/%s", config->mutation_dir, dp->d_name); // TODO linked_list?
-//				printf("[REal] %s[%d]\n", input_files[n_inputs], n_inputs);
+				//				printf("[REal] %s[%d]\n", input_files[n_inputs], n_inputs);
 				n_inputs++;
 			}		
 		}
-		
+
 		fuzz_config.mutation = n_inputs;
 	}
 
@@ -101,9 +101,10 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 	strcpy(fuzz_config.binary_path, config->binary_path);
 
 	fuzz_config.trial = config->trial;
+	fuzz_config.number_of_source = config->number_of_source;
 
 	if(config->cmd_args != NULL) {
-		if(config->source != 0x0){
+		if(config->number_of_source > 0){
 			fuzz_config.cmd_args = (char **)malloc(sizeof(char *) * (config->option_num + 3)) ; 
 			fuzz_config.cmd_args[0] = (char *)malloc(sizeof(char) * (strlen(config->binary_path) + 1)) ;
 			strcpy(fuzz_config.cmd_args[0], config->binary_path);
@@ -114,7 +115,7 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 				strcpy(fuzz_config.cmd_args[i+1], config->cmd_args[i]) ;
 			}
 			fuzz_config.cmd_args[config->option_num + 2] = NULL; 
-			
+
 		}
 		else{
 			fuzz_config.cmd_args = (char **)malloc(sizeof(char *) * (config->option_num + 2)) ; 
@@ -130,12 +131,12 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 		}
 	}
 	else{
-		if(config->source != 0x0){
+		if(config->number_of_source > 0){
 			fuzz_config.cmd_args = (char **)malloc(sizeof(char *) * 3); 
 			fuzz_config.cmd_args[0] = (char *)malloc(sizeof(char) * (strlen(config->binary_path) + 1)); 
 			strcpy(fuzz_config.cmd_args[0], config->binary_path); 
 			fuzz_config.cmd_args[2] = NULL; 
-			
+
 		}
 		else{
 			fuzz_config.cmd_args = (char **)malloc(sizeof(char *) * 2); 
@@ -149,11 +150,15 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 
 	fuzz_config.oracle = config->oracle;
 
-	if(config->source != 0x0){
-		assert(access(config->source_path, F_OK) == 0 && "Target Source Not Exiset!");	
+	if(config->number_of_source > 0){
+		for(int i=0; i<config->number_of_source; i++){
+			char* s_path = (char*)malloc(sizeof(char) * 1024);
+			sprintf(s_path, "%s%s", config->source_path, config->sources[i]);
+			assert(access(s_path, F_OK) == 0 && "Target Source Not Exiset!");	
+			free(s_path);
+		}
 		gcov_flag = 1;
-		fuzz_config.source = config->source;
-
+		fuzz_config.sources = config->sources;
 	}
 
 	make_tempdir(dir_name);
@@ -233,7 +238,9 @@ get_info(test_config_t * config, char* input, int input_size, char* dir_name, in
 void
 run_gcov(char* source){
 	pid_t gcov_child = fork();
-	
+
+	printf("[DEBUG] run_gcov: source %s\n", source);
+
 	if(gcov_child == 0){
 		execl("/usr/bin/gcov", "gcov", "-b", "-c", source, NULL);
 		perror("run_gcov: Execution Error!");
@@ -308,10 +315,10 @@ fuzzer_main(test_config_t* config){
 	int* prog_results = (int*)malloc(sizeof(int) * (fuzz_config.trial + 1));
 	int* return_code = (int*)malloc(sizeof(int) * (fuzz_config.trial + 1));
 	gcov_t* gcov_results= (gcov_t*)malloc(sizeof(gcov_t) * (fuzz_config.trial + 1));
-	
+
 	for(int i = 0; i < fuzz_config.trial; i++){
 		char* input = (char*)malloc(sizeof(char)*(fuzz_config.f_max_len + 1)); 
-		
+
 		int fuzz_len;
 		if(fuzz_config.mutation > 0){
 			printf("[DEBUG] i: %d mute: %d file num: %d\n", fuzz_config.mutation, i,  i%fuzz_config.mutation);
@@ -320,47 +327,49 @@ fuzzer_main(test_config_t* config){
 		else{
 			fuzz_len = create_input(&fuzz_config, input); // Generage Random Input
 		}
-		
+
 		printf("[Trial %d]Input: %s\n", i, input);
 
 		if(gcov_flag == 1) 
 			fuzz_config.cmd_args[fuzz_config.option_num + 1] = input; 
-		
+
 		return_code[i] = run(&fuzz_config, input, fuzz_len, dir_name, i);
 
 		if(gcov_flag == 1){
-			run_gcov(fuzz_config.source);
-			if(i==0){
-				gcov_line = get_gcov_line(fuzz_config.source, &gcov_line_for_ratio, &gcov_line_for_branch);
-				printf("[DEBUG] fuzzer_main, lines:%d\n", gcov_line);
-				bitmap = (int*)malloc(sizeof(int) * gcov_line);
-				memset(bitmap, 0, sizeof(int)*gcov_line);
-				
-				branch_bitmap = (int*)malloc(sizeof(int) * gcov_line);
-				memset(branch_bitmap, 0, sizeof(int) * gcov_line);
-			}
-			int new_mutate = 0;
-			read_gcov_coverage(fuzz_config.source, gcov_results, i, gcov_line, bitmap, branch_bitmap, &new_mutate);
-			if(new_mutate == 1){
-				printf("[DEBUG] new_mutate_inp\n");
-				fuzz_config.mutation++;
-				sprintf(input_files[fuzz_config.mutation-1], "%s/input%d", config->mutation_dir, fuzz_config.mutation); 
-				
-				char* input_name = (char*)malloc(sizeof(char)*25);
-				sprintf(input_name, "%s/input%d", fuzz_config.mutation_dir, fuzz_config.mutation);
-				FILE* new_inp_file = fopen(input_name, "wb");
-				printf("[DEBUG] new_inp_file: %s\n", input_name);
+			for(int n_src=0; n_src<fuzz_config.number_of_source; n_src++){ // TODO sources
+				run_gcov(fuzz_config.sources[n_src]);
+				if(i==0){
+					gcov_line = get_gcov_line(fuzz_config.sources[n_src], &gcov_line_for_ratio, &gcov_line_for_branch);
+					printf("[DEBUG] fuzzer_main, lines:%d\n", gcov_line);
+					bitmap = (int*)malloc(sizeof(int) * gcov_line);
+					memset(bitmap, 0, sizeof(int)*gcov_line);
 
-				if(new_inp_file == NULL){
-					perror("new_mutate: FILE Open Failed");
+					branch_bitmap = (int*)malloc(sizeof(int) * gcov_line);
+					memset(branch_bitmap, 0, sizeof(int) * gcov_line);
 				}
-		
-				printf("[DEBUG] new_inp: %s\n", input);	
-				fwrite(input, 1, fuzz_len, new_inp_file);
-				free(input_name);
-				fclose(new_inp_file);
+				int new_mutate = 0;
+				read_gcov_coverage(fuzz_config.sources[n_src], gcov_results, i, gcov_line, bitmap, branch_bitmap, &new_mutate);
+				if(new_mutate == 1){
+					printf("[DEBUG] new_mutate_inp\n");
+					fuzz_config.mutation++;
+					sprintf(input_files[fuzz_config.mutation-1], "%s/input%d", config->mutation_dir, fuzz_config.mutation); 
+
+					char* input_name = (char*)malloc(sizeof(char)*25);
+					sprintf(input_name, "%s/input%d", fuzz_config.mutation_dir, fuzz_config.mutation);
+					FILE* new_inp_file = fopen(input_name, "wb");
+					printf("[DEBUG] new_inp_file: %s\n", input_name);
+
+					if(new_inp_file == NULL){
+						perror("new_mutate: FILE Open Failed");
+					}
+
+					printf("[DEBUG] new_inp: %sn_srcn", input);	
+					fwrite(input, 1, fuzz_len, new_inp_file);
+					free(input_name);
+					fclose(new_inp_file);
+				}
+				gcda_remove(fuzz_config.sources[n_src]);
 			}
-			gcda_remove(fuzz_config.source);
 		}	
 
 		free(input);

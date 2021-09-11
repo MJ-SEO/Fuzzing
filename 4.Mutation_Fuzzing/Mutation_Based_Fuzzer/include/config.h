@@ -21,8 +21,9 @@ typedef struct test_config{
 
 	char binary_path[PATH_MAX] ;
 
-	char* source;
+	char** sources;
 	char* source_path;	// for coverage
+	int number_of_source;
 
 	char** cmd_args;
 
