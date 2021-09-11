@@ -10,7 +10,7 @@ config_setting(test_config_t* config){
 
 	config->trial = 1;
 	
-	int n_src = 1;
+	int n_src = 2;
 	config->number_of_source = n_src;
 
 	char** src_arr = (char**)malloc(sizeof(char*) * n_src);
@@ -19,6 +19,7 @@ config_setting(test_config_t* config){
 	}
 
 	src_arr[0] = "bc.c";
+	src_arr[1] = "execute.c";
 
 	config->sources = src_arr;
 	config->source_path = "../lib/bc/bc/";

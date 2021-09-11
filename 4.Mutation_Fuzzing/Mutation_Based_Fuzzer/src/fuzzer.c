@@ -257,7 +257,7 @@ get_info(test_config_t * config, char* input, int input_size, char* dir_name, in
 
 
 void
-run_gcov(char* source){
+run_gcov(char* source, int idx){
 	pid_t gcov_child = fork();
 
 #ifdef DEBUG
@@ -265,7 +265,7 @@ run_gcov(char* source){
 #endif
 
 	char* s_path = (char*)malloc(sizeof(char) * 1024);
-	sprintf(s_path, "%s%s", fuzz_config.source_path, fuzz_config.sources[0]);
+	sprintf(s_path, "%s%s", fuzz_config.source_path, fuzz_config.sources[idx]);
 
 #ifdef DEUBG
 	printf("[DEBUG] run_gcov: sourcessss %s\n", s_path);
@@ -379,7 +379,7 @@ fuzzer_main(test_config_t* config){
 
 		if(gcov_flag == 1){
 			for(int n_src=0; n_src<fuzz_config.number_of_source; n_src++){ // TODO sources
-				run_gcov(fuzz_config.sources[n_src]);
+				run_gcov(fuzz_config.sources[n_src], n_src);
 				if(i==0){
 					gcov_line = get_gcov_line(fuzz_config.sources[n_src], &gcov_line_for_ratio, &gcov_line_for_branch);
 					printf("[DEBUG] fuzzer_main, lines:%d\n", gcov_line);
