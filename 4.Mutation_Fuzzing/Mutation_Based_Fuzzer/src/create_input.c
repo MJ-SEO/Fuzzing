@@ -1,6 +1,5 @@
 #include "../include/create_input.h"
 #include "../include/mutating.h"
-// #include "../src/mutating.c" // ...
 
 int
 RandomFuzzer(int min_len, int max_len, int start, int range, char* fuzz){
@@ -33,6 +32,9 @@ mutational_input(char* fuzz, char* input_file, int trial){
 	while((seed[len] = getc(fp)) != EOF){
 		len++;
 	}
+	
+	printf("[DEUBG] seed: %s\n", seed);
+	strcpy(fuzz, seed);
 
 	for(int i=1; i<=trial; i++){
 		len = mutate(seed, fuzz, len);

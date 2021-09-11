@@ -11,7 +11,6 @@ config_setting(test_config_t* config){
 	config->trial = 10;
 
 	int n_src = 1;
-
 	config->number_of_source = n_src;
 
 	char** src_arr = (char**)malloc(sizeof(char*) * n_src);
@@ -23,6 +22,7 @@ config_setting(test_config_t* config){
 
 	config->sources = src_arr;
 	config->source_path = "../lib/";
+	config->curr_dir = 1;
 
 	strcpy(config->binary_path, "./http_mutation");
 }

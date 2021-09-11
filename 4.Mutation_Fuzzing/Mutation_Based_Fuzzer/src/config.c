@@ -25,6 +25,7 @@ config_init(test_config_t * config){
     config->sources = 0X0;
     config->source_path = 0X0;
     config->number_of_source = 0;
+    config->curr_dir = 0;
 
     config->trial = 10 ; 
 

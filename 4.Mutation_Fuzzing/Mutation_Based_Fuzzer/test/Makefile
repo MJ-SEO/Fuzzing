@@ -1,4 +1,4 @@
-all: test_cat.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../lib/my_troff.c test_troff.c test_gcov.c ../lib/cgi_decoder.c 
+all: test_cat.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../lib/my_troff.c test_troff.c test_gcov.c ../lib/cgi_decoder.c bc_test.c
 	gcc -o cat_test test_cat.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c
 	gcc -o troff_test test_troff.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c
 	gcc --coverage -o mytroff ../lib/my_troff.c
@@ -6,6 +6,7 @@ all: test_cat.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/cov
 	gcc --coverage -o http_mutation ../lib/http_program.c
 	gcc -o gcov_test test_gcov.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c
 	gcc -o http_test test_http.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c
+	gcc -o bc_test bc_test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c
 
 test: test_cat.c ../src/fuzzer.c ../src/create_input.c ../src/coverage.c
 	gcc -o cat_test test_cat.c ../src/config.c ../src/fuzzer.c ../src/create_input.c ../src/coverage.c
@@ -22,12 +23,15 @@ http: ../lib/http_program.c
 trof_test: test_troff.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c
 	gcc -o troff_test test_troff.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c
 
-gcov_test: test_gcov.c ../src/fuzzer.c ../src/create_input.c ../src/config.c .../src/coverage.c
+gcov_test: test_gcov.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c
 	gcc -o gcov_test test_gcov.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c
 
-http_test: test_http.c ../src/fuzzer.c ../src/create_input.c ../src/config.c
+http_test: test_http.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c
 	gcc --coverage -o http_mutation ../lib/http_program.c
 	gcc -o http_test test_http.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c
 
+bc: bc_test.c ../src/fuzzer.c ../src/create_input.c ../src/coverage.c ../src/config.c
+	gcc -o bc_test bc_test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c
+
 clean:
-	rm -rf cat_test tmp.* a.out mytroff troff_test *.gcno *.gcda decoder gcov_test *.gcov http_test http_mutation a b
+	rm -rf bc_test cat_test tmp.* a.out mytroff troff_test *.gcno *.gcda decoder gcov_test *.gcov http_test http_mutation a b

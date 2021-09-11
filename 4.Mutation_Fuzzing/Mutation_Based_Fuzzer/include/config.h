@@ -24,6 +24,7 @@ typedef struct test_config{
 	char** sources;
 	char* source_path;	// for coverage
 	int number_of_source;
+	int curr_dir; 	// target prog location
 
 	char** cmd_args;
 

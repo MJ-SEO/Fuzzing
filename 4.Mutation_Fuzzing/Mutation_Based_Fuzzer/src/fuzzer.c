@@ -54,7 +54,7 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 		int n_inputs = 0;
 
 		if((inp_dir = opendir(config->mutation_dir)) == NULL){
-			perror("Target dir open failed");
+			perror("[fuzzer_init] Target dir open failed");
 			exit(1);
 		}
 
@@ -62,9 +62,9 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 
 		while((dp = readdir(inp_dir)) != NULL){
 			if(dp->d_type == 8){
-				//				printf("[FILE] %s\n", dp->d_name);
+				//	printf("[FILE] %s\n", dp->d_name);
 				sprintf(input_files[n_inputs], "%s/%s", config->mutation_dir, dp->d_name); // TODO linked_list?
-				//				printf("[REal] %s[%d]\n", input_files[n_inputs], n_inputs);
+				//	printf("[REal] %s[%d]\n", input_files[n_inputs], n_inputs);
 				n_inputs++;
 			}		
 		}
@@ -102,6 +102,8 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 
 	fuzz_config.trial = config->trial;
 	fuzz_config.number_of_source = config->number_of_source;
+	fuzz_config.source_path = config->source_path;
+	fuzz_config.curr_dir = config->curr_dir;
 
 	if(config->cmd_args != NULL) {
 		if(config->number_of_source > 0){
@@ -169,6 +171,11 @@ execute_prog(test_config_t * config, char* input, int input_size, char* dir_name
 	char* input_name = (char*)malloc(sizeof(char)*25);
 	sprintf(input_name, "%s/input%d", dir_name, file_num);
 	FILE* input_file = fopen(input_name, "wb");
+	
+	if(input_files == NULL){
+		perror("execute_prog: Input-file error");
+		exit(1);
+	}
 
 	fwrite(input, 1, input_size, input_file);
 
@@ -196,16 +203,25 @@ get_info(test_config_t * config, char* input, int input_size, char* dir_name, in
 
 	write(in_pipes[1], input, input_size);
 	close(in_pipes[1]);
-
+	
 	int exit_code;
 	wait(&exit_code);
 
 	char buffer[1024];
 	ssize_t s;
 
+#ifdef DEBUG
+	printf("[Get_info] input(%d): %s\n", input_size, input);
+#endif
+
 	char* output_name = (char*)malloc(sizeof(char)*15);
 	sprintf(output_name, "%s/output%d", dir_name, file_num);
 	FILE* output_file = fopen(output_name, "wb");
+
+	if(output_file == NULL){
+		perror("get_info: Output-file error");
+		exit(1);
+	}
 
 	while((s = read(out_pipes[0], buffer, 1024))> 0){
 		if(fwrite(buffer, 1, s, output_file) != s){
@@ -216,6 +232,11 @@ get_info(test_config_t * config, char* input, int input_size, char* dir_name, in
 	char* err_name = (char*)malloc(sizeof(char)*15);
 	sprintf(err_name, "%s/error%d", dir_name, file_num);
 	FILE* err_file = fopen(err_name, "wb");
+
+	if(err_file == NULL){
+		perror("get_info: Error-file error");
+		exit(1);
+	}
 
 	while((s = read(err_pipes[0], buffer, 1024)) > 0){
 		if(fwrite(buffer, 1, s, err_file) != s){
@@ -239,16 +260,32 @@ void
 run_gcov(char* source){
 	pid_t gcov_child = fork();
 
+#ifdef DEBUG
 	printf("[DEBUG] run_gcov: source %s\n", source);
+#endif
+
+	char* s_path = (char*)malloc(sizeof(char) * 1024);
+	sprintf(s_path, "%s%s", fuzz_config.source_path, fuzz_config.sources[0]);
+
+#ifdef DEUBG
+	printf("[DEBUG] run_gcov: sourcessss %s\n", s_path);
+#endif
 
 	if(gcov_child == 0){
-		execl("/usr/bin/gcov", "gcov", "-b", "-c", source, NULL);
-		perror("run_gcov: Execution Error!");
+		if(fuzz_config.curr_dir == 1){
+			execl("/usr/bin/gcov", "gcov", "-b", "-c", source, NULL);
+			perror("run_gcov: Execution Error!");
+		}
+		else{
+			execl("/usr/bin/gcov", "gcov", "-b", "-c", s_path, NULL);
+			perror("run_gcov: Execution Error!");
+		}		
 		return;
 	}
 	else if(gcov_child > 0){
 		int exit_code;
 		wait(&exit_code);
+		free(s_path);
 		if(exit_code != 0){
 			perror("GCOV Execute Error!");
 			return;
@@ -322,7 +359,7 @@ fuzzer_main(test_config_t* config){
 		int fuzz_len;
 		if(fuzz_config.mutation > 0){
 			printf("[DEBUG] i: %d mute: %d file num: %d\n", fuzz_config.mutation, i,  i%fuzz_config.mutation);
-			fuzz_len = mutational_input(input, input_files[i%(fuzz_config.mutation)], 1);		// Generate Mutational Input
+			fuzz_len = mutational_input(input, input_files[i%(fuzz_config.mutation)], 0);			// Generate Mutational Input
 		}
 		else{
 			fuzz_len = create_input(&fuzz_config, input); // Generage Random Input
@@ -333,6 +370,11 @@ fuzzer_main(test_config_t* config){
 		if(gcov_flag == 1) 
 			fuzz_config.cmd_args[fuzz_config.option_num + 1] = input; 
 
+#ifdef DEBUG
+	for(int i=0; i<3; i++){
+		printf("[execute_prog] cmd_args[%d]: %s\n", i, fuzz_config.cmd_args[i]);
+	}
+#endif
 		return_code[i] = run(&fuzz_config, input, fuzz_len, dir_name, i);
 
 		if(gcov_flag == 1){
