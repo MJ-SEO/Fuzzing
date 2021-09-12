@@ -191,7 +191,8 @@ execute_prog(test_config_t * config, char* input, int input_size, char* dir_name
 	dup2(out_pipes[1], 1);	
 	dup2(err_pipes[1], 2);
 
-	execv(config->binary_path, config->cmd_args);
+//	execv(config->binary_path, config->cmd_args);
+	execl(config->binary_path, "bc", NULL);
 	perror("[excute_prog] - Execution Error\n");
 	exit(1);
 }
