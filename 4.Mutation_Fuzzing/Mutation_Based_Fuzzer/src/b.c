@@ -19,16 +19,18 @@ static pid_t child_pid;
 static char input_files[100][4096];
 
 static int gcov_flag;
+static int** bitmap;
+static int** branch_bitmap;
+static int* gcov_line;
+static int* gcov_line_for_ratio;
+static int* gcov_line_for_branch;
 
-static gcov_src_t* gcov_src;
+//static int* bitmap;
+//static int* branch_bitmap;
+//static int gcov_line;
+//static int gcov_line_for_ratio;
+//static int gcov_line_for_branch;
 
-/*
-* static int* bitmap;
-* static int* branch_bitmap;
-* static int gcov_line;
-* static int gcov_line_for_ratio;
-* static int gcov_line_for_branch;
-*/
 
 void
 time_handler(int sig){
@@ -342,7 +344,8 @@ show_result(int* return_code, int* prog_results, int trial){
 	}	
 }
 
-
+void
+show_gcov(int* return_code, gcov_t* gcov_result, int trial){
 	printf("===================================Fuzzer Summary====================================\n");
 	for(int i=0; i<trial; i++){
 		printf("[Input %d] Line: %d/%d Union: %d Latio:%lf   Branch: %d/%d Union: %d Latio:%lf\n", i, gcov_result[i].line, gcov_line_for_ratio ,gcov_result[i].union_line, (double)gcov_result[i].union_line/gcov_line_for_ratio, gcov_result[i].branch_line, gcov_line_for_branch, gcov_result[i].branch_union_line, (double)gcov_result[i].branch_union_line/gcov_line_for_branch );
@@ -363,7 +366,6 @@ fuzzer_main(test_config_t* config){
 	int* prog_results = (int*)malloc(sizeof(int) * (fuzz_config.trial + 1));
 	int* return_code = (int*)malloc(sizeof(int) * (fuzz_config.trial + 1));
 	gcov_t* gcov_results= (gcov_t*)malloc(sizeof(gcov_t) * (fuzz_config.trial + 1));
-	gcov_src = (gcov_src_t*)malloc(sizeof(gcov_src_t) * (n_src));
 
 	for(int i = 0; i < fuzz_config.trial; i++){
 		char* input = (char*)malloc(sizeof(char)*(fuzz_config.f_max_len + 1)); 
@@ -393,13 +395,13 @@ fuzzer_main(test_config_t* config){
 			for(int n_src=0; n_src<fuzz_config.number_of_source; n_src++){ // TODO sources
 				run_gcov(fuzz_config.sources[n_src], n_src);
 				if(i==0){
-					gcov_line = get_gcov_line(fuzz_config.sources[n_src], &gcov_line_for_ratio, &gcov_line_for_branch);
-					printf("[DEBUG] fuzzer_main, lines:%d\n", gcov_line);
-					bitmap[n_src] = (int*)malloc(sizeof(int) * gcov_line);
-					memset(bitmap[n_src], 0, sizeof(int)*gcov_line);
+					gcov_line[n_src] = get_gcov_line(fuzz_config.sources[n_src], &gcov_line_for_ratio, &gcov_line_for_branch);
+					printf("[DEBUG] fuzzer_main, lines:%d\n", gcov_line[n_src]);
+					bitmap[n_src] = (int*)malloc(sizeof(int) * gcov_line[n_src]);
+					memset(bitmap[n_src], 0, sizeof(int)*gcov_line[n_src]);
 
-					branch_bitmap = (int*)malloc(sizeof(int) * gcov_line);
-					memset(branch_bitmap[n_src], 0, sizeof(int) * gcov_line);
+					branch_bitmap = (int*)malloc(sizeof(int) * gcov_line[n_src]);
+					memset(branch_bitmap[n_src], 0, sizeof(int) * gcov_line[n_src]);
 				}
 				int new_mutate = 0;
 				read_gcov_coverage(fuzz_config.sources[n_src], gcov_results, i, gcov_line, bitmap, branch_bitmap, &new_mutate);

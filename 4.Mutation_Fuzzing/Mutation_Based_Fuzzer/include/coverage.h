@@ -6,13 +6,13 @@
 #include <string.h>
 #include <unistd.h>
 
-/*
-int* bitmap;
-int* branch_bitmap;
-int gcov_line;
-int gcov_line_for_ratio;
-int gcov_line_for_branch;
-*/
+typedef struct gcov_sources{
+	int* bitmap;
+	int* branch_bitmap;
+	int gcov_line;
+	int gcov_line_for_ratio;
+	int gcov_line_for_branch;
+} gcov_src_t;
 
 typedef struct gcov_info{
 	int line;

@@ -17,7 +17,8 @@ config_init(test_config_t * config){
     config->mutation = 0;
 
     strcpy(config->binary_path, "") ;
-    
+   
+    config->need_args = 0; 
     config->cmd_args = 0x0;
     
     config->option_num = 0;
