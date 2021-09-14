@@ -2,7 +2,6 @@
 #include <dirent.h>
 #include <sys/types.h>
 
-
 void
 config_setting(test_config_t* config){
 	config->mutation_dir = "./input/bc_inp";
@@ -10,7 +9,7 @@ config_setting(test_config_t* config){
 
 	config->trial = 5;
 	
-	int n_src = 2;
+	int n_src = 3;
 	config->number_of_source = n_src;
 
 	char** src_arr = (char**)malloc(sizeof(char*) * n_src);
@@ -19,7 +18,8 @@ config_setting(test_config_t* config){
 	}
 
 	src_arr[0] = "bc.c";
-	src_arr[1] = "execute.c";
+	src_arr[1] = "main.c";
+	src_arr[2] = "load.c";
 
 	config->sources = src_arr;
 	config->source_path = "../lib/bc/bc/";

@@ -6,7 +6,7 @@
 
 
 #define INTERESTING_8   \
-	        -1,            /*                                         */ \
+	-1,            /*                                         */ \
         0,            /*                                         */ \
         1,            /*                                         */ \
         16,           /* One-off with common buffer size         */ \
@@ -16,7 +16,7 @@
         127           /* Overflow signed 8-bit when incremented  */
 
 #define INTERESTING_16 \
-	        -32768,        /* Overflow signed 16-bit when decremented */\
+        -32768,        /* Overflow signed 16-bit when decremented */\
         -129,          /* Overflow signed 8-bit                   */ \
         128,          /* Overflow signed 8-bit                   */ \
         255,          /* Overflow unsig 8-bit when incremented   */ \
@@ -28,7 +28,7 @@
         32767         /* Overflow signed 16-bit when incremented */
 
 #define INTERESTING_32 \
-	        -2147483648LL, /* Overflow signed 32-bit when decremented */ \
+        -2147483648LL, /* Overflow signed 32-bit when decremented */ \
         -100663046,    /* Large negative number (endian-agnostic) */ \
         -32769,        /* Overflow signed 16-bit                  */ \
         32768,        /* Overflow signed 16-bit                  */ \

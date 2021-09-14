@@ -2,7 +2,6 @@
 #include <dirent.h>
 #include <sys/types.h>
 
-
 void
 config_setting(test_config_t* config){
 	config->mutation_dir = "./input/http_inp";

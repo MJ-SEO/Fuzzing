@@ -48,7 +48,7 @@ union_bits(int* dest, int* src, int lines){
 }
 
 void
-read_gcov_coverage(char* c_file, gcov_t* curr_info, int idx, int lines, int* bitmap, int* branch_bitmap, int* new_mutate){
+read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, int lines, int* bitmap, int* branch_bitmap, int* new_mutate){
 	char gcov_file[64];
 	strcpy(gcov_file, c_file);
 	strcat(gcov_file, ".gcov");
@@ -56,7 +56,7 @@ read_gcov_coverage(char* c_file, gcov_t* curr_info, int idx, int lines, int* bit
 	FILE* fp;
 	fp = fopen(gcov_file, "rb");
 	if(fp == NULL){
-		perror("read_gcov: File Opne Error!");
+		perror("read_gcov_coverage: File Open Error!");
 		exit(1);
 	}
 
@@ -91,27 +91,27 @@ read_gcov_coverage(char* c_file, gcov_t* curr_info, int idx, int lines, int* bit
 		n_bit++;
 	}
 	
-	curr_info[idx].line = n_line;
-	if(idx == 0){
-		curr_info[idx].union_line = union_bits(bitmap, curr_mask, lines);
+	curr_info[trial][n_src].line = n_line;
+	if(trial == 0){
+		curr_info[trial][n_src].union_line = union_bits(bitmap, curr_mask, lines);
 	}
 	else{
-		int before_lines = curr_info[idx-1].union_line;
-		curr_info[idx].union_line = union_bits(bitmap, curr_mask, lines);
-		int after_lines = curr_info[idx].union_line;
+		int before_lines = curr_info[trial-1][n_src].union_line;
+		curr_info[trial][n_src].union_line = union_bits(bitmap, curr_mask, lines);
+		int after_lines = curr_info[trial][n_src].union_line;
 		if(after_lines > before_lines){	
 			*new_mutate = 1;
 		}
 	}
 
-	curr_info[idx].branch_line = n_branch;
-	if(idx == 0){
-		curr_info[idx].branch_union_line = union_bits(branch_bitmap, branch_mask, lines);
+	curr_info[trial][n_src].branch_line = n_branch;
+	if(trial == 0){
+		curr_info[trial][n_src].branch_union_line = union_bits(branch_bitmap, branch_mask, lines);
 	}
 	else{
-		int before_branch_lines = curr_info[idx-1].branch_union_line;
-		curr_info[idx].branch_union_line = union_bits(branch_bitmap, branch_mask, lines);
-		int after_branch_lines = curr_info[idx].branch_union_line;
+		int before_branch_lines = curr_info[trial-1][n_src].branch_union_line;
+		curr_info[trial][n_src].branch_union_line = union_bits(branch_bitmap, branch_mask, lines);
+		int after_branch_lines = curr_info[trial][n_src].branch_union_line;
 		if(after_branch_lines > before_branch_lines){
 			*new_mutate = 1;	//TODO line, branch 따로?
 		}	
