@@ -273,7 +273,7 @@ run_gcov(char* source, int idx){
 	pid_t gcov_child = fork();
 
 #ifdef DEBUG
-	printf("[DEBUG] run_gcov: source %s\n", source);
+	printf("[DEBUG] Gcov_run with source %s/%d\n", source, idx);
 #endif
 
 	char* s_path = (char*)malloc(sizeof(char) * 1024);
@@ -369,10 +369,8 @@ show_gcov_stat(int* return_code, gcov_t* gcov_result, int trial){	// TODO
 	for(int i=1; i<=trial; i++){
 		if(return_code[i] == 0) pass++;
 		else fail++;
-		printf("[Input %d] Line: %d/%d Union: %d Latio:%lf   Branch: %d/%d Union: %d Latio:%lf\n", i, gcov_result[i].line, gcov_line_for_ratio ,gcov_result[i].union_line, (double)gcov_result[i].union_line/gcov_line_for_ratio, gcov_result[i].branch_line, gcov_line_for_branch, gcov_result[i].branch_union_line, (double)gcov_result[i].branch_union_line/gcov_line_for_branch );
 	}
 	printf("=========================================================================================\n");
-
 	printf("\n===========================Fuzzer Summary===========================\n");
 	printf("* Trial : %d\n", trial);
 	printf("* Pass  : %d\n", pass);
@@ -426,20 +424,20 @@ fuzzer_main(test_config_t* config){
 		return_code[i] = run(&fuzz_config, input, fuzz_len, dir_name, i);
 
 		if(gcov_flag == 1){
-			for(int n_src=0; n_src<fuzz_config.number_of_source; n_src++){ // TODO sources
+			for(int n_src=0; n_src<fuzz_config.number_of_source; n_src++){ 
 				run_gcov(fuzz_config.sources[n_src], n_src);
 				if(i==0){	// Setting gcov vaiable of each src
 					gcov_src[n_src].gcov_line = get_gcov_line(fuzz_config.sources[n_src], &gcov_src[n_src].gcov_line_for_ratio, &gcov_src[n_src].gcov_line_for_branch);
 					printf("[DEBUG] fuzzer_main, lines:%d\n", gcov_src[n_src].gcov_line);
 					gcov_src[n_src].bitmap = (int*)malloc(sizeof(int) * gcov_src[n_src].gcov_line);
 					gcov_src[n_src].branch_bitmap = (int*)malloc(sizeof(int) * gcov_src[n_src].gcov_line);
-				}
-
 				memset(gcov_src[n_src].bitmap, 0, sizeof(int) * gcov_src[n_src].gcov_line);
 				memset(gcov_src[n_src].branch_bitmap, 0, sizeof(int) * gcov_src[n_src].gcov_line);
+				}
+
 				int new_mutate = 0;
 				read_gcov_coverage(fuzz_config.sources[n_src], gcov_results, i, n_src,gcov_src[n_src].gcov_line, gcov_src[n_src].bitmap, gcov_src[n_src].branch_bitmap, &new_mutate);
-				if(new_mutate == 3){	// TODO new mutational seed
+				if(new_mutate == 1){
 					printf("[DEBUG] new_mutate_inp\n");
 					fuzz_config.mutation++;
 					sprintf(input_files[fuzz_config.mutation-1], "%s/input%d", config->mutation_dir, fuzz_config.mutation); 
@@ -458,10 +456,20 @@ fuzzer_main(test_config_t* config){
 					free(input_name);
 					fclose(new_inp_file);
 				}
+			}
 
-				gcda_remove(fuzz_config.sources[n_src]);
+			if(fuzz_config.curr_dir == 1){	// gcov in current directory
+				for(int i=0; i<fuzz_config.number_of_source; i++){
+					gcda_remove(fuzz_config.sources[i], 0x0);
+				}
+			}
+			else{
+				for(int i=0; i<fuzz_config.number_of_source; i++){
+					gcda_remove(fuzz_config.sources[i], fuzz_config.source_path);
+				}
 			}
 		}	
+		
 
 		free(input);
 		fuzz_config.oracle(dir_name, i, prog_results, return_code[i]);

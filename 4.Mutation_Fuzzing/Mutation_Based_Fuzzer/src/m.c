@@ -25,6 +25,26 @@ delete_random_character(char* seed, char* mutated_inp, int length){
 	return length-1;
 }
 
+int
+insert_random_character(char* seed, char* mutated_inp, int length){
+#ifdef DEBUG
+	printf("[Mutating] Insert\n");
+#endif
+	int pos;
+	pos = rand()%length; // 0 ~ seedlen(seed)
+
+	char rand_char = rand()%95 + 32; // 32 ~ 127
+
+	memcpy(mutated_inp, seed, sizeof(char) * length);
+
+	mutated_inp[pos] = rand_char;
+
+	for(int i=pos+1; i<length+1; i++){
+		mutated_inp[i] = seed[i-1];
+	}
+
+	return length+1;
+}
 
 int
 flip_random_character(char* seed, char* mutated_inp, int length){
@@ -203,45 +223,6 @@ known_integers(char* seed, char* mutated_inp, int length){	// TODO test
 }
 
 int
-insert_random_character(char* seed, char* mutated_inp, int length, int offset, int byte){
-#ifdef DEBUG
-	printf("[Mutating] Insert Random Character\a");
-#endif
-	memcpy(mutated_inp, seed, sizeof(char) * length);
-	
-	for(int i=0; i<byte; i++){
-		char rand_char = rand()%95 + 32; // 32 ~ 127
-		
-		mutated_inp[offset+i] = rand_char;
-	}
-	
-
-	for(int i=offset+byte; i<length+1; i++){
-		mutated_inp[i] = seed[i-1];
-	}
-
-	return length+1;
-}
-
-int
-insert_known_integer(char* seed, char* mutated_inp, int length, int offset, int byte){
-#ifdef DEBUG
-	printf("[Mutating] Insert Known Integer\a");
-#endif
-	char rand_char = rand()%95 + 32; // 32 ~ 127
-
-	memcpy(mutated_inp, seed, sizeof(char) * length);
-
-	mutated_inp[pos] = rand_char;
-
-	for(int i=pos+1; i<length+1; i++){
-		mutated_inp[i] = seed[i-1];
-	}
-
-	return length+1;
-}
-
-int
 insert_mutation(char* seed, char* mutated_inp, int inp_len, int offset, int byte){
 	int mutator = rand()2+1;
 	
@@ -276,7 +257,7 @@ change_mutation(char* seed, char* mutated_inp, int inp_len, int offset, int byte
 			return change_known_integer(seed, mutated_inp, inp_len, offset, byte);
 			break;
 		default:
-			perror("change_mutation: out of bound");
+			perror("insert_mutation: out of bound");
 			return inp_len;
 	}
 }
@@ -305,17 +286,3 @@ mutate(char* seed, char* mutated_inp, int inp_len){
 	
 	return len;
 }
-
-/*
-int main(){
-	char* seed = "https://www.google.com";
-	char* mutated_inp = (char*)malloc(sizeof(char) * 1024);
-	int length = strlen(seed);
-
-	mutate(seed, mutated_inp, length);
-	
-	for(int i=0; i<10; i++){
-		printf("M: %s(%d)\n", mutated_inp, length);	
-	}
-}
-*/

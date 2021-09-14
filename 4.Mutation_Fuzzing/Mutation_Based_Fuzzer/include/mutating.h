@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <sys/types.h>
 
-
 #define INTERESTING_8   \
 	-1,            /*                                         */ \
         0,            /*                                         */ \
@@ -37,18 +36,24 @@
         100663045,    /* Large positive number (endian-agnostic) */ \
         2147483647    /* Overflow signed 32-bit when incremented */
 
-int delete_random_character(char* seed, char* mutated_inp, int length);
-
-int insert_random_character(char* seed, char* mutated_inp, int length);
-
-int flip_random_character(char* seed, char* mutated_inp, int length);
-
-int flip_two_bits(char* seed, char* mutated_inp, int length);
-
-int flip_on_bytes(char* seed, char* mutated_inp, int length);
-
-int simple_arithmetics(char* seed, char* mutated_inp, int length);
-
-int known_integers(char* seed, char* mutated_inp, int length);
-
 int mutate(char* seed, char* mutated_inp, int length);
+
+int insert_mutation(char* seed, char* mutated_inp, int input_len, int offset, int n_byte);
+
+int change_mutation(char* seed, char* mutated_inp, int input_len, int offset, int n_byte);
+
+int delete_mutation(char* seed, char* mutated_inp, int input_len, int offset, int n_byte);
+
+int insert_random_character(char* seed, char* mutated_inp, int input_len, int offset, int n_byte);
+
+int insert_known_integer(char* seed, char* mutated_inp, int input_len, int offset, int n_byte);
+
+int delete_mutation(char* seed, char* mutated_inp, int input_len, int offset, int n_byte);
+
+int change_random_bits(char* seed, char* mutated_inp, int input_len, int offset, int n_byte);
+
+int change_random_bytes(char* seed, char* mutated_inp, int input_len, int offset, int n_byte);
+
+int change_simple_arith(char* seed, char* mutated_inp, int input_len, int offset, int n_byte);
+
+int change_known_integer(char* seed, char* mutated_inp, int input_len, int offset, int n_byte);

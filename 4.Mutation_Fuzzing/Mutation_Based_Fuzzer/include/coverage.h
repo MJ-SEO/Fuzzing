@@ -28,6 +28,6 @@ int union_bits(int* dest, int* src, int lines);
 
 void read_gcov_coverage(char* c_file, gcov_t** curr_infor, int trial, int n_src, int lines, int* bitmap, int* branch_bitmap, int* new_mutate);
 
-void gcda_remove(char* c_file);
+void gcda_remove(char* c_file, char* path);
 
 #endif

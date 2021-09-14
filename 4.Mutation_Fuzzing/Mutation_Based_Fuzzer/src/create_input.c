@@ -28,7 +28,7 @@ mutational_input(char* fuzz, char* input_file, int trial){
 	}
 
 	int len = 0;
-	char* seed = (char*)malloc(sizeof(char) * 1024);	// TODO Seed input size
+	char* seed = (char*)malloc(sizeof(char) * 1024);
 	while((seed[len] = getc(fp)) != EOF){
 		len++;
 	}

@@ -27,8 +27,8 @@ typedef struct test_config{
 	char** sources;
 	char* source_path;	// path of sources
 	int number_of_source;
-	int curr_dir; 	// 0: target sources are in same directory
-			// 1: target sources are in different directory path
+	int curr_dir; 	// 1: target sources are in same directory
+			// 0: target sources are in different directory path
 
 	// configuations for command line args
 	int need_args;

@@ -123,14 +123,28 @@ read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, int l
 }
 
 void
-gcda_remove(char* c_file){
+gcda_remove(char* c_file, char* path){
 	char* gcda_file = (char*)malloc(sizeof(char) * strlen(c_file) + 4);
+
+	strcpy(gcda_file, c_file);
+	char* ptr = strtok(gcda_file, ".");
 	
-	strncpy(gcda_file, c_file, strlen(c_file) - 2);
-	strcat(gcda_file, ".gcda");
-	
-	if(remove(gcda_file) != 0){
-		perror("GCDA delete failed");
+	sprintf(gcda_file, "%s.gcda", ptr);
+
+	if(path == 0x0){
+		if(remove(gcda_file) != 0){
+			perror("gcda_remove: GCDA delete failed");
+		}
+	}
+	else{
+		char* gcda_path = (char*)malloc(sizeof(char) * 1024);
+		sprintf(gcda_path, "%s%s", path, gcda_file);
+
+		printf("[DEBUG] gcda_path: %s\n", gcda_path);
+
+		if(remove(gcda_path) != 0){
+			perror("gcda_remove: GCDA PATH delete failed");
+		}
 	}
 
 	free(gcda_file);
