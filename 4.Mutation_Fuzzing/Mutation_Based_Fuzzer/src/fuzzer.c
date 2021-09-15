@@ -400,7 +400,7 @@ fuzzer_main(test_config_t* config){
 	gcov_src = (gcov_src_t*)malloc(sizeof(gcov_src_t) * (fuzz_config.number_of_source));
 
 	for(int i = 0; i < fuzz_config.trial; i++){
-		char* input = (char*)malloc(sizeof(char)*(fuzz_config.f_max_len + 1)); 
+		char* input = (char*)malloc(sizeof(char)* FUZZ_MAX); 
 
 		int fuzz_len;
 		if(fuzz_config.mutation > 0){

@@ -9,6 +9,7 @@
 #define MINLEN 2
 #define MAXLEN 4000
 #define PATH_MAX 4096
+#define FUZZ_MAX 1024
 
 typedef struct test_config{
 	// configuations for random fuzzer input

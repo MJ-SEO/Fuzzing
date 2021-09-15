@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <sys/types.h>
 
+#define SEED_MAX 1024
+
 #define INTERESTING_8   \
 	-1,            /*                                         */ \
         0,            /*                                         */ \

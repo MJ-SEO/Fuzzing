@@ -7,46 +7,6 @@ static uint16_t interesting_16[] = { INTERESTING_8, INTERESTING_16 };
 static uint32_t interesting_32[] = { INTERESTING_8, INTERESTING_16, INTERESTING_32 };
 
 int
-delete_random_character(char* seed, char* mutated_inp, int length){
-#ifdef DEBUG
-	printf("[Mutating] Delete\n");
-#endif
-	if(length < 1) {
-		perror("delete_random_character: length error");
-		return length;
-	}
-
-	int pos;
-	pos = rand()%length; // 0 ~ seedlen(seed)
-
-	memcpy(mutated_inp, seed, length);
-	mutated_inp[pos] = 127;
-
-	return length-1;
-}
-
-int
-insert_random_character(char* seed, char* mutated_inp, int length){
-#ifdef DEBUG
-	printf("[Mutating] Insert\n");
-#endif
-	int pos;
-	pos = rand()%length; // 0 ~ seedlen(seed)
-
-	char rand_char = rand()%95 + 32; // 32 ~ 127
-
-	memcpy(mutated_inp, seed, sizeof(char) * length);
-
-	mutated_inp[pos] = rand_char;
-
-	for(int i=pos+1; i<length+1; i++){
-		mutated_inp[i] = seed[i-1];
-	}
-
-	return length+1;
-}
-
-int
 flip_random_character(char* seed, char* mutated_inp, int length){
 #ifdef DEBUG
 	printf("[Mutating] Flip_1bit\n");
@@ -216,7 +176,6 @@ known_integers(char* seed, char* mutated_inp, int length){	// TODO test
 
 		return length;
 	}
-
 
 	perror("known_integers: reached invalid");
 	return -1;
