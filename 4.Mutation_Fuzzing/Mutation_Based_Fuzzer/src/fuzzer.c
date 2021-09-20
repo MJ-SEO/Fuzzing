@@ -401,6 +401,7 @@ fuzzer_main(test_config_t* config){
 
 	for(int i = 0; i < fuzz_config.trial; i++){
 		char* input = (char*)malloc(sizeof(char)* FUZZ_MAX); 
+		memset(input, 0, FUZZ_MAX);
 
 		int fuzz_len;
 		if(fuzz_config.mutation > 0){

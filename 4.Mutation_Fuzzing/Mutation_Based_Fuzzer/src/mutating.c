@@ -9,7 +9,11 @@ static int32_t interesting_32[] = { INTERESTING_8, INTERESTING_16, INTERESTING_3
 
 int
 insert_random_character(char* seed, char* mutated_inp, int length, int offset, int byte){
-
+	if(length < 1) {
+		perror("insert_random_character: length error");
+		return length;
+	}
+	
 	memcpy(mutated_inp, seed, sizeof(char) * length);
 	
 	for(int i=0; i<byte; i++){
@@ -56,7 +60,7 @@ insert_known_integer(char* seed, char* mutated_inp, int length, int offset, int 
 }
 
 int
-delete_random_character(char* seed, char* mutated_inp, int length, int offset, int byte){
+delete_random_character(char* seed, char* mutated_inp, int length, int offset){
 	if(length < 1) {
 		perror("delete_random_character: length error");
 		return length;
@@ -64,20 +68,32 @@ delete_random_character(char* seed, char* mutated_inp, int length, int offset, i
 
 	memcpy(mutated_inp, seed, length);
 	
-	int del_counter = 0;
+	int bytes[3] = {1, 2, 4};
+	int byte_size = rand()%3;
 
-	for(int i=0; i<byte; i++){
-		if(byte > length - offset){
-			i++;
-			continue;
-		}
-		mutated_inp[offset+i] = 127;
-		del_counter++;
+#ifdef DEBUG
+	printf("[Mutating] Delete Random Character offset: %d, byte:%d\n", offset, bytes[byte_size]);
+#endif
+
+	if(bytes[byte_size] > length - offset){
+		mutated_inp[offset] = 0x0;
+		return offset;
 	}
-	
-	mutated_inp[length] = 0x0;
 
-	return length-del_counter;
+	for(int i=0; i<3; i++){
+		if(bytes[byte_size-i] <= length - offset){
+	
+			memcpy(mutated_inp, seed, offset);
+				
+			memcpy(mutated_inp + offset, seed + offset + bytes[byte_size], length - offset - bytes[byte_size]); 	
+			break;
+		}
+	}
+			
+	
+	mutated_inp[length-bytes[byte_size]] = 0x0;
+
+	return length-bytes[byte_size];
 }
 
 int
@@ -251,23 +267,16 @@ change_mutation(char* seed, char* mutated_inp, int inp_len, int offset, int byte
 }
 
 int 
-delete_mutation(char* seed, char* mutated_inp, int inp_len, int offset, int byte){
+delete_mutation(char* seed, char* mutated_inp, int inp_len, int offset){
 	
-	if((offset + byte) > SEED_MAX){
-		perror("delete_mutation: offset overflow");
-		return inp_len;	
-	}
-#ifdef DEBUG
-	printf("[Mutating] Delete Random Character offset: %d, byte:%d\n", offset, byte);
-#endif
-	return delete_random_character(seed, mutated_inp, inp_len, offset, byte);
+	return delete_random_character(seed, mutated_inp, inp_len, offset);
 }
 
 int
 mutate(char* seed, char* mutated_inp, int inp_len){
 	int len;	
 	int offset = rand()%inp_len;
-	int mutate_mode = rand()%7+1;
+	int mutate_mode = rand()%1+7;
 	int byte_size[3] = {1, 2, 4};
 	int byte = rand()%3;
 	
@@ -278,7 +287,7 @@ mutate(char* seed, char* mutated_inp, int inp_len){
 		len = change_mutation(seed, mutated_inp, inp_len, offset, byte_size[byte]);
 	}
 	else{
-		len = delete_mutation(seed, mutated_inp, inp_len, offset, byte_size[byte]);
+		len = delete_mutation(seed, mutated_inp, inp_len, offset);
 	}
 	
 	return len;
@@ -288,8 +297,7 @@ mutate(char* seed, char* mutated_inp, int inp_len){
 int main(){					// TEST DRIVER for mutating
 	srand((unsigned int)time(NULL));
 	int len = 0;
-	
-	for(int i=0; i<13; i++){
+	for(int i=0; i<10; i++){
 		char* seed = "https://www.google.com";
 		int length = strlen(seed);
 		char* mutated_inp = (char*)malloc(sizeof(char) * 1024);
@@ -297,8 +305,8 @@ int main(){					// TEST DRIVER for mutating
 
 		len = mutate(seed, mutated_inp, length);
 		
-		printf("[RESULT]: %s(%d) / %ld\n\n", mutated_inp, len, strlen(mutated_inp));	
+			printf("[RESULT]: %s(%d) / %ld\n\n", mutated_inp, len, strlen(mutated_inp));	
+		
 		free(mutated_inp);
 	}
 }
-
