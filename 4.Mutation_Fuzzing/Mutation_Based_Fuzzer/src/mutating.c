@@ -276,7 +276,7 @@ int
 mutate(char* seed, char* mutated_inp, int inp_len){
 	int len;	
 	int offset = rand()%inp_len;
-	int mutate_mode = rand()%1+7;
+	int mutate_mode = rand()%7+1;
 	int byte_size[3] = {1, 2, 4};
 	int byte = rand()%3;
 	
@@ -293,7 +293,7 @@ mutate(char* seed, char* mutated_inp, int inp_len){
 	return len;
 }
 
-
+/*
 int main(){					// TEST DRIVER for mutating
 	srand((unsigned int)time(NULL));
 	int len = 0;
@@ -310,3 +310,4 @@ int main(){					// TEST DRIVER for mutating
 		free(mutated_inp);
 	}
 }
+*/

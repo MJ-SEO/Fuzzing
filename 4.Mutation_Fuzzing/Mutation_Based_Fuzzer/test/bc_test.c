@@ -7,7 +7,7 @@ config_setting(test_config_t* config){
 	config->mutation_dir = "./input/bc_inp";
 	config->mutation = 1;
 
-	config->trial = 5;
+	config->trial = 10;
 	
 	int n_src = 3;
 	config->number_of_source = n_src;

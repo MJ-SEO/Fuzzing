@@ -406,7 +406,7 @@ fuzzer_main(test_config_t* config){
 		int fuzz_len;
 		if(fuzz_config.mutation > 0){
 			printf("[DEBUG] i: %d mute: %d file num: %d\n", fuzz_config.mutation, i,  i%fuzz_config.mutation);
-			fuzz_len = mutational_input(input, input_files[i%(fuzz_config.mutation)], 0);			// Generate Mutational Input
+			fuzz_len = mutational_input(input, input_files[i%(fuzz_config.mutation)], 1);			// Generate Mutational Input
 		}
 		else{
 			fuzz_len = create_input(&fuzz_config, input); // Generage Random Input

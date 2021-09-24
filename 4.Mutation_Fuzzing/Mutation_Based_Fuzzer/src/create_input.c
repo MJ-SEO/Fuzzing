@@ -1,7 +1,7 @@
 #include "../include/create_input.h"
 #include "../include/mutating.h"
 
-#define DEBUG
+// #define DEBUG
 
 #ifdef DEBUG
 	#include "./mutating.c"
@@ -56,6 +56,8 @@ mutational_input(char* fuzz, char* input_file, int trial){
 	return len;
 }
 
+/*
+
 int		// TEST DRIVER for create_input
 main(){
 	srand((unsigned int)time(NULL));
@@ -65,3 +67,5 @@ main(){
 	
 	printf("[DEBUG] result(%d): %s\n", len, fuzzed_input);	
 }
+
+*/
