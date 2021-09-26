@@ -27,7 +27,7 @@ int
 mutational_input(char* fuzz, char* input_file, int trial){
 	FILE* fp;
 	fp = fopen(input_file, "rb");
-	printf("[DEBUG] mutational_input fname: %s\n", input_file);
+//	printf("[DEBUG] mutational_input fname: %s\n", input_file);
 	if(fp == NULL){
 		perror("mutationl_input: File open failed");
 		exit(1);
@@ -40,7 +40,7 @@ mutational_input(char* fuzz, char* input_file, int trial){
 		len++;
 	}
 	
-	printf("[DEUBG] seed(%d): %s\n", len, seed);
+//	printf("[DEUBG] seed(%d): %s\n", len, seed);
 	strcpy(fuzz, seed);
 
 	for(int i=1; i<=trial; i++){

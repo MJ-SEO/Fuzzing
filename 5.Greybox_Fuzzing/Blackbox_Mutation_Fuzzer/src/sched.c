@@ -16,7 +16,6 @@ assign_energy(seed_t* seed, int n_input){
 	for(int i=0; i<n_input; i++){
 		seed[i].energy = 3;
 	}
-	
 	return 1;
 }
 
@@ -79,9 +78,11 @@ choose_seed(seed_t* seed, int n_input){
 		perror("convert error\n");
 		exit(1);
 	}
-	test[index]++;
 
 	free(norm_energy_list);
+	
+	printf("[Choose seed] %s(%d)\n", seed[index].data, seed[index].energy);
+
 	return seed[index].data;
 }
 

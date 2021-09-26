@@ -3,7 +3,7 @@
 #include "../include/coverage.h"
 #include "../include/sched.h"
 
-#define DEBUG
+//#define DEBUG
 
 #include <time.h>
 #include <sys/time.h>
@@ -17,7 +17,8 @@ static int in_pipes[2] ;
 static int out_pipes[2] ;
 static int err_pipes[2] ;
 static pid_t child_pid;
-static char input_files[100][4096];
+// static char input_files[100][4096];
+static seed_t seed[100];	// Capacity of Seed?
 
 static int gcov_flag;
 
@@ -68,8 +69,9 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 		while((dp = readdir(inp_dir)) != NULL){
 			if(dp->d_type == 8){
 				//	printf("[FILE] %s\n", dp->d_name);
-				sprintf(input_files[n_inputs], "%s/%s", config->mutation_dir, dp->d_name); // TODO linked_list?
-				//	printf("[REal] %s[%d]\n", input_files[n_inputs], n_inputs);
+//				sprintf(input_files[n_inputs], "%s/%s", config->mutation_dir, dp->d_name);
+			       	sprintf(seed[n_inputs].data, "%s/%s", config->mutation_dir, dp->d_name);	
+//				printf("[Fuzz init] %s[%d]\n", seed[n_inputs].data, n_inputs);
 				n_inputs++;
 			}		
 		}
@@ -178,8 +180,7 @@ execute_prog(test_config_t * config, char* input, int input_size, char* dir_name
 	char* input_name = (char*)malloc(sizeof(char)*25);
 	sprintf(input_name, "%s/input%d", dir_name, file_num);
 	FILE* input_file = fopen(input_name, "wb");
-
-	if(input_files == NULL){
+	if(input_file == NULL){
 		perror("execute_prog: Input-file error");
 		exit(1);
 	}
@@ -348,7 +349,7 @@ void
 show_gcov(int* return_code, gcov_t** gcov_results, int trial, int n_src){
 	printf("===========================================Fuzzer Summary============================================\n");
 	for(int i=0; i<trial; i++){
-		printf("    \t\t\t\t\t---[Input %d]---	\n\n", i);
+		 printf("    \t\t\t\t\t---[Input %d]---\n", i);
 		for(int j=0; j<n_src; j++){
 			printf("[Source: %s] ", fuzz_config.sources[j]); 
 			printf("Line: %d/%d ", gcov_results[i][j].line, gcov_src[j].gcov_line_for_ratio);
@@ -357,7 +358,7 @@ show_gcov(int* return_code, gcov_t** gcov_results, int trial, int n_src){
 
 			printf("Branch: %d/%d ", gcov_results[i][j].branch_union_line, gcov_src[j].gcov_line_for_branch);
 			printf("Union: %d ", gcov_results[i][j].branch_union_line);
-			printf("Coverage: %lf   \n", (double)gcov_results[i][j].branch_union_line/gcov_src[j].gcov_line_for_branch);
+			printf("Coverage: %lf   \n\n", (double)gcov_results[i][j].branch_union_line/gcov_src[j].gcov_line_for_branch);
 		}
 	}
 	printf("=====================================================================================================\n");
@@ -408,8 +409,9 @@ fuzzer_main(test_config_t* config){
 
 		int fuzz_len;
 		if(fuzz_config.mutation > 0){
-			printf("[DEBUG] i: %d mute: %d file num: %d\n", fuzz_config.mutation, i,  i%fuzz_config.mutation);
-			fuzz_len = mutational_input(input, input_files[i%(fuzz_config.mutation)], 1);			// Generate Mutational Input
+		//	printf("[DEBUG] i: %d mute: %d file num: %d\n", fuzz_config.mutation, i,  i%fuzz_config.mutation);
+//			fuzz_len = mutational_input(input, seed[i%(fuzz_config.mutation)].data, 1);			// Generate Mutational InputI
+			fuzz_len = mutational_input(input, choose_seed(seed, fuzz_config.mutation), 1);
 		}
 		else{
 			fuzz_len = create_input(&fuzz_config, input); // Generage Random Input
@@ -441,16 +443,16 @@ fuzzer_main(test_config_t* config){
 
 				int new_mutate = 0;
 				read_gcov_coverage(fuzz_config.sources[n_src], gcov_results, i, n_src,gcov_src[n_src].gcov_line, gcov_src[n_src].bitmap, gcov_src[n_src].branch_bitmap, &new_mutate);
+				
 				if(new_mutate == 1){
 					printf("[DEBUG] new_mutate_inp\n");
 					fuzz_config.mutation++;
-					sprintf(input_files[fuzz_config.mutation-1], "%s/input%d", config->mutation_dir, fuzz_config.mutation); 
+					sprintf(seed[fuzz_config.mutation-1].data, "%s/input%d", config->mutation_dir, fuzz_config.mutation); 
 
 					char* input_name = (char*)malloc(sizeof(char)*25);
 					sprintf(input_name, "%s/input%d", fuzz_config.mutation_dir, fuzz_config.mutation);
 					FILE* new_inp_file = fopen(input_name, "wb");
 					printf("[DEBUG] new_inp_file: %s\n", input_name);
-
 					if(new_inp_file == NULL){
 						perror("new_mutate: FILE Open Failed");
 					}

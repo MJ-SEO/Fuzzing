@@ -10,7 +10,7 @@
 #include <time.h>
 
 typedef struct seed{
-	char data[1024];   // file name
+	char data[4096];   // file name
 	int energy;
 } seed_t;
 

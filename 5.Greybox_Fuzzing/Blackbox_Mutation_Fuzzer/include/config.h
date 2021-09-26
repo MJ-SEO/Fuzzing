@@ -19,7 +19,7 @@ typedef struct test_config{
 	int f_char_range ;
 
 	// configuations for mutaional fuzzer input
-	int mutation;
+	int mutation;		// first flag, later number of seed
 	char* mutation_dir; // Dir path for mutation input seeds
 	
 	char binary_path[PATH_MAX] ; // bin path of target executeion file
