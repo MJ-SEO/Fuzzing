@@ -1,35 +1,8 @@
-# A Fuzzing Architecture
+# Blackbox Mutation-based Fuzzer
 
-## Include
+## test program
 
-- config.h
+## Result
 
-- create_input.h
-
-- fuzzer.h
-
-## src
-
-- config.c
-
-- create_input.c
-
-- fuzzer.c
-
-- my_troff.c
-
-## test
-
-- test_cat.c
-
-- test_troff.c
-
-- test_gcov.c
-
----
-
-## Usage
-
-	make
-
+5000
 
