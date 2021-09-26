@@ -1,8 +1,9 @@
 #include "../include/fuzzer.h"
 #include "../include/create_input.h"
 #include "../include/coverage.h"
+#include "../include/sched.h"
 
-#define DEBUG
+//#define DEBUG
 
 #include <time.h>
 #include <sys/time.h>
@@ -16,7 +17,8 @@ static int in_pipes[2] ;
 static int out_pipes[2] ;
 static int err_pipes[2] ;
 static pid_t child_pid;
-static char input_files[100][4096];
+// static char input_files[100][4096];
+static seed_t seed[100];	// Capacity of Seed?
 
 static int gcov_flag;
 
@@ -67,8 +69,9 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 		while((dp = readdir(inp_dir)) != NULL){
 			if(dp->d_type == 8){
 				//	printf("[FILE] %s\n", dp->d_name);
-				sprintf(input_files[n_inputs], "%s/%s", config->mutation_dir, dp->d_name); // TODO linked_list?
-				//	printf("[REal] %s[%d]\n", input_files[n_inputs], n_inputs);
+//				sprintf(input_files[n_inputs], "%s/%s", config->mutation_dir, dp->d_name);
+			       	sprintf(seed[n_inputs].data, "%s/%s", config->mutation_dir, dp->d_name);	
+//				printf("[Fuzz init] %s[%d]\n", seed[n_inputs].data, n_inputs);
 				n_inputs++;
 			}		
 		}
@@ -177,8 +180,7 @@ execute_prog(test_config_t * config, char* input, int input_size, char* dir_name
 	char* input_name = (char*)malloc(sizeof(char)*25);
 	sprintf(input_name, "%s/input%d", dir_name, file_num);
 	FILE* input_file = fopen(input_name, "wb");
-
-	if(input_files == NULL){
+	if(input_file == NULL){
 		perror("execute_prog: Input-file error");
 		exit(1);
 	}
@@ -336,17 +338,18 @@ run(test_config_t* config, char* input, int input_size, char* dir_name, int file
 }
 
 void
-show_result(int* return_code, int* prog_results, int trial){
+show_result(int* return_code, int* prog_results, int trial, double exe_time){
 	for(int i=0; i<trial; i++){
-		printf("[%d] Return code: %d, Result: %d\n", i, return_code[i], prog_results[i]);
+//		printf("[%d] Return code: %d, Result: %d\n", i, return_code[i], prog_results[i]);
 	}
+	printf("It took the fuzzer %lf seconds to generate and execute %d inputs.\n", exe_time, trial);
 }
 
 void 
 show_gcov(int* return_code, gcov_t** gcov_results, int trial, int n_src){
 	printf("===========================================Fuzzer Summary============================================\n");
 	for(int i=0; i<trial; i++){
-		printf("    \t\t\t\t\t---[Input %d]---	\n\n", i);
+		 printf("    \t\t\t\t\t---[Input %d]---\n", i);
 		for(int j=0; j<n_src; j++){
 			printf("[Source: %s] ", fuzz_config.sources[j]); 
 			printf("Line: %d/%d ", gcov_results[i][j].line, gcov_src[j].gcov_line_for_ratio);
@@ -355,7 +358,7 @@ show_gcov(int* return_code, gcov_t** gcov_results, int trial, int n_src){
 
 			printf("Branch: %d/%d ", gcov_results[i][j].branch_union_line, gcov_src[j].gcov_line_for_branch);
 			printf("Union: %d ", gcov_results[i][j].branch_union_line);
-			printf("Coverage: %lf   \n", (double)gcov_results[i][j].branch_union_line/gcov_src[j].gcov_line_for_branch);
+			printf("Coverage: %lf   \n\n", (double)gcov_results[i][j].branch_union_line/gcov_src[j].gcov_line_for_branch);
 		}
 	}
 	printf("=====================================================================================================\n");
@@ -398,14 +401,17 @@ fuzzer_main(test_config_t* config){
 		gcov_results[trial_n] = (gcov_t*)malloc(sizeof(gcov_t) * fuzz_config.number_of_source);
 	}
 	gcov_src = (gcov_src_t*)malloc(sizeof(gcov_src_t) * (fuzz_config.number_of_source));
-
+	
+	clock_t t_start = clock();
 	for(int i = 0; i < fuzz_config.trial; i++){
 		char* input = (char*)malloc(sizeof(char)* FUZZ_MAX); 
+		memset(input, 0, FUZZ_MAX);
 
 		int fuzz_len;
 		if(fuzz_config.mutation > 0){
-			printf("[DEBUG] i: %d mute: %d file num: %d\n", fuzz_config.mutation, i,  i%fuzz_config.mutation);
-			fuzz_len = mutational_input(input, input_files[i%(fuzz_config.mutation)], 0);			// Generate Mutational Input
+		//	printf("[DEBUG] i: %d mute: %d file num: %d\n", fuzz_config.mutation, i,  i%fuzz_config.mutation);
+//			fuzz_len = mutational_input(input, seed[i%(fuzz_config.mutation)].data, 1);			// Generate Mutational InputI
+			fuzz_len = mutational_input(input, choose_seed(seed, fuzz_config.mutation), 1);
 		}
 		else{
 			fuzz_len = create_input(&fuzz_config, input); // Generage Random Input
@@ -437,16 +443,16 @@ fuzzer_main(test_config_t* config){
 
 				int new_mutate = 0;
 				read_gcov_coverage(fuzz_config.sources[n_src], gcov_results, i, n_src,gcov_src[n_src].gcov_line, gcov_src[n_src].bitmap, gcov_src[n_src].branch_bitmap, &new_mutate);
+				
 				if(new_mutate == 1){
 					printf("[DEBUG] new_mutate_inp\n");
 					fuzz_config.mutation++;
-					sprintf(input_files[fuzz_config.mutation-1], "%s/input%d", config->mutation_dir, fuzz_config.mutation); 
+					sprintf(seed[fuzz_config.mutation-1].data, "%s/input%d", config->mutation_dir, fuzz_config.mutation); 
 
 					char* input_name = (char*)malloc(sizeof(char)*25);
 					sprintf(input_name, "%s/input%d", fuzz_config.mutation_dir, fuzz_config.mutation);
 					FILE* new_inp_file = fopen(input_name, "wb");
 					printf("[DEBUG] new_inp_file: %s\n", input_name);
-
 					if(new_inp_file == NULL){
 						perror("new_mutate: FILE Open Failed");
 					}
@@ -474,13 +480,16 @@ fuzzer_main(test_config_t* config){
 		free(input);
 		fuzz_config.oracle(dir_name, i, prog_results, return_code[i]);
 	}
+	clock_t t_end = clock();
+
+	double d_time = (double)(t_end - t_start)/CLOCKS_PER_SEC;
 
 	if(gcov_flag == 1){
-		show_result(return_code, prog_results, fuzz_config.trial);
 		show_gcov(return_code, gcov_results, fuzz_config.trial, fuzz_config.number_of_source);
+		show_result(return_code, prog_results, fuzz_config.trial, d_time);
 	}
 	else{
-		show_result(return_code, prog_results, fuzz_config.trial);
+		show_result(return_code, prog_results, fuzz_config.trial, d_time);
 	}
 
 	free(prog_results);

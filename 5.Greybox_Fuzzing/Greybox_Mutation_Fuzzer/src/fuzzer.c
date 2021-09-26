@@ -72,6 +72,7 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 //				sprintf(input_files[n_inputs], "%s/%s", config->mutation_dir, dp->d_name);
 			       	sprintf(seed[n_inputs].data, "%s/%s", config->mutation_dir, dp->d_name);	
 //				printf("[Fuzz init] %s[%d]\n", seed[n_inputs].data, n_inputs);
+				seed[n_inputs].length = strlen(dp->d_name); // TODO content
 				n_inputs++;
 			}		
 		}
@@ -461,7 +462,7 @@ fuzzer_main(test_config_t* config){
 					fwrite(input, 1, fuzz_len, new_inp_file);
 					free(input_name);
 					fclose(new_inp_file);
-				}
+				} 
 			}
 
 			if(fuzz_config.curr_dir == 1){	// gcov in current directory

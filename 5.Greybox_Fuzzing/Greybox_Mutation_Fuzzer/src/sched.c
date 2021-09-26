@@ -14,47 +14,52 @@ int test[3];
 int 
 assign_energy(seed_t* seed, int n_input){
 	for(int i=0; i<n_input; i++){
-		seed[i].energy = 3;
+		seed[i].energy = 1;
 	}
 	return 1;
 }
 
-int*
+double*
 normalized_energy(seed_t* seed, int n_input, int* sum_energy){
 	int* energy_list = (int*)malloc(sizeof(int) * n_input);
-	int* norm_energy_list = (int*)malloc(sizeof(int) * n_input);
+	double* norm_energy_list = (double*)malloc(sizeof(double) * n_input);
 	
 	for(int i=0; i<n_input; i++){
 		energy_list[i] = seed[i].energy;
 		*sum_energy += energy_list[i];
 	}
 	
-	norm_energy_list[0] = energy_list[0];
-
-	for(int i=1; i<n_input; i++){
-		norm_energy_list[i] = energy_list[i] + norm_energy_list[i-1];
+	for(int i=0; i<n_input; i++){
+		norm_energy_list[i] = (double)energy_list[i]/(double)(*sum_energy);
 	}
 
 	return norm_energy_list;
 }
 
 int
-convert_energy_index(int sum_energy, int* n_energy_list, int n_input){
-	int randnum = rand()%sum_energy;
-	
+convert_energy_index(int sum_energy, double* n_energy_list, int n_input){
+	double randnum = (double) rand() / INT_MAX; // 0 ~ 1
+	double percentage = randnum * 100.0f; // 0 ~ 100%
+	double cumulate[n_input];
+
+	cumulate[0] = n_energy_list[0] * 100.0f;
+	for(int i=1; i<n_input; i++){
+		cumulate[i] = n_energy_list[i]*100.0f + cumulate[i-1];
+	}
+
 	for(int i=0; i<n_input; i++){
 		if(i==0){
-			for(int j=0; j<n_energy_list[i]; j++){
-				if(randnum == j) return i;
+			if(percentage <= cumulate[i]){
+				return i;
 			}
 		}
 		else{
-			for(int j=n_energy_list[i-1]; j<n_energy_list[i]; j++){
-				if(randnum == j) return i;
+			if(percentage > cumulate[i-1] && percentage <= cumulate[i]){
+				return i;
 			}
 		}
 	}
-
+	
 	return -1;
 }
 
@@ -62,29 +67,28 @@ char*
 choose_seed(seed_t* seed, int n_input){
 	assign_energy(seed, n_input);
 	int sum_energy = 0;
-	int* norm_energy_list;
+	double* norm_energy_list;
 	
 	norm_energy_list = normalized_energy(seed, n_input, &sum_energy);
 
 #ifdef DEBUG
 	printf("[DEBUG] sum_E: %d\n", sum_energy);
 	for(int i=0; i<n_input; i++){
-		printf("[DEBUG] norm[%d]: %d\n", i, norm_energy_list[i]);
+		printf("[DEBUG] norm[%d]: %lf\n", i, norm_energy_list[i]);
 	}
 #endif
 
 	int index;
-   	if((index = convert_energy_index(sum_energy, norm_energy_list, n_input)) == -1){
+  	if((index = convert_energy_index(sum_energy, norm_energy_list, n_input)) == -1){
 		perror("convert error\n");
 		exit(1);
 	}
+	test[index]++;
 
 	free(norm_energy_list);
-	
-	printf("[Choose seed] %s(%d)\n", seed[index].data, seed[index].energy);
-
 	return seed[index].data;
 }
+
 
 /*
 int main(){	 // TEST DRIVER for scheduler
@@ -116,6 +120,4 @@ int main(){	 // TEST DRIVER for scheduler
 		printf("%d ", test[i]);
 	}
 	printf("\n");
-
-
 } */

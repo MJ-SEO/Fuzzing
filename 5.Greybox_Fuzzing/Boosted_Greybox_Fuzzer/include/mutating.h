@@ -44,13 +44,11 @@ int insert_mutation(char* seed, char* mutated_inp, int input_len, int offset, in
 
 int change_mutation(char* seed, char* mutated_inp, int input_len, int offset, int n_byte);
 
-int delete_mutation(char* seed, char* mutated_inp, int input_len, int offset, int n_byte);
+int delete_mutation(char* seed, char* mutated_inp, int input_len, int offset);
 
 int insert_random_character(char* seed, char* mutated_inp, int input_len, int offset, int n_byte);
 
 int insert_known_integer(char* seed, char* mutated_inp, int input_len, int offset, int n_byte);
-
-int delete_mutation(char* seed, char* mutated_inp, int input_len, int offset, int n_byte);
 
 int change_random_bits(char* seed, char* mutated_inp, int input_len, int offset, int n_byte);
 

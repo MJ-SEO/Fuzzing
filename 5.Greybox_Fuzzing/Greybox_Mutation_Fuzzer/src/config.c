@@ -8,10 +8,10 @@ default_oracle(char* dir_name, int file_num, int* result, int return_code){
 
 void 
 config_init(test_config_t * config){
-    config->f_min_len = 10 ;
-    config->f_max_len = 100 ;
+    config->f_min_len = 4 ;
+    config->f_max_len = 4 ;
     config->f_char_start = 32 ;
-    config->f_char_range = 32 ;
+    config->f_char_range = 96 ;
 
     config->mutation_dir = 0x0;
     config->mutation = 0;
