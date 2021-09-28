@@ -72,6 +72,7 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 //				sprintf(input_files[n_inputs], "%s/%s", config->mutation_dir, dp->d_name);
 			       	sprintf(seed[n_inputs].data, "%s/%s", config->mutation_dir, dp->d_name);	
 //				printf("[Fuzz init] %s[%d]\n", seed[n_inputs].data, n_inputs);
+				seed[n_inputs].length = strlen(dp->d_name); // TODO strlen in file
 				n_inputs++;
 			}		
 		}
@@ -112,6 +113,8 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 	fuzz_config.source_path = config->source_path;
 	fuzz_config.curr_dir = config->curr_dir;
 	fuzz_config.option_num = config->option_num;
+	
+	fuzz_config.exponent = config->exponent;
 
 	if(config->cmd_args != NULL) {
 		if(config->number_of_source > 0){
@@ -461,7 +464,7 @@ fuzzer_main(test_config_t* config){
 		if(fuzz_config.mutation > 0){
 		//	printf("[DEBUG] i: %d mute: %d file num: %d\n", fuzz_config.mutation, i,  i%fuzz_config.mutation);
 //			fuzz_len = mutational_input(input, seed[i%(fuzz_config.mutation)].data, 1);			// Generate Mutational InputI
-			fuzz_len = mutational_input(input, choose_seed(seed, fuzz_config.mutation), 1);
+			fuzz_len = mutational_input(input, choose_seed(seed, fuzz_config.mutation, fuzz_config.exponent), 1);
 		}
 		else{
 			fuzz_len = create_input(&fuzz_config, input); // Generage Random Input

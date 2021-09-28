@@ -8,23 +8,28 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <time.h>
+#include <limits.h>
+#include <math.h>
+
+#define DATA_MAX 4096
 
 typedef struct seed{
-	char data[4096];   // file name
-	int energy;
+	char data[DATA_MAX];   // file name
+	size_t length;
+	double energy;
 } seed_t;
 
 // assign energy in each seed  
-int assign_energy(seed_t* seed, int n_input);
+int assign_energy(seed_t* seed, int n_input, int exponent);
 
 // get weigth of each seed
-int* normalized_energy(seed_t* seed, int n_input, int* sum_energy);
+double* normalized_energy(seed_t* seed, int n_input, double* sum_energy);
 
 // convert weighted seed list into index
-int convert_energy_index(int sum_energy, int* norm_energy_list, int n_input);
+int convert_energy_index(double sum_energy, double* norm_energy_list, int n_input);
 
 // choose one seed with weight
-char* choose_seed(seed_t* seed, int n_input);
+char* choose_seed(seed_t* seed, int n_input, int exponent);
 
 #endif
 

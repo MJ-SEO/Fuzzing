@@ -21,7 +21,8 @@ typedef struct test_config{
 	// configuations for mutaional fuzzer input
 	int mutation;		// first flag, later number of seed
 	char* mutation_dir; // Dir path for mutation input seeds
-	
+	int exponent; 		//exponent for boosted greybox fuzzer
+
 	char binary_path[PATH_MAX] ; // bin path of target executeion file
 
 	// configuations for gcov
