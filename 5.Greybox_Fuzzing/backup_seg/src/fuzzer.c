@@ -72,12 +72,15 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 //				sprintf(input_files[n_inputs], "%s/%s", config->mutation_dir, dp->d_name);
 			       	sprintf(seed[n_inputs].data, "%s/%s", config->mutation_dir, dp->d_name);	
 //				printf("[Fuzz init] %s[%d]\n", seed[n_inputs].data, n_inputs);
+				seed[n_inputs].length = strlen(dp->d_name); // TODO content
 				n_inputs++;
 			}		
 		}
 
 		fuzz_config.mutation = n_inputs;
 	}
+
+	fuzz_config.exponent = config->exponent;
 
 	if(config->f_min_len < MINLEN || config->f_max_len > MAXLEN){
 		perror("[fuzzer_init] - Fuzzer Length Error\n");
@@ -111,7 +114,6 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 	fuzz_config.number_of_source = config->number_of_source;
 	fuzz_config.source_path = config->source_path;
 	fuzz_config.curr_dir = config->curr_dir;
-	fuzz_config.option_num = config->option_num;
 
 	if(config->cmd_args != NULL) {
 		if(config->number_of_source > 0){
@@ -385,55 +387,6 @@ show_gcov_stat(int* return_code, gcov_t* gcov_result, int trial){	// TODO
 
 }
 */
-
-void
-gcov_result_free(gcov_t** result, int trial){
-	for(int i=0; i<trial; i++){
-		free(result[i]);
-	}
-	free(result);
-}
-
-void
-gcov_src_free(gcov_src_t* gcov_src){
-	for(int i=0; i<fuzz_config.number_of_source; i++){
-		free(gcov_src[i].bitmap);
-		free(gcov_src[i].branch_bitmap);
-	}
-	free(gcov_src);
-}
-
-void
-fuzz_free(test_config_t fuzz_config){
-	if(fuzz_config.cmd_args != NULL) {
-		if(fuzz_config.number_of_source > 0){
-			for(int i=0; i<fuzz_config.option_num+3; i++){
-				free(fuzz_config.cmd_args[i]);
-			}
-		}
-		else{
-			for(int i=0; i<fuzz_config.option_num+2; i++){
-				free(fuzz_config.cmd_args[i]);
-			}
-		}
-	}
-	else{
-		if(fuzz_config.number_of_source > 0){
-			for(int i=0; i<3; i++){
-				free(fuzz_config.cmd_args[i]);
-			}
-
-		}
-		else{
-			for(int i=0; i<2; i++){
-				free(fuzz_config.cmd_args[i]);
-			}
-		}
-	}
-	
-	free(fuzz_config.cmd_args);
-}
-
 void
 fuzzer_main(test_config_t* config){
 	srand((unsigned int)time(NULL));
@@ -461,7 +414,7 @@ fuzzer_main(test_config_t* config){
 		if(fuzz_config.mutation > 0){
 		//	printf("[DEBUG] i: %d mute: %d file num: %d\n", fuzz_config.mutation, i,  i%fuzz_config.mutation);
 //			fuzz_len = mutational_input(input, seed[i%(fuzz_config.mutation)].data, 1);			// Generate Mutational InputI
-			fuzz_len = mutational_input(input, choose_seed(seed, fuzz_config.mutation), 1);
+			fuzz_len = mutational_input(input, choose_seed(seed, fuzz_config.mutation, fuzz_config.exponent), 1);
 		}
 		else{
 			fuzz_len = create_input(&fuzz_config, input); // Generage Random Input
@@ -511,7 +464,7 @@ fuzzer_main(test_config_t* config){
 					fwrite(input, 1, fuzz_len, new_inp_file);
 					free(input_name);
 					fclose(new_inp_file);
-				}
+				} 
 			}
 
 			if(fuzz_config.curr_dir == 1){	// gcov in current directory
@@ -526,6 +479,7 @@ fuzzer_main(test_config_t* config){
 			}
 		}	
 		
+
 		free(input);
 		fuzz_config.oracle(dir_name, i, prog_results, return_code[i]);
 	}
@@ -543,9 +497,6 @@ fuzzer_main(test_config_t* config){
 
 	free(prog_results);
 	free(return_code);
-	
-	gcov_result_free(gcov_results, fuzz_config.trial);
-	gcov_src_free(gcov_src);
-	
-//	fuzz_free(fuzz_config);
+	free(gcov_results); // TODO Internal
+	free(gcov_src); // TODO INTERNAL
 }

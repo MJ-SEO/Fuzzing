@@ -6,7 +6,7 @@ void
 config_setting(test_config_t* config){
 	config->mutation_dir = "./input/crash_inp";
 	config->mutation = 1;
-
+ 
 	config->trial = 1000;
 
 	int n_src = 1;
@@ -32,7 +32,9 @@ int main(){
 	config_init(&config);
 
 	config_setting(&config);
-//	for(int i=0; i<10; i++){
+
+//	for(int i=0; i<1000; i++){
 	fuzzer_main(&config);
 //	}
+
 }
