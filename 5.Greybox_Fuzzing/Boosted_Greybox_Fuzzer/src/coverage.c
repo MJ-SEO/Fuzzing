@@ -1,5 +1,7 @@
 #include "../include/coverage.h"
 
+#define DEBUG
+
 int 
 get_gcov_line(char* c_file, int* gcov_line_for_ratio, int* gcov_line_for_branch){
 	char gcov_file[64];
@@ -36,11 +38,11 @@ get_gcov_line(char* c_file, int* gcov_line_for_ratio, int* gcov_line_for_branch)
 }
 
 int
-union_bits(int* dest, int* src, int lines){
+union_bits(char* dest, char* src, int lines){
 	int bitsum = 0;
 	for(int i=0; i<lines; i++){
-		if(dest[i] == 1 || src[i] == 1){
-			dest[i] = 1;
+		if(dest[i] == '1' || src[i] == '1'){
+			dest[i] = '1';
 			bitsum++;	
 		}
 	}
@@ -48,7 +50,7 @@ union_bits(int* dest, int* src, int lines){
 }
 
 void
-read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, int lines, int* bitmap, int* branch_bitmap, int* new_mutate){
+read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, int lines, char* bitmap, char* branch_bitmap, int* new_mutate){
 	char gcov_file[64];
 	strcpy(gcov_file, c_file);
 	strcat(gcov_file, ".gcov");
@@ -67,22 +69,22 @@ read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, int l
 	int n_line = 0;
 	int n_branch = 0;
 
-	int* curr_mask = (int*)malloc(sizeof(int) * lines);
-	memset(curr_mask, 0, sizeof(int) * lines);
+	char* curr_mask = (char*)malloc(sizeof(char) * lines);
+	memset(curr_mask, 0, sizeof(char) * lines);
 	
-	int* branch_mask = (int*)malloc(sizeof(int) * lines);
-	memset(branch_mask, 0, sizeof(int) * lines);
+	char* branch_mask = (char*)malloc(sizeof(char) * lines);
+	memset(branch_mask, 0, sizeof(char) * lines);
 
 	while((ret = getline(&line, &size, fp)) != -1){
 		char* ptr = strtok(line, ":");
 		int flag = 0;
 		while(ptr != NULL){
 			if(flag == 0 && atoi(ptr) > 0){
-				curr_mask[n_bit] = 1;
+				curr_mask[n_bit] = '1';
 				n_line++;			
 			}
 			if(flag == 0 && strstr(ptr, "taken") != NULL){
-				branch_mask[n_bit] = 1;
+				branch_mask[n_bit] = '1';
 				n_branch++;	
 			}
 			ptr = strtok(NULL, ":");

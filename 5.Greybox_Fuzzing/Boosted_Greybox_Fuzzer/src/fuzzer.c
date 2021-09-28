@@ -465,10 +465,12 @@ fuzzer_main(test_config_t* config){
 		//	printf("[DEBUG] i: %d mute: %d file num: %d\n", fuzz_config.mutation, i,  i%fuzz_config.mutation);
 //			fuzz_len = mutational_input(input, seed[i%(fuzz_config.mutation)].data, 1);			// Generate Mutational InputI
 			fuzz_len = mutational_input(input, choose_seed(seed, fuzz_config.mutation, fuzz_config.exponent), 1);
+			
 		}
 		else{
 			fuzz_len = create_input(&fuzz_config, input); // Generage Random Input
 		}
+			
 
 		printf("[Trial %d]Input: %s\n", i, input);
 
@@ -488,14 +490,16 @@ fuzzer_main(test_config_t* config){
 				if(i==0){	// Setting gcov vaiable of each src
 					gcov_src[n_src].gcov_line = get_gcov_line(fuzz_config.sources[n_src], &gcov_src[n_src].gcov_line_for_ratio, &gcov_src[n_src].gcov_line_for_branch);
 					printf("[DEBUG] fuzzer_main, lines:%d\n", gcov_src[n_src].gcov_line);
-					gcov_src[n_src].bitmap = (int*)malloc(sizeof(int) * gcov_src[n_src].gcov_line);
-					gcov_src[n_src].branch_bitmap = (int*)malloc(sizeof(int) * gcov_src[n_src].gcov_line);
-				memset(gcov_src[n_src].bitmap, 0, sizeof(int) * gcov_src[n_src].gcov_line);
-				memset(gcov_src[n_src].branch_bitmap, 0, sizeof(int) * gcov_src[n_src].gcov_line);
+					gcov_src[n_src].bitmap = (char*)malloc(sizeof(char) * gcov_src[n_src].gcov_line);
+					gcov_src[n_src].branch_bitmap = (char*)malloc(sizeof(char) * gcov_src[n_src].gcov_line);
+				memset(gcov_src[n_src].bitmap, 0, sizeof(char) * gcov_src[n_src].gcov_line);
+				memset(gcov_src[n_src].branch_bitmap, 0, sizeof(char) * gcov_src[n_src].gcov_line);
 				}
+
 
 				int new_mutate = 0;
 				read_gcov_coverage(fuzz_config.sources[n_src], gcov_results, i, n_src,gcov_src[n_src].gcov_line, gcov_src[n_src].bitmap, gcov_src[n_src].branch_bitmap, &new_mutate);
+				
 				
 				if(new_mutate == 1){
 					printf("[DEBUG] new_mutate_inp\n");
@@ -516,6 +520,7 @@ fuzzer_main(test_config_t* config){
 					fclose(new_inp_file);
 				}
 			}
+			
 
 			if(fuzz_config.curr_dir == 1){	// gcov in current directory
 				for(int i=0; i<fuzz_config.number_of_source; i++){
@@ -536,6 +541,8 @@ fuzzer_main(test_config_t* config){
 
 	double d_time = (double)(t_end - t_start)/CLOCKS_PER_SEC;
 
+	printf("zzz ru zz5\n");
+	
 	if(gcov_flag == 1){
 		show_gcov(return_code, gcov_results, fuzz_config.trial, fuzz_config.number_of_source);
 		show_result(return_code, prog_results, fuzz_config.trial, d_time);

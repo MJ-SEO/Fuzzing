@@ -38,11 +38,15 @@ normalized_energy(seed_t* seed, int n_input, double* sum_energy){
 
 int
 convert_energy_index(double sum_energy, double* n_energy_list, int n_input){
-	double randnum = (double) rand() / INT_MAX; // 0 ~ 1
+	double randnum = (double)rand()/INT_MAX; // 0 ~ 1
 	double percentage = randnum * 100.0f; // 0 ~ 100%
 	double cumulate[n_input];
 	
 	cumulate[0] = n_energy_list[0] * 100.0f;
+	for(int i=1; i<n_input; i++){
+		cumulate[i] = cumulate[i-1] + n_energy_list[i] * 100.0f;
+	}
+
 	for(int i=0; i<n_input; i++){
 		if(i==0){
 			if(percentage <= cumulate[i]) return i;
@@ -71,14 +75,14 @@ choose_seed(seed_t* seed, int n_input, int exponent){
 #endif
 
 	int index;
-   	if((index = convert_energy_index(sum_energy, norm_energy_list, n_input)) == -1){
-		perror("convert error\n");
+
+	if((index = convert_energy_index(sum_energy, norm_energy_list, n_input)) == -1){
+		perror("choose_seed: convert error\n");
 		exit(1);
 	}
 	test[index]++;
 
 	free(norm_energy_list);
-	
 	return seed[index].data;
 }
 

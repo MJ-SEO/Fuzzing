@@ -5,7 +5,7 @@
 
 int RandomeFuzzer(int min_len, int max_len, int start, int range);
 
-int create_input(test_config_t * config, char* input);
+int create_input(test_config_t* config, char* input);
 
 int mutational_input(char* fuzz, char* input_file, int trial);
 
