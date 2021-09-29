@@ -22,6 +22,8 @@ typedef struct test_config{
 	int mutation;		// first flag, later number of seed
 	char* mutation_dir; // Dir path for mutation input seeds
 	int exponent; 		//exponent for boosted greybox fuzzer
+	int file_name;      //  file nmae to input = 1
+			    //  file content to input = 0
 
 	char binary_path[PATH_MAX] ; // bin path of target executeion file
 

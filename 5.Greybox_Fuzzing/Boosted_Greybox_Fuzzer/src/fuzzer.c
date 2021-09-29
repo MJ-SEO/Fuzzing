@@ -24,14 +24,6 @@ static int gcov_flag;
 
 static gcov_src_t* gcov_src;
 
-/*
- * static int* bitmap;
- * static int* branch_bitmap;
- * static int gcov_line;
- * static int gcov_line_for_ratio;
- * static int gcov_line_for_branch;
- */
-
 void
 time_handler(int sig){
 	if(sig == SIGALRM){
@@ -115,6 +107,7 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 	fuzz_config.option_num = config->option_num;
 	
 	fuzz_config.exponent = config->exponent;
+	fuzz_config.file_name = config->file_name;
 
 	if(config->cmd_args != NULL) {
 		if(config->number_of_source > 0){

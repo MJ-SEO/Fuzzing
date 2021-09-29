@@ -39,5 +39,13 @@ crash: crash_test.c ../lib/crashme.c ../src/fuzzer.c ../src/create_input.c ../sr
 	gcc --coverage -o crashme ../lib/crashme.c
 	gcc -o crash_test crash_test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c
 
+json:
+	gcc --coverage -o cjson ../lib/CJSON/testCJSON.c ../lib/CJSON/cJSON.c
+	gcc -o jtest cjson_test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c	
+
+zz: test.c ../lib/zz.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/sched.c
+	gcc --coverage -o zebal ../lib/zz.c
+	gcc -o ztest test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c
+
 clean:
-	rm -rf crash_test crashme bc_test cat_test tmp.* a.out mytroff troff_test *.gcno *.gcda decoder gcov_test *.gcov http_test http_mutation a b
+	rm -rf cjson jtest crash_test crashme bc_test cat_test tmp.* a.out mytroff troff_test *.gcno *.gcda decoder gcov_test *.gcov http_test http_mutation a b

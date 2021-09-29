@@ -16,6 +16,7 @@ config_init(test_config_t * config){
     config->mutation_dir = 0x0;
     config->mutation = 0;
     config->exponent = 5;
+    config->file_name = 0;
 
     strcpy(config->binary_path, "") ;
    

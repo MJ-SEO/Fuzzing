@@ -21,19 +21,22 @@ void init_hex_values() {
 
 int cgi_decode(char *s, char *t) {
 	while (*s != '\0') {
-		if (*s == '+')
+		if (*s == '+'){
 			*t++ = ' ';
+		}
 		else if (*s == '%') {
 			int digit_high = *++s;
 			int digit_low = *++s;
 			if (hex_values[digit_high] >= 0 && hex_values[digit_low] >= 0) {
 				*t++ = hex_values[digit_high] * 16 + hex_values[digit_low];
 			}
-			else
+			else{
 				return -1;
+			}
 		}
-		else
+		else{
 			*t++ = *s;
+		}
 		s++;
 	}
 	*t = '\0';
