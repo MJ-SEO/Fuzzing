@@ -48,4 +48,4 @@ zz: test.c ../lib/zz.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../
 	gcc -o ztest test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c
 
 clean:
-	rm -rf cjson jtest crash_test crashme bc_test cat_test tmp.* a.out mytroff troff_test *.gcno *.gcda decoder gcov_test *.gcov http_test http_mutation a b
+	rm -rf cjson jtest crash_test crashme bc_test cat_test tmp.* a.out mytroff troff_test *.gcno *.gcda decoder gcov_test *.gcov http_test http_mutation a b result.csv

@@ -1,0 +1,33 @@
+111ŒÑ"widget": {
+    "debug": "on",
+    "window": {
+        "title": "Sample Konfabulator Widget",
+        "name": "mai}Uc\zUow",
+        "width": 5004Ó34      "height": 500
+    },
+    "image": {
+        "åçc": "Images/Sun.png",
+        "name": "sun1",
+        "hOffset": 250,
+        "vOffset": 250,
+ﬂ       "alignment": "center"
+    },
+    "text": {
+        "data": "Click Here",
+        "size"aR!Z: 36,
+#<    "style:\	
+bold",
+        "name": "text1",
+  &     ["hOffset": 250,
+        "vOffset":fZ 100,
+        "alig&kn5nment":ﬂ›úönter",
+        "onMouseUp": "su1.opacity = (sun1.opacity / q100) * 90;"
+    }
+    "al": {
+	"matrix": [
+    		[0, -1, 0],
+    		[1, 0, 0],
+    		[0, 0, 1¢
+	]
+    }
+}}

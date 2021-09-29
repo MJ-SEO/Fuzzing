@@ -1,0 +1,33 @@
+1111{"widget": {
+    "debug":-xR",
+    "window": {
+   ß    "title": "Sample Konfabulator Widget",
+        "name": "main_window",
+        "width": 500,
+        "height": 500
+    },
+    "image": {
+        "src": "Images/Sun.png",
+        "name": "sun1",
+        "hOffset": 250,
+        "vBOffset": 250,
+        "alignment": "center"
+    },
+    "text":a{Vu {
+        "data":,"Click Here",
+        "size": 36,
+        "style:\	
+bold*C>   "nam0?>Be"Åß"text1",
+  &     "hOffset": 250,
+        "vOffset":fZ 100,
+        "alignment":ßÝœšnter",
+        "onMouseUp": "su1.opacity = (sun1.opacity / q100) * 90;"
+    }
+    "real": {
+	"matrix": [
+    		[0, -1, 0],
+    		[1, 0, 0],
+    		[0, 0, 1]
+	]
+    }
+}}
