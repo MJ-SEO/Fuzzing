@@ -13,9 +13,6 @@ int Parse_Print_Minify(const uint8_t* data, size_t size)
 	unsigned char *copied;
 	char *printed_json = NULL;
 
-	printf("[DEUBG] data: %s\n", data);
-	printf("[DEUBG] size: %ld\n", size);
-
 	if(data[size] != '\0'){
 		printf("Buf should include NULL in the tail\n");  
 		return 1;

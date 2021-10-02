@@ -18,7 +18,7 @@ static int out_pipes[2] ;
 static int err_pipes[2] ;
 static pid_t child_pid;
 // static char input_files[100][4096];
-static seed_t seed[100];	// Capacity of Seed?
+static seed_t seed[1000];	// Capacity of Seed?
 
 static int gcov_flag;
 
@@ -339,10 +339,8 @@ show_result(int* return_code, int* prog_results, int trial, double exe_time){
 	int return_checker = 0;
 	for(int i=0; i<trial; i++){
 //		printf("[%d] Return code: %d, Result: %d\n", i, return_code[i], prog_results[i]);
-		if(return_code[i] == 0) return_checker++;
 	}
 	printf("It took the fuzzer %lf seconds to generate and execute %d inputs.\n", exe_time, trial);
-	printf("[DEBUG] return_checker: %d\n", return_checker);
 }
 
 void 
@@ -383,28 +381,30 @@ show_gcov(int* return_code, gcov_t** gcov_results, int trial, int n_src){
 void 
 make_csv(gcov_t** gcov_results, int trial, int n_src){
 	FILE* csv;
-	csv = fopen("result.csv", "wb");
+	csv = fopen("result.csv", "ab");
 	if(csv == NULL){
 		perror("make_csv: File open error");
 		exit(1);
 	}
 	
-	for(int i=1; i<=trial; i++){
-		if(i==1){
+	for(int i=0; i<trial; i++){
+		char* buffer = (char*)malloc(sizeof(char) * 30);
+		memset(buffer, 0, 30);
+/*		if(i==1){
 			fputs("Trial,",csv);
 			fputs("Branch\n",csv);
 		}
-		char* buffer = (char*)malloc(sizeof(char) * 100);
-		memset(buffer, 0, 100);
-/*		printf("[DEBUG] trial: %d  ", i);	
+		printf("[DEBUG] trial: %d  ", i);	
 		printf("Line: %d  ", gcov_results[i-1][0].union_line);
 		printf("Branch: %d\n", gcov_results[i-1][0].branch_union_line);
 */
-		sprintf(buffer, "%d,%d", i, gcov_results[i-1][0].branch_union_line);
+		sprintf(buffer, "%d,", gcov_results[i][0].branch_union_line);
 		fwrite(buffer, 1, strlen(buffer), csv);
-		fputs("\n", csv);
 		free(buffer);
 	}
+		
+	fputs("\n", csv);
+	fclose(csv);
 }
 
 void
