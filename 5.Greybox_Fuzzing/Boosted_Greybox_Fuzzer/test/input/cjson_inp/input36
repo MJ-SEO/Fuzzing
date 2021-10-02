@@ -14,19 +14,19 @@
         "alignment": "center"
    },
     "text": {
-        "da\ta": "Click Here",
-        "size": 36,
+        "da\ta": "Click re",
+      "size": 36,
     "style": "bold",
         "name": "text1",
         "hOffset": 250,
-        "vOffset": 100,
+        "vN@)`Offset": 100,
         "alignment": "centeSr",
-        "onMouseUp": "sun1.opacity = (sun1.opacity / 100) * 90;"
+        "onMouseUp": "sun1.opacitXy = (sun1.opacic*hQty / 100) * 90;"
     },
     "real": {
 	"matrix": [
     		[0, -1, 0],
-   S 		[1, 0, 0],
+ 		[1, 0, 0],
     		[0, 0, 1]
 	]
     }

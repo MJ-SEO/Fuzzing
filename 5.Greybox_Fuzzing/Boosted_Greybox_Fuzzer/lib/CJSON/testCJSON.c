@@ -5,65 +5,55 @@
 
 #include "cJSON.h"
 
-int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size); /* required by C89 */
+int Parse_Print_Minify(const uint8_t* data, size_t size); /* required by C89 */
 
-int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+int Parse_Print_Minify(const uint8_t* data, size_t size)
 {
 	cJSON *json;
-	size_t offset = 4;
 	unsigned char *copied;
 	char *printed_json = NULL;
-	int minify, require_termination, formatted, buffered;
 
+	printf("[DEUBG] data: %s\n", data);
+	printf("[DEUBG] size: %ld\n", size);
 
-	if(size <= offset) return 0;
-	if(data[0] != '1' && data[0] != '0') return 0;
-	if(data[1] != '1' && data[1] != '0') return 0;
-	if(data[2] != '1' && data[2] != '0') return 0;
-	if(data[3] != '1' && data[3] != '0') return 0;
-
-	minify              = data[0] == '1' ? 1 : 0;
-	require_termination = data[1] == '1' ? 1 : 0;
-	formatted           = data[2] == '1' ? 1 : 0;
-	buffered            = data[3] == '1' ? 1 : 0;
-
-	json = cJSON_ParseWithOpts((const char*)data + offset, NULL, require_termination);
-
-	if(json == NULL) return 0;
-
-	if(buffered)
-	{
-		printed_json = cJSON_PrintBuffered(json, 1, formatted);
+	if(data[size] != '\0'){
+		printf("Buf should include NULL in the tail\n");  
+		return 1;
 	}
-	else
-	{
-		/* unbuffered printing */
-		if(formatted)
-		{
-			printed_json = cJSON_Print(json);
-		}
-		else
-		{
-			printed_json = cJSON_PrintUnformatted(json);
-		}
+	
+	// 1. Parsing
+	json = cJSON_ParseWithOpts((const char*)data, NULL, 1);
+	
+	if(json == NULL) {
+		printf("json is NULL \n");
+		return 2;
 	}
+
+	printf("NOT NULL?\n");
+
+	// 2. Printing
+	printed_json = cJSON_PrintBuffered(json, 1, 1);
+	printf("[DEUBG] printed_json(buffered): %s\n", printed_json);
 
 	if(printed_json != NULL) free(printed_json);
 
-	if(minify)
-	{
-		copied = (unsigned char*)malloc(size);
-		if(copied == NULL) return 0;
+	// 3. Minifying
+	copied = (unsigned char*)malloc(size);
+	if(copied == NULL) return 3;
+	memcpy(copied, data, size);
+	cJSON_Minify((char*)copied);
 
-		memcpy(copied, data, size);
+	printf("[DEBUG] Minifyed: %s\n", copied);
+	free(copied);
 
-		cJSON_Minify((char*)copied + offset);
+	// 4. Get
 
-		free(copied);
-	}
+	printf("[DEBUT] Number_value: %lf\n", cJSON_GetNumberValue(json));
+	printf("[DEBUT] String_value: %s\n", cJSON_GetStringValue(json));
+		
+	// 5. Add
 
 	cJSON_Delete(json);
-
 	return 0;
 }
 
@@ -77,10 +67,13 @@ int main(int argc, char **argv)
 	while((buf[siz_buf] = getc(stdin)) != EOF){
 		siz_buf++;
 	}
+	buf[siz_buf] = '\0';
 
-	(void)LLVMFuzzerTestOneInput((uint8_t*)buf, (size_t)siz_buf);
+	int return_code;
+
+	return_code = Parse_Print_Minify((uint8_t*)buf, (size_t)siz_buf);
 	
 	free(buf);
-	return 0;
+	return return_code;
 }
 

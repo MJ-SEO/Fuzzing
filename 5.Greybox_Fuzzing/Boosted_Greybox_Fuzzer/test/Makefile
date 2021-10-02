@@ -43,9 +43,9 @@ json:
 	gcc --coverage -o cjson ../lib/CJSON/testCJSON.c ../lib/CJSON/cJSON.c
 	gcc -o jtest cjson_test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c	
 
-zz: test.c ../lib/zz.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/sched.c
-	gcc --coverage -o zebal ../lib/zz.c
-	gcc -o ztest test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c
-
+oh318:
+	gcc --coverage -o jin1 ../lib/CJSON/jin1.c ../lib/CJSON/cJSON.c
+	gcc -o test_jin1 jin1.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c
+	gcc --
 clean:
-	rm -rf cjson jtest crash_test crashme bc_test cat_test tmp.* a.out mytroff troff_test *.gcno *.gcda decoder gcov_test *.gcov http_test http_mutation a b result.csv
+	rm -rf jin1 seoye test_jin1 test_seoye cjson jtest crash_test crashme bc_test cat_test tmp.* a.out mytroff troff_test *.gcno *.gcda decoder gcov_test *.gcov http_test http_mutation a b result.csv

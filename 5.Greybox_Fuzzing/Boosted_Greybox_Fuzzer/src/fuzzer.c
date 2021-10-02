@@ -336,10 +336,13 @@ run(test_config_t* config, char* input, int input_size, char* dir_name, int file
 
 void
 show_result(int* return_code, int* prog_results, int trial, double exe_time){
+	int return_checker = 0;
 	for(int i=0; i<trial; i++){
 //		printf("[%d] Return code: %d, Result: %d\n", i, return_code[i], prog_results[i]);
+		if(return_code[i] == 0) return_checker++;
 	}
 	printf("It took the fuzzer %lf seconds to generate and execute %d inputs.\n", exe_time, trial);
+	printf("[DEBUG] return_checker: %d\n", return_checker);
 }
 
 void 
@@ -479,8 +482,12 @@ fuzzer_main(test_config_t* config){
 		if(fuzz_config.mutation > 0){
 		//	printf("[DEBUG] i: %d mute: %d file num: %d\n", fuzz_config.mutation, i,  i%fuzz_config.mutation);
 //			fuzz_len = mutational_input(input, seed[i%(fuzz_config.mutation)].data, 1);			// Generate Mutational InputI
-			fuzz_len = mutational_input(input, choose_seed(seed, fuzz_config.mutation, fuzz_config.exponent), 3);
-			
+			if(i==0){
+				fuzz_len = mutational_input(input, choose_seed(seed, fuzz_config.mutation, fuzz_config.exponent), 0);
+			}
+			else{
+				fuzz_len = mutational_input(input, choose_seed(seed, fuzz_config.mutation, fuzz_config.exponent), 3);
+			}
 		}
 		else{
 			fuzz_len = create_input(&fuzz_config, input); // Generage Random Input
@@ -516,7 +523,7 @@ fuzzer_main(test_config_t* config){
 				read_gcov_coverage(fuzz_config.sources[n_src], gcov_results, i, n_src,gcov_src[n_src].gcov_line, gcov_src[n_src].bitmap, gcov_src[n_src].branch_bitmap, &new_mutate);
 				
 				
-				if(new_mutate == 1){
+				if(new_mutate == 1 && fuzz_config.mutation>0){
 					printf("[DEBUG] new_mutate_inp\n");
 					fuzz_config.mutation++;
 					sprintf(seed[fuzz_config.mutation-1].data, "%s/input%d", config->mutation_dir, fuzz_config.mutation); 

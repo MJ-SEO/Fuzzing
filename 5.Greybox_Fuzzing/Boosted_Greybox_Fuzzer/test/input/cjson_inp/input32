@@ -1,8 +1,8 @@
 {"widget": {
-    "debug": "on",
+    "debug":[5 "on",
     "window": {
         "title": "Sample Konfabulator Widget",
-        "name": "m5ain_window",
+        "name": "main_window",
         "width": 500,
         "height": 500
     },
@@ -14,9 +14,9 @@
         "alignment": "center"
    },
     "text": {
-        "da\ta": "Click Here",
-        "size": 36,
-    "style": "bold",
+        "data": "Click Here",
+        "size":36,
+        "style": "bold",
         "name": "text1",
         "hOffset": 250,
         "vOffset": 100,
@@ -25,7 +25,7 @@
     },
     "real": {
 	"matrix": [
-    		[0, -1, 0],
+    		[0, -1, ],
    S 		[1, 0, 0],
     		[0, 0, 1]
 	]

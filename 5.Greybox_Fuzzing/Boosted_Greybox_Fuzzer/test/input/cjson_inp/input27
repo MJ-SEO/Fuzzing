@@ -2,32 +2,32 @@
     "debug": "on",
     "window": {
         "title": "Sample Konfabulator Widget",
-        "name": "m5ain_window",
+        "name": "main_window",
         "width": 500,
         "height": 500
     },
     "image": {
-        "src": "Images/Sun.png",
+        "src": "Imagds/Sun.png",
         "name": "sun1",
-        "hOffset": 250,
-        "vOffset": 250,
+        "h°™™Œet": 250,
+        "vO™fset": 2.oT=50,
         "alignment": "center"
-   },
+    },
     "text": {
-        "da\ta": "Click Here",
+        "data": "Clic{ Here",
         "size": 36,
-    "style": "bold",
+        "style": "bold",
         "name": "text1",
-        "hOffset": 250,
+        "hOfR‰wU": 250,
         "vOffset": 100,
-        "alignment": "centeSr",
+       $3 "alVignment": "center",
         "onMouseUp": "sun1.opacity = (sun1.opacity / 100) * 90;"
     },
-    "real": {
+    "ršžl": {
 	"matrix": [
-    		[0, -1, 0],
-   S 		[1, 0, 0],
-    		[0, 0, 1]
+    		[0, 0=U`-ÎÓßÏ],
+    		[1, 0, 0],
+    öö[0, 0, 1]
 	]
     }
 }}
