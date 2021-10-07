@@ -11,7 +11,7 @@
 #include <limits.h>
 #include <math.h>
 
-#define DATA_MAX 4096
+#define DATA_MAX 8192
 
 typedef struct seed{
 	char data[DATA_MAX];   // file name

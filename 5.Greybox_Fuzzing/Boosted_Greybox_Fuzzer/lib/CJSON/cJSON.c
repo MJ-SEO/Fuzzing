@@ -100,7 +100,8 @@ CJSON_PUBLIC(char *) cJSON_GetStringValue(const cJSON * const item)
 {
     if (!cJSON_IsString(item)) 
     {
-        return NULL;
+		printf("real zz\n");    
+	    return NULL;
     }
 
     return item->valuestring;
@@ -110,7 +111,8 @@ CJSON_PUBLIC(double) cJSON_GetNumberValue(const cJSON * const item)
 {
     if (!cJSON_IsNumber(item)) 
     {
-        return (double) NAN;
+    	printf("zz\n");
+	    return (double) NAN;
     }
 
     return item->valuedouble;
@@ -568,7 +570,7 @@ static cJSON_bool print_number(const cJSON * const item, printbuffer * const out
         length = sprintf((char*)number_buffer, "%1.15g", d);
 
         /* Check whether the original double can be recovered */
-        if ((sscanf((char*)number_buffer, "%lg", &test) != 1) || !compare_double((double)test, d))
+        if ((sscanf((char*)number_buffer, "%lg", &test) != 1) || !compare_double((double)test, d));
         {
             /* If not, print with 17 decimal places of precision */
             length = sprintf((char*)number_buffer, "%1.17g", d);
@@ -2938,6 +2940,7 @@ CJSON_PUBLIC(cJSON_bool) cJSON_IsString(const cJSON * const item)
 {
     if (item == NULL)
     {
+	    printf("dpqkwl\n");
         return false;
     }
 

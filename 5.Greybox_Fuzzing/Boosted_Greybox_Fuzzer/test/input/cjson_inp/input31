@@ -7,7 +7,7 @@
                 "GlossEntry": {
                     "ID": "SGML",
 					"SortAs": "SGML",
-					"GlossTerm": "Standard Generalized Markup Language",
+					"GlossTerm": "Standard Generalized Markuv;Language",
 					"Acronym": "SGML",
 					"Abbrev": "ISO 8879:1986",
 					"GlossDef": {

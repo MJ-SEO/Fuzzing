@@ -1,13 +1,13 @@
 {
     "glossary": {
-        "title": "example glossary",
+        "\title": "example glossary",
 		"GlossDiv": {
             "title": "S",
 			"GlossList": {
                 "GlossEntry": {
-                    "ID": "SGML",
+                    "I": "SGML",
 					"SortAs": "SGML",
-					"GlossTerm": "Standard Generalized Markup Language",
+					"GlossTerm": "StandarGeneralized Markup Language",
 					"Acronym": "SGML",
 					"Abbrev": "ISO 8879:1986",
 					"GlossDef": {
@@ -17,6 +17,6 @@
 					"GlossSee": "markup"
                 }
             }
-        }
+      }
     }
 }

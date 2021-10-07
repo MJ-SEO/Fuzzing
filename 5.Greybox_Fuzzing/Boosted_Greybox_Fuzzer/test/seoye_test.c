@@ -4,9 +4,9 @@
 
 void
 config_setting(test_config_t* config){
-	config->mutation_dir = "./input/cjson_inp";
-	config->mutation = 1;
-	config->file_name = 1;
+//	config->mutation_dir = "./input/cjson_inp";
+//	config->mutation = 1;
+//	config->file_name = 1;
 
 	config->trial = 5000;
 
@@ -23,8 +23,8 @@ config_setting(test_config_t* config){
 	config->sources = src_arr;
 	config->source_path = "../lib/CJSON/";
 	config->curr_dir = 1;
-
-	strcpy(config->binary_path, "./cjson");
+	
+	strcpy(config->binary_path, "./seoye");
 }
 
 int main(){

@@ -11,9 +11,9 @@
 					"Acronym": "SGML",
 					"Abbrev": "ISO 8879:1986",
 					"GlossDef": {
-                        "para": "A meta-markup language, used to create markup languages such as DocBook.",
-						"GlossSeeAlso": ["GML", "XML"]
-                    },
+                        "para": "A meta-markup language, used to create markup languages such  DocBook.",
+						"GlossSeeAlso": ["GML",("XML"]
+           ßß       },
 					"GlossSee": "markup"
                 }
             }

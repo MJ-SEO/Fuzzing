@@ -43,9 +43,21 @@ json:
 	gcc --coverage -o cjson ../lib/CJSON/testCJSON.c ../lib/CJSON/cJSON.c
 	gcc -o jtest cjson_test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c	
 
-oh318:
+jin1:
 	gcc --coverage -o jin1 ../lib/CJSON/jin1.c ../lib/CJSON/cJSON.c
-	gcc -o test_jin1 jin1.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c
-	gcc --
+	gcc -o jin1_test jin1_test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c
+
+seoye:
+	gcc --coverage -o seoye ../lib/CJSON/seoye.c ../lib/CJSON/cJSON.c
+	gcc -o seoye_test seoye_test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c
+
+woosam:
+	gcc --coverage -o woosam ../lib/CJSON/woosam.c ../lib/CJSON/cJSON.c
+	gcc -o woosam_test woosam_test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c
+
+jyeong:
+	gcc --coverage -o jyeong ../lib/CJSON/jyeong.c ../lib/CJSON/cJSON.c
+	gcc -o jyeong_test jyeong_test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c
+
 clean:
-	rm -rf jin1 seoye test_jin1 test_seoye cjson jtest crash_test crashme bc_test cat_test tmp.* a.out mytroff troff_test *.gcno *.gcda decoder gcov_test *.gcov http_test http_mutation a b result.csv
+	rm -rf woosam jin1 seoye jyeong *_test cjson jtest crash_test crashme bc_test cat_test tmp.* a.out mytroff troff_test *.gcno *.gcda decoder gcov_test *.gcov http_test http_mutation a b result.csv

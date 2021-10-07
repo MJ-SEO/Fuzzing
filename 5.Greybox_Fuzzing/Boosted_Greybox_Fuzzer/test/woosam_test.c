@@ -23,8 +23,8 @@ config_setting(test_config_t* config){
 	config->sources = src_arr;
 	config->source_path = "../lib/CJSON/";
 	config->curr_dir = 1;
-
-	strcpy(config->binary_path, "./cjson");
+	
+	strcpy(config->binary_path, "./woosam");
 }
 
 int main(){

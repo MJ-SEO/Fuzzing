@@ -60,9 +60,10 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 
 		while((dp = readdir(inp_dir)) != NULL){
 			if(dp->d_type == 8){
-				//	printf("[FILE] %s\n", dp->d_name);
+//				printf("[FILE] %s\n", dp->d_name);
 //				sprintf(input_files[n_inputs], "%s/%s", config->mutation_dir, dp->d_name);
-			       	sprintf(seed[n_inputs].data, "%s/%s", config->mutation_dir, dp->d_name);	
+				   
+				sprintf(seed[n_inputs].data, "%s/%s", config->mutation_dir, dp->d_name);	
 //				printf("[Fuzz init] %s[%d]\n", seed[n_inputs].data, n_inputs);
 				seed[n_inputs].length = strlen(dp->d_name); // TODO strlen in file
 				n_inputs++;
@@ -472,9 +473,11 @@ fuzzer_main(test_config_t* config){
 		gcov_results[trial_n] = (gcov_t*)malloc(sizeof(gcov_t) * fuzz_config.number_of_source);
 	}
 	gcov_src = (gcov_src_t*)malloc(sizeof(gcov_src_t) * (fuzz_config.number_of_source));
-	
+		
+
 	clock_t t_start = clock();
 	for(int i = 0; i < fuzz_config.trial; i++){
+
 		char* input = (char*)malloc(sizeof(char)* FUZZ_MAX); 
 		memset(input, 0, FUZZ_MAX);
 
@@ -486,14 +489,13 @@ fuzzer_main(test_config_t* config){
 				fuzz_len = mutational_input(input, choose_seed(seed, fuzz_config.mutation, fuzz_config.exponent), 0);
 			}
 			else{
-				fuzz_len = mutational_input(input, choose_seed(seed, fuzz_config.mutation, fuzz_config.exponent), 3);
+				fuzz_len = mutational_input(input, choose_seed(seed, fuzz_config.mutation, fuzz_config.exponent), 1);
 			}
 		}
 		else{
 			fuzz_len = create_input(&fuzz_config, input); // Generage Random Input
 		}
 			
-
 		printf("[Trial %d]Input: %s\n", i, input);
 
 		if(gcov_flag == 1) 

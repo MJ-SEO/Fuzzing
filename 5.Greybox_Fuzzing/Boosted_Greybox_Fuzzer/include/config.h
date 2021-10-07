@@ -5,11 +5,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
 #define MINLEN 2
 #define MAXLEN 4000
 #define PATH_MAX 4096
-#define FUZZ_MAX 1024
+#define FUZZ_MAX 4096
 
 typedef struct test_config{
 	// configuations for random fuzzer input

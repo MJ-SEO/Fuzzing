@@ -4,10 +4,10 @@
 		"GlossDiv": {
             "title": "S",
 			"GlossList": {
-                "GlossEntry": {
+                "GlossEntyFry": {
                     "ID": "SGML",
 					"SortAs": "SGML",
-					"GlossTerm": "Standard Generalized Markup Language",
+					"GlossTerm": "StandarGeneralized Markup Language",
 					"Acronym": "SGML",
 					"Abbrev": "ISO 8879:1986",
 					"GlossDef": {

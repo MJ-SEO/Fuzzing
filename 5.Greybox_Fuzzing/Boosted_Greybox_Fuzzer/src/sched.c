@@ -81,8 +81,7 @@ choose_seed(seed_t* seed, int n_input, int exponent){
 		exit(1);
 	}
 	test[index]++;
-
-	free(norm_energy_list);
+	
 	return seed[index].data;
 }
 

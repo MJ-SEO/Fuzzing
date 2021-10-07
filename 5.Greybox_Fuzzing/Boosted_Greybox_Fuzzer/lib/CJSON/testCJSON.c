@@ -15,7 +15,7 @@ int Parse_Print_Minify(const uint8_t* data, size_t size)
 
 	if(data[size] != '\0'){
 		printf("Buf should include NULL in the tail\n");  
-		return 1;
+		return 0;
 	}
 	
 	// 1. Parsing
@@ -23,10 +23,8 @@ int Parse_Print_Minify(const uint8_t* data, size_t size)
 	
 	if(json == NULL) {
 		printf("json is NULL \n");
-		return 2;
+		return 0;
 	}
-
-	printf("NOT NULL?\n");
 
 	// 2. Printing
 	printed_json = cJSON_PrintBuffered(json, 1, 1);
@@ -56,7 +54,6 @@ int Parse_Print_Minify(const uint8_t* data, size_t size)
 
 int main(int argc, char **argv)
 {
-	FILE *fp;
 	char* buf = (char*)malloc(sizeof(char) * 8196);
 	size_t siz_buf = 0;
 	memset(buf, 0, 8196);

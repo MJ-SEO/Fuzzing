@@ -4,7 +4,7 @@
 
 void
 config_setting(test_config_t* config){
-	config->mutation_dir = "./input/cjson_inp";
+//	config->mutation_dir = "./input/cjson_inp";
 //	config->mutation = 1;
 //	config->file_name = 1;
 
@@ -23,8 +23,8 @@ config_setting(test_config_t* config){
 	config->sources = src_arr;
 	config->source_path = "../lib/CJSON/";
 	config->curr_dir = 1;
-
-	strcpy(config->binary_path, "./jin1");
+	
+	strcpy(config->binary_path, "./jyeong");
 }
 
 int main(){
@@ -33,7 +33,6 @@ int main(){
 	config_init(&config);
 
 	config_setting(&config);
-
-		fuzzer_main(&config);
-
+	
+	fuzzer_main(&config);
 }

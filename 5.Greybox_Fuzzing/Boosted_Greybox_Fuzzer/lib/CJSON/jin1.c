@@ -1,205 +1,144 @@
-#include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include "cJSON.h" 
+#include <stdlib.h> 
+#include <stdio.h> 
+#include <string.h> 
 
-#include "cJSON.h"
+#define BUFF_SIZE 4096
 
-typedef struct 
-{
-	int id;
-	char firstName[32];
-	char lastName[32];
-	char email[64];
-	int age;
-	float height;
-}people;
+void copyItems(cJSON * json, cJSON * new_json) { 
+    int cJSON_array_size ; 
+    cJSON * item = json; 
 
-//parse a key-value pair
-int cJSON_to_str(char *json_string, char *str_val)
-{
-	cJSON *root=cJSON_Parse(json_string);
-	if (!root)
-	{
-		printf("Error before: [%s]\n",cJSON_GetErrorPtr());
-		return -1;
-	}
-	else
-	{
-		cJSON *item=cJSON_GetObjectItem(root,"firstName");
-		if(item!=NULL)
-		{
-			printf("cJSON_GetObjectItem: type=%d, key is %s, value is %s\n",item->type,item->string,item->valuestring);
-			memcpy(str_val,item->valuestring,strlen(item->valuestring));
-		}
-		cJSON_Delete(root);
-	}
-	return 0;
+    if((cJSON_array_size = cJSON_GetArraySize(item)) != 0) {
+        cJSON * array = cJSON_CreateArray() ; 
+
+        cJSON * ci ; 
+        for (int i = 0 ; i < cJSON_array_size ; i++) {
+            cJSON * new_obj = cJSON_CreateObject() ; 
+            ci = cJSON_GetArrayItem(item, i) ;
+
+            if (cJSON_HasObjectItem(item, ci->string)) { 
+                int string_length = strlen(ci->string);  
+                new_obj->string = (char *)cJSON_malloc(sizeof(char) * string_length);  
+                
+                memcpy(new_obj->string, ci->string, string_length) ; new_obj->string[string_length] = 0x0 ;   
+                cJSON_Minify(new_obj->string); 
+                cJSON * obj_item = cJSON_GetObjectItemCaseSensitive(item, ci->string); 
+                
+                printf("[item]:%s ", new_obj->string) ; 
+                if (obj_item != NULL) {
+                    if (cJSON_IsString(obj_item) && obj_item->valuestring != NULL) {
+                        int valuestring_length = strlen(obj_item->valuestring);  
+                        new_obj->valuestring = (char *)cJSON_malloc(sizeof(char) * valuestring_length) ;
+                        
+                        memcpy(new_obj->valuestring, ci->valuestring, valuestring_length) ; new_obj->valuestring[valuestring_length] = 0x0 ;   
+                        // cJSON_AddItemToObject(new_obj, new_obj->valuestring, string); 
+                        printf("[ValueString]: %s, \n", new_obj->valuestring) ; 
+                    } else if(cJSON_IsNumber(obj_item)) { 
+                        // cJSON * number = cJSON_CreateNumber(obj_item->valuedouble); 
+                        // double num = cJSON_SetNumberHelper(new_obj, obj_item->valuedouble) ;
+                        new_obj->valueint = ci->valueint ; 
+                        new_obj->valuedouble = ci->valuedouble ; 
+
+                        printf("[value]: %f ", new_obj->valuedouble) ; 
+                    }else {
+                        printf("\n");
+                    }
+                    if ( !cJSON_AddItemToArray(array, new_obj) ) {
+                        printf("Cannot add the new_obj to array!\n"); 
+                    } 
+                }
+            }
+            copyItems(ci, new_json); 
+        }
+        if ( !cJSON_AddItemToArray(new_json, array) ) { 
+            printf("Cannot add the array to new_json!\n"); 
+        } 
+    }  
 }
 
-//parse a object to struct
-int cJSON_to_struct(char *json_string, people *person)
-{
-	cJSON *item;
-	cJSON *root=cJSON_Parse(json_string);
-	if (!root)
-	{
-		printf("Error before: [%s]\n",cJSON_GetErrorPtr());
-		return -1;
-	}
-	else
-	{
-		cJSON *object=cJSON_GetObjectItem(root,"person");
-		if(object==NULL)
-		{
-			printf("Error before: [%s]\n",cJSON_GetErrorPtr());
-			cJSON_Delete(root);
-			return -1;
-		}
-		printf("cJSON_GetObjectItem: type=%d, key is %s, value is %s\n",object->type,object->string,object->valuestring);
+int main(void) {
+    char * text = (char *)malloc(sizeof(char) * BUFF_SIZE) ; 
+    char c ; 
+    int idx = 0, n = 1 ; 
+    cJSON *json ; 
+    
+    // INPUT 
+    while( (c = getchar()) != EOF) {
+        if (idx >= BUFF_SIZE) { 
+            text = (char *)realloc(text, sizeof(char) * BUFF_SIZE * (++n)) ;
+        }
+        text[idx++] = c; 
+    }
+    text[idx] = '\0'; 
 
-		if(object!=NULL)
-		{
-			item=cJSON_GetObjectItem(object,"firstName");
-			if(item!=NULL)
-			{
-				printf("cJSON_GetObjectItem: type=%d, string is %s, valuestring=%s\n",item->type,item->string,item->valuestring);
-				memcpy(person->firstName,item->valuestring,strlen(item->valuestring));
-			}
+    // Parse 
+    json = cJSON_Parse(text) ;
+    if (!json) {
+        printf("Error before: [%s]\n",cJSON_GetErrorPtr());
+    } else { 
+        printf("[JSON file structure]\n"); 
+        printf("%s\n", cJSON_Print(json));
+        
+        char * copy_text = NULL ; 
+        cJSON * created_cJSON = cJSON_CreateStringReference(text); 
 
-			item=cJSON_GetObjectItem(object,"lastName");
-			if(item!=NULL)
-			{
-				printf("cJSON_GetObjectItem: type=%d, string is %s, valuestring=%s\n",item->type,item->string,item->valuestring);
-				memcpy(person->lastName,item->valuestring,strlen(item->valuestring));
-			}
+        if (!created_cJSON) {
+            printf("Cannot create the cJSON: [%s]\n",cJSON_GetErrorPtr());
+        } else {    
+            copy_text = (char *)cJSON_malloc(sizeof(char) * idx) ;
+            // If the content of entity is correctly copied to copy_text, true
+            if (cJSON_PrintPreallocated(json, copy_text, idx , cJSON_True)) { 
+                printf("%s\n", copy_text); 
 
-			item=cJSON_GetObjectItem(object,"email");
-			if(item!=NULL)
-			{
-				printf("cJSON_GetObjectItem: type=%d, string is %s, valuestring=%s\n",item->type,item->string,item->valuestring);
-				memcpy(person->email,item->valuestring,strlen(item->valuestring));
-			}
+                if( !strcmp(text, copy_text)) {
+                    printf("The content of text is same with copy_text!\n"); 
+                }else {
+                    printf("The content of text is not same with copy_text!\n"); 
+                }
+            }
+            if ( copy_text != NULL ) free(copy_text); 
 
-			item=cJSON_GetObjectItem(object,"age");
-			if(item!=NULL)
-			{
-				printf("cJSON_GetObjectItem: type=%d, string is %s, valueint=%d\n",item->type,item->string,item->valueint);
-				person->age=item->valueint;
-			}
-			else
-			{
-				printf("cJSON_GetObjectItem: get age failed\n");
-			}
+            // copy the content of object
+            copyItems(json, created_cJSON) ;
+            printf("<<< COPY ITEMS >>>\n");
+            printf("%s\n", cJSON_PrintUnformatted(created_cJSON));
+            
+            cJSON_free(created_cJSON); 
+        }
 
-			item=cJSON_GetObjectItem(object,"height");
-			if(item!=NULL)
-			{
-				printf("cJSON_GetObjectItem: type=%d, string is %s, valuedouble=%f\n",item->type,item->string,item->valuedouble);
-				person->height=item->valuedouble;
-			}
-		}
+        // cJSON Duplicate
+        cJSON * json_dup = cJSON_Duplicate(json, cJSON_True); 
 
-		cJSON_Delete(root);
-	}
-	return 0;
-}
+        // Compare original cJSON to duplicated cJSON. 
+        if (cJSON_Compare(json, json_dup, cJSON_False)) {
+            printf("Copy is correct!\n"); 
+        }
+        cJSON_free(json_dup) ;
 
-//parse a struct array
-int cJSON_to_struct_array(char *text, people worker[])
-{
-	cJSON *json, *arrayItem, *item, *object;
-	int i;
+        /* Minify a strings, remove blank characters(such as ' ', '\t', '\r', '\n') from strings.*/
+        cJSON_Minify(text); 
+        json_dup = cJSON_Parse(text) ; 
+        if (!json_dup) {
+            printf("Error before: [%s]\n",cJSON_GetErrorPtr());
+        }else {
+            printf("%s\n", cJSON_PrintUnformatted(json_dup)); ;
+        }
 
-	json = cJSON_Parse(text);
-	if (!json)
-	{
-		printf("Error before: [%s]\n",cJSON_GetErrorPtr());
-	}
-	else
-	{
-		arrayItem=cJSON_GetObjectItem(json,"people");
-		if(arrayItem!=NULL)
-		{
-			int size = cJSON_GetArraySize(arrayItem);
-			printf("cJSON_GetArraySize: size=%d\n",size);
-
-			for(i = 0; i < size; i++)
-			{
-				printf("i=%d\n",i);
-				object = cJSON_GetArrayItem(arrayItem, i);
-
-				item = cJSON_GetObjectItem(object, "firstName");
-				if(item!=NULL)
-				{
-					printf("cJSON_GetObjectItem: type=%d, string is %s\n", item->type,item->string);
-					memcpy(worker[i].firstName, item->valuestring, strlen(item->valuestring));
-				}
-
-				item = cJSON_GetObjectItem(object,"lastName");
-				if(item!=NULL)
-				{
-					printf("cJSON_GetObjectItem: type=%d, string is %s, valuestring=%s\n",item->type,item->string,item->valuestring);
-					memcpy(worker[i].lastName, item->valuestring, strlen(item->valuestring));
-				}
-
-				item = cJSON_GetObjectItem(object,"email");
-				if(item!=NULL)
-				{
-					printf("cJSON_GetObjectItem: type=%d, string is %s, valuestring=%s\n",item->type, item->string, item->valuestring);
-					memcpy(worker[i].email, item->valuestring, strlen(item->valuestring));
-				}
-
-				item = cJSON_GetObjectItem(object,"age");
-				if(item!=NULL)
-				{
-					printf("cJSON_GetObjectItem: type=%d, string is %s, valueint=%d\n",item->type, item->string, item->valueint);
-					worker[i].age = item->valueint;
-				}
-				else
-				{
-					printf("cJSON_GetObjectItem: get age failed\n");
-				}
-
-				item = cJSON_GetObjectItem(object,"height");
-				if(item != NULL)
-				{
-					printf("cJSON_GetObjectItem: type=%d, string is %s, value=%f\n",item->type, item->string, item->valuedouble);
-					worker[i].height = item->valuedouble;
-				}
-			}
-		}
-
-		for(i = 0; i < 3; i++) {
-			printf("i=%d, firstName=%s,lastName=%s,email=%s,age=%d,height=%f\n",
-				i,
-				worker[i].firstName,
-				worker[i].lastName,
-				worker[i].email,
-				worker[i].age,
-				worker[i].height);
-		}
-
-		cJSON_Delete(json);
-	}
-	return 0;
-}
-
-int main(int argc, char **argv)
-{
-    people worker[3]={{0}};
-	
-    char* buf = (char*)malloc(sizeof(char) * 8196);
-    int len = 0;
-    memset(buf, 0, 8196); 
-
-    while((buf[len] = getc(stdin)) != EOF){
-	len++;
+        if (cJSON_Compare(json, json_dup, cJSON_False)) {
+            printf("Structure of minified text is same with the structure of original text!\n"); 
+        }else{
+            printf("Structure of minified text is not same with the structure of original text!\n");
+        }
+        
+        /* Delete a cJSON entity and all subentities. */
+        cJSON_Delete(json_dup);
+        cJSON_Delete(json); 
     }
     
-    cJSON_to_struct_array(buf, worker);
+    free(text); 
 
-    free(buf);
     return 0;
 }
+
+
