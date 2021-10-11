@@ -22,6 +22,8 @@ typedef struct test_config{
 
 	// configuations for mutaional fuzzer input
 	int mutation;		// first flag, later number of seed
+	int greybox;		// 1: greybox 0: blackbox
+	int init_seed;		// number of init_seed;
 	char* mutation_dir; // Dir path for mutation input seeds
 	int exponent; 		//exponent for boosted greybox fuzzer
 	int file_name;      //  file nmae to input = 1

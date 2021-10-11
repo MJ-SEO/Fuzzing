@@ -73,6 +73,9 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 		fuzz_config.mutation = n_inputs;
 	}
 
+	fuzz_config.greybox = config->greybox;
+	fuzz_config.init_seed = config->init_seed;
+
 	if(config->f_min_len < MINLEN || config->f_max_len > MAXLEN){
 		perror("[fuzzer_init] - Fuzzer Length Error\n");
 		exit(1);
@@ -485,7 +488,7 @@ fuzzer_main(test_config_t* config){
 		if(fuzz_config.mutation > 0){
 		//	printf("[DEBUG] i: %d mute: %d file num: %d\n", fuzz_config.mutation, i,  i%fuzz_config.mutation);
 //			fuzz_len = mutational_input(input, seed[i%(fuzz_config.mutation)].data, 1);			// Generate Mutational InputI
-			if(i==0){
+			if(i<fuzz_config.init_seed){
 				fuzz_len = mutational_input(input, choose_seed(seed, fuzz_config.mutation, fuzz_config.exponent), 0);
 			}
 			else{
@@ -523,9 +526,8 @@ fuzzer_main(test_config_t* config){
 
 				int new_mutate = 0;
 				read_gcov_coverage(fuzz_config.sources[n_src], gcov_results, i, n_src,gcov_src[n_src].gcov_line, gcov_src[n_src].bitmap, gcov_src[n_src].branch_bitmap, &new_mutate);
-				
-				
-				if(new_mutate == 1 && fuzz_config.mutation>0){
+		
+				if(new_mutate == 1 && fuzz_config.mutation>0 && fuzz_config.greybox == 1){
 					printf("[DEBUG] new_mutate_inp\n");
 					fuzz_config.mutation++;
 					sprintf(seed[fuzz_config.mutation-1].data, "%s/input%d", config->mutation_dir, fuzz_config.mutation); 
