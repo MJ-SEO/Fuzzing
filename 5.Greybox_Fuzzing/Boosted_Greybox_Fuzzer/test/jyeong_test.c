@@ -4,9 +4,9 @@
 
 void
 config_setting(test_config_t* config){
-//	config->mutation_dir = "./input/cjson_inp";
-//	config->mutation = 1;
-//	config->file_name = 1;
+	config->mutation_dir = "./input/cjson_inp";
+	config->mutation = 1;
+	config->file_name = 1;
 
 	config->trial = 5000;
 
@@ -20,6 +20,7 @@ config_setting(test_config_t* config){
 
 	src_arr[0] = "cJSON.c";
 
+	config->greybox = 1;
 	config->sources = src_arr;
 	config->source_path = "../lib/CJSON/";
 	config->curr_dir = 1;

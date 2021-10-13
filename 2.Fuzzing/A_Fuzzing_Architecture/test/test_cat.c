@@ -68,10 +68,11 @@ oracle(char* dir_name, int file_num, int* result, int return_code){
 
 void
 config_setting(test_config_t* config){
-	config->f_min_len = 1030;
-	config->f_max_len = 1030;
+	config->f_min_len = 5;
+	config->f_max_len = 30;
 	
 	config->f_char_start = 32;
+	config->f_char_start = 24;
 
 	char* options[4] = {"-b"};
 	config->cmd_args = options;

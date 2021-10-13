@@ -102,7 +102,7 @@ read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, int l
 		curr_info[trial][n_src].union_line = union_bits(bitmap, curr_mask, lines);
 		int after_lines = curr_info[trial][n_src].union_line;
 		if(after_lines > before_lines){	
-			*new_mutate = 1;
+//			*new_mutate = 1;	// Not use line
 		}
 	}
 

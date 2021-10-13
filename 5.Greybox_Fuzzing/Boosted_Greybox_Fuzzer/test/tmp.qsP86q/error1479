@@ -1,0 +1,2 @@
+simple_parse_and_print: cJSON_Parse failed: Success
+free(): invalid next size (fast)

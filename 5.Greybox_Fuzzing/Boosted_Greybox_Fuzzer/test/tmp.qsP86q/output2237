@@ -1,0 +1,36 @@
+
+=========================================
+PARSE: FORMATTED
+=========================================
+7
+
+=========================================
+PARSE: UNFORMATTED
+=========================================
+7
+
+=========================================
+PARSE_W_LEN: FORMATTED
+=========================================
+7
+
+=========================================
+PARSE_W_LEN: UNFORMATTED
+=========================================
+7
+
+=========================================
+PRINT_PREALLOCATED: FORMATTED
+=========================================
+1
+7
+=========================================
+PRINT_PREALLOCATED: UNFORMATTED
+=========================================
+1
+7duplicate success
+
+=========================================
+MINIFIED
+=========================================
+7iSu{"widget":{"debug":"on","window":{"title":"Sample Konfabulator Widget","name":"main_window","width":500,"height":500},"image":{"src":"Images/Sun.png","name":"sun1","hOffset":250,"vOffset":250,"alignment":"center"},"text":{"data":"Click Here","size":36,"style":"bold","name":"text1","hOffset":250,T"vOffset":100,"alignment":"center","onMouseUp":"sun1.opacity = (sun1.opacity / 100) * 90;"}}}

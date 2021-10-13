@@ -272,6 +272,8 @@ fuzzer_main(test_config_t* config){
 		char* input = (char*)malloc(sizeof(char)*(fuzz_config.f_max_len + 1)); 
 		
 		int fuzz_len = create_input(&fuzz_config, input);
+		
+		printf("[Random] %s\n", input);
 
 		return_code[i] = run(&fuzz_config, input, fuzz_len, dir_name, i, gcov_flag);
 		free(input);
