@@ -20,7 +20,7 @@ config_setting(test_config_t* config){
 
 	src_arr[0] = "cJSON.c";
 
-	config->greybox = 1;
+	config->greybox = 0;
 	config->sources = src_arr;
 	config->source_path = "../lib/CJSON/";
 	config->curr_dir = 1;

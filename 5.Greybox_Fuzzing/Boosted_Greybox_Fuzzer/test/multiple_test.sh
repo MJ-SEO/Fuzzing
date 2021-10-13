@@ -4,7 +4,7 @@ start_time=$(date +%s)
 
 for i in 1 2 3 4 5;
 do
-	./seoye_test
+	./jtest
 	mv ./input/cjson_inp/input1 ./input/cjson_inp/temp1
 	mv ./input/cjson_inp/input2 ./input/cjson_inp/temp2
 	mv ./input/cjson_inp/input3 ./input/cjson_inp/temp3

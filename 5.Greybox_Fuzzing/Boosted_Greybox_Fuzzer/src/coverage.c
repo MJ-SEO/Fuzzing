@@ -21,17 +21,20 @@ get_gcov_line(char* c_file, int* gcov_line_for_ratio, int* gcov_line_for_branch)
 	int n_line = 0;
 	
 	while((ret = getline(&line, &size, fp)) != -1){
+		if(strstr(line, "branch") != NULL){
+			*gcov_line_for_branch = (*gcov_line_for_branch) + 1;
+		}
 		char* ptr = strtok(line, ":");
 		int flag = 0;
 		while(ptr != NULL){
 			if((flag == 0 && atoi(ptr) > 0 ) || (flag == 0 && strstr(ptr, "#") != NULL)){
 			       	*gcov_line_for_ratio = (*gcov_line_for_ratio) + 1;		
 			}
-			if(flag == 0 && strstr(ptr, "branch") != NULL) *gcov_line_for_branch = (*gcov_line_for_branch) + 1;
-			if(flag == 0) n_line++;		
+			
 			ptr = strtok(NULL, ":");
 			flag++;
 		}
+		n_line++;
 	}
 	fclose(fp);
 	return n_line;
@@ -115,7 +118,7 @@ read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, int l
 		curr_info[trial][n_src].branch_union_line = union_bits(branch_bitmap, branch_mask, lines);
 		int after_branch_lines = curr_info[trial][n_src].branch_union_line;
 		if(after_branch_lines > before_branch_lines){
-			*new_mutate = 1;	//TODO line, branch 따로?
+			*new_mutate = 1;
 		}	
 	}
 
