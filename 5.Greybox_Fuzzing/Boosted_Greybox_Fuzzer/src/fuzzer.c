@@ -262,6 +262,7 @@ get_info(test_config_t * config, char* input, int input_size, char* dir_name, in
 		}
 	}
 
+	close(in_pipes[0]);
 	close(out_pipes[0]);
 	close(err_pipes[0]);
 
@@ -320,19 +321,19 @@ run_gcov(char* source, int idx){
 
 int
 run(test_config_t* config, char* input, int input_size, char* dir_name, int file_num){
-	if (pipe(in_pipes) != 0 || pipe(out_pipes) != 0 || pipe(err_pipes) != 0) {
-		perror("Pipe Error real zz\n") ;
+	if (pipe(in_pipes) != 0) {
+		perror("IN Pipe Error\n") ;
 		exit(1) ;
 	}
-/*	if (pipe(in_pipes) != 0 || pipe(out_pipes) != 0 || pipe(err_pipes) != 0) {
-		perror("Pipe Error real zz\n") ;
+	if (pipe(out_pipes) != 0) {
+		perror("OUT Pipe Error\n") ;
 		exit(1) ;
 	}
-	if (pipe(in_pipes) != 0 || pipe(out_pipes) != 0 || pipe(err_pipes) != 0) {
-		perror("Pipe Error real zz\n") ;
+	if (pipe(err_pipes) != 0) {
+		perror("ERR Pipe Error\n") ;
 		exit(1) ;
 	}
-*/
+	
 	int return_code;
 
 	alarm(config->timeout);
