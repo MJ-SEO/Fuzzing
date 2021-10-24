@@ -16,11 +16,12 @@
 typedef struct seed{
 	char data[DATA_MAX];   // file name
 	size_t length;
-	double energy;
+	int num_executed;
+	long double energy;
 } seed_t;
 
 // assign energy in each seed  
-int assign_energy(seed_t* seed, int n_input, int exponent);
+int assign_energy(seed_t* seed, int n_input, double exponent);
 
 // get weigth of each seed
 double* normalized_energy(seed_t* seed, int n_input, double* sum_energy);
@@ -29,7 +30,7 @@ double* normalized_energy(seed_t* seed, int n_input, double* sum_energy);
 int convert_energy_index(double sum_energy, double* norm_energy_list, int n_input);
 
 // choose one seed with weight
-char* choose_seed(seed_t* seed, int n_input, int exponent);
+char* choose_seed(seed_t* seed, int n_input, double exponent, int* choosed);
 
 #endif
 

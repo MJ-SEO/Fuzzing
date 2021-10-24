@@ -1,20 +1,20 @@
 #include "../include/sched.h"
 
-//#define DEBUG
-
-/*
-int
-seed(char* src, char* dst){	// Receive f_name in src Return seed to dst, Return int is length of seed
-	
-}
-*/
-
-int test[3];
+// #define DEBUG
 
 int 
-assign_energy(seed_t* seed, int n_input, int exponent){
+assign_energy(seed_t* seed, int n_input, double exponent){
 	for(int i=0; i<n_input; i++){
-		seed[i].energy = 1;
+#ifdef DEBUG
+		printf("[ASSIGNT] seed[%d] %d, %lf\n", i, seed[i].num_executed, exponent);
+		//printf("[ASSIGNT] energy: %lf\n", 1 / pow(seed[i].num_executed, exponent));
+#endif
+//		printf("[FLOATING?] %lf\n", (pow(seed[i].num_executed, exponent)));
+		seed[i].energy = 1 / (pow(seed[i].num_executed, exponent));
+#ifdef DEBUG
+		printf("[ASSIGNT] seed[%d] energy: %Lf\n", i, seed[i].energy);
+#endif
+
 	}
 	return 1;
 }
@@ -60,7 +60,7 @@ convert_energy_index(double sum_energy, double* n_energy_list, int n_input){
 }
 
 char*
-choose_seed(seed_t* seed, int n_input, int exponent){
+choose_seed(seed_t* seed, int n_input, double exponent, int* choosed){
 	assign_energy(seed, n_input, exponent);
 	double sum_energy = 0;
 	double* norm_energy_list;
@@ -68,22 +68,29 @@ choose_seed(seed_t* seed, int n_input, int exponent){
 	norm_energy_list = normalized_energy(seed, n_input, &sum_energy);
 
 #ifdef DEBUG
-	printf("[DEBUG] sum_E: %d\n", sum_energy);
+	printf("[CHOOSE] sum_energy: %lf\n", sum_energy);
 	for(int i=0; i<n_input; i++){
-		printf("[DEBUG] norm[%d]: %d\n", i, norm_energy_list[i]);
+		printf("[CHOOSE] norm[%d]: %lf\n", i, norm_energy_list[i]);
 	}
 #endif
-
+/*
+	for(int i=0; i<n_input; i++){
+		printf("[DEBUG] seed[%d]: %s\n", i, seed[i].data);
+	}
+*/
 	int index;
-
 	if((index = convert_energy_index(sum_energy, norm_energy_list, n_input)) == -1){
 		perror("choose_seed: convert error\n");
 		exit(1);
 	}
-	test[index]++;
-	
+	seed[index].num_executed++;
+	*choosed = index;
+
+//	printf("[DEBUG] seed[%d] executed %d\n", index, seed[index].num_executed);
+
 	return seed[index].data;
 }
+
 
 /*
 int main(){	 // TEST DRIVER for scheduler
@@ -106,9 +113,9 @@ int main(){	 // TEST DRIVER for scheduler
 			n_input++;
 		}
 	}
-	
-	for(int i=0; i<10000; i++){
-		char* chosen = choose_seed(seed, n_input);	
+
+	for(int i=0; i<10; i++){
+		char* chosen = choose_seed(seed, n_input, 0.5);	
 	}
 
 	for(int i=0; i<3; i++){
@@ -116,5 +123,4 @@ int main(){	 // TEST DRIVER for scheduler
 	}
 	printf("\n");
 
-
-} */
+}*/

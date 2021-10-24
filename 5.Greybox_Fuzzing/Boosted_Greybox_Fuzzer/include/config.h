@@ -25,7 +25,7 @@ typedef struct test_config{
 	int greybox;		// 1: greybox 0: blackbox
 	int init_seed;		// number of init_seed;
 	char* mutation_dir; // Dir path for mutation input seeds
-	int exponent; 		//exponent for boosted greybox fuzzer
+	double exponent; 		//exponent for boosted greybox fuzzer
 	int file_name;      //  file nmae to input = 1
 			    //  file content to input = 0
 

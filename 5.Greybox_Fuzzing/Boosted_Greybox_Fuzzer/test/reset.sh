@@ -1,5 +1,7 @@
 # !bin/bash
 
+make clean
+
 mv ./input/cjson_inp/input1 ./input/cjson_inp/temp1
 mv ./input/cjson_inp/input2 ./input/cjson_inp/temp2
 mv ./input/cjson_inp/input3 ./input/cjson_inp/temp3

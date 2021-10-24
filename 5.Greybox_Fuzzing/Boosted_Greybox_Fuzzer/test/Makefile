@@ -41,7 +41,7 @@ crash: crash_test.c ../lib/crashme.c ../src/fuzzer.c ../src/create_input.c ../sr
 
 json:
 	gcc --coverage -o cjson ../lib/CJSON/testCJSON.c ../lib/CJSON/cJSON.c
-	gcc -o jtest cjson_test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c	
+	gcc -o jtest cjson_test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c -lm
 
 jin1:
 	gcc --coverage -o jin1 ../lib/CJSON/jin1.c ../lib/CJSON/cJSON.c

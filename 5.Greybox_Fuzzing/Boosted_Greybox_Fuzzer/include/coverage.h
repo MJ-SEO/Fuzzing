@@ -12,6 +12,9 @@ typedef struct gcov_sources{	// source specific gcov info
 	int gcov_line;
 	int gcov_line_for_ratio;
 	int gcov_line_for_branch;
+
+	unsigned short hash_table[65546];
+	int hash_size;
 } gcov_src_t;  
 
 typedef struct gcov_info{	// Trial specific gcov info
@@ -26,7 +29,7 @@ int get_gcov_line(char* c_file, int* line, int* branch);
 
 int union_bits(char* dest, char* src, int lines);
 
-void read_gcov_coverage(char* c_file, gcov_t** curr_infor, int trial, int n_src, int lines, char* bitmap, char* branch_bitmap, int* new_mutate);
+int read_gcov_coverage(char* c_file, gcov_t** curr_infor, int trial, int n_src, gcov_src_t* gcov_info);
 
 void gcda_remove(char* c_file, char* path);
 
