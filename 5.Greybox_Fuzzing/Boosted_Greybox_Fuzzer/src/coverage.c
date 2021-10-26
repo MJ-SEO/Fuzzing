@@ -104,7 +104,7 @@ read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, gcov_
 	ssize_t ret;
 	char* line = NULL;
 	size_t size = 0;
-
+	int branch_bit = 0;
 	int n_bit = 0;
 	int n_line = 0;
 	int n_branch = 0;
@@ -130,12 +130,13 @@ read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, gcov_
 				int b_flag = 0;
 				while(btok != NULL){
 					if(b_flag == 3 && atoi(btok) > 0){
-						branch_mask[n_bit] = '1';
+						branch_mask[branch_bit] = '1';
 						n_branch++;
 					}
 					btok = strtok(NULL, " ");		
 					b_flag++;
-				}			
+				}
+				branch_bit++;
 			}
 			ptr = strtok(NULL, ":");
 			flag++;
@@ -143,6 +144,8 @@ read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, gcov_
 		n_bit++;
 	}
 	
+	branch_mask[n_branch] = 0;
+
 #ifdef DEBUG
 	printf("[BRANCH] %s\n", branch_mask);
 	printf("[HASHING] %u\n", hashing(branch_mask));
@@ -175,7 +178,7 @@ read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, gcov_
 		curr_info[trial][n_src].branch_union_line = union_bits(gcov_info->branch_bitmap, branch_mask, gcov_info->gcov_line);
 		int after_branch_lines = curr_info[trial][n_src].branch_union_line;
 		if(after_branch_lines > before_branch_lines){
-			add_seed = 1;
+		//	add_seed = 1;
 		}	
 	}
 

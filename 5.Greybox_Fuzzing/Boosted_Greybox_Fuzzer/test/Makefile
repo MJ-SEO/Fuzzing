@@ -45,11 +45,11 @@ json:
 
 jin1:
 	gcc --coverage -o jin1 ../lib/CJSON/jin1.c ../lib/CJSON/cJSON.c
-	gcc -o jin1_test jin1_test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c
+	gcc -o jin1_test -g jin1_test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c -lm
 
 seoye:
 	gcc --coverage -o seoye ../lib/CJSON/seoye.c ../lib/CJSON/cJSON.c
-	gcc -o seoye_test seoye_test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c
+	gcc -o seoye_test seoye_test.c ../src/fuzzer.c ../src/create_input.c ../src/config.c ../src/coverage.c ../src/mutating.c ../src/sched.c -lm
 
 woosam:
 	gcc --coverage -o woosam ../lib/CJSON/woosam.c ../lib/CJSON/cJSON.c

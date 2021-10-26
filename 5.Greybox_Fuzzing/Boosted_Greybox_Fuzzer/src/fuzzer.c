@@ -18,7 +18,7 @@ static int out_pipes[2] ;
 static int err_pipes[2] ;
 static pid_t child_pid;
 // static char input_files[100][4096];
-static seed_t seed[2000];	// Capacity of Seed?
+static seed_t seed[8192];	// Capacity of Seed?
 
 static int gcov_flag;
 
@@ -398,8 +398,17 @@ show_gcov(int* return_code, gcov_t** gcov_results, int trial, int n_src){
 	//	printf("Hash: %d\n", gcov_src[0].hash_table[i]);
 //	}
 	printf("[DEBUG] num_of_hash: %d\n", gcov_src[0].hash_size);
-	
-
+	int flag = 0;
+/*	for(int i=0; i<gcov_src[0].hash_size; i++){
+		for(int j=i+1; j<gcov_src[0].hash_size; j++){
+			if(gcov_src[0].hash_table[i] == gcov_src[0].hash_table[j]){
+				printf("[!!!!!!!!!!!!!11] dup!! in %d\n", j);
+			}
+		}
+		flag++;
+	}
+	printf("[DEBUG] flag: %d\n", flag);
+*/
 	printf("=====================================================================\n");
 	// TODO multiple source
 }
@@ -424,7 +433,7 @@ make_csv(gcov_t** gcov_results, int trial, int n_src){
 		printf("Line: %d  ", gcov_results[i-1][0].union_line);
 		printf("Branch: %d\n", gcov_results[i-1][0].branch_union_line);
 */
-		sprintf(buffer, "%d,", gcov_results[i][0].branch_union_line);
+		sprintf(buffer, "%d\n", gcov_results[i][0].branch_union_line);
 		fwrite(buffer, 1, strlen(buffer), csv);
 		free(buffer);
 	}
@@ -558,17 +567,17 @@ fuzzer_main(test_config_t* config){
 				if(new_mutate == 1 && fuzz_config.mutation>0 && fuzz_config.greybox == 1 && i >= fuzz_config.init_seed){	// TODO condition.....
 					fuzz_config.mutation++;
 					sprintf(seed[fuzz_config.mutation-1].data, "%s/input%d", config->mutation_dir, fuzz_config.mutation); 
+	
 					seed[fuzz_config.mutation-1].num_executed = 1;
-					
-					printf("[DEBUG] choosed: %d\n", choosed);
-					if(seed[choosed].num_executed != 1){
+//					printf("[DEBUG] choosed: %d\n", choosed);
+					if(seed[choosed].num_executed > 1){
 						seed[choosed].num_executed -= 1;
 					}
 
 					char* input_name = (char*)malloc(sizeof(char)*25);
 					sprintf(input_name, "%s/input%d", fuzz_config.mutation_dir, fuzz_config.mutation);
 					FILE* new_inp_file = fopen(input_name, "wb");
-					printf("[DEBUG] new_inp_file: %s\n", input_name);
+//					printf("[DEBUG] new_inp_file: %s\n", input_name);
 					if(new_inp_file == NULL){
 						perror("new_mutate: FILE Open Failed");
 					}
