@@ -8,7 +8,7 @@ config_setting(test_config_t* config){
 	config->mutation = 1;
 	config->file_name = 1;
 
-	config->trial = 150000;
+	config->trial = 1000;
 
 	int n_src = 1;
 	config->number_of_source = n_src;
