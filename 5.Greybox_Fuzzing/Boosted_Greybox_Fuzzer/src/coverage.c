@@ -56,24 +56,20 @@ union_bits(char* dest, char* src, int lines){
 
 
 int
-lookup(unsigned short hash_num, unsigned short* hash_table, int* hash_size, int trial){
-		
-	if(*hash_size < trial){
-		hash_table[*hash_size] = hash_num;
-		*hash_size = (*hash_size) + 1;
-		return 0;
+lookup(unsigned short hash_num, unsigned short* hash_table, seed_t* seed){
+	
+	if(hash_table[hash_num] == '0'){
+		printf("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n");
+		hash_table[hash_num] = '1';
+		return 1;
 	}
 	else{
-		for(int i=0; i<*hash_size; i++){
-			if(hash_table[i] == hash_num){
-				return 0;
-			}
-		}
+		printf("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n");
+		// seed frequeny increases;
+		seed->num_executed++;
+		return 0;
 	}
-	
-	hash_table[*hash_size] = hash_num;
-	*hash_size = (*hash_size) + 1;
-	return 1;
+
 }
 
 unsigned short
@@ -87,7 +83,7 @@ hashing(char* bitmap){
 }
 
 int
-read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, gcov_src_t* gcov_info){
+read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, gcov_src_t* gcov_info, seed_t* seed){
 	char gcov_file[64];
 	strcpy(gcov_file, c_file);
 	strcat(gcov_file, ".gcov");
@@ -151,8 +147,9 @@ read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, gcov_
 	printf("[HASHING] %u\n", hashing(branch_mask));
 #endif
 	
-	add_seed = lookup(hashing(branch_mask), gcov_info->hash_table, &(gcov_info->hash_size), 3);
-	
+	add_seed = lookup(hashing(branch_mask), gcov_info->hash_table, seed);
+	printf("[LOOKUP] add_seed: %d\n", add_seed);
+
 //	printf("[DEBUG] size: %d\n", gcov_info->hash_size);
 //	printf("[DEBUG] ht: %u\n", gcov_info->hash_table[0]);
 

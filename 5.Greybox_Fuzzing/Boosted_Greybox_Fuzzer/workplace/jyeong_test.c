@@ -6,8 +6,9 @@ void
 config_setting(test_config_t* config){
 	config->mutation_dir = "./input/cjson_inp";
 	config->mutation = 1;
+	config->file_name = 1;
 
-	config->trial = 1000;
+	config->trial = 5000;
 
 	int n_src = 1;
 	config->number_of_source = n_src;
@@ -24,7 +25,7 @@ config_setting(test_config_t* config){
 	config->source_path = "../lib/CJSON/";
 	config->curr_dir = 1;
 	
-	strcpy(config->binary_path, "./seoye");
+	strcpy(config->binary_path, "./jyeong");
 }
 
 int main(){

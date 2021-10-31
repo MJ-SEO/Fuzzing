@@ -396,7 +396,7 @@ show_gcov(int* return_code, gcov_t** gcov_results, int trial, int n_src){
 //	for(int i=0; i<gcov_src[0].hash_size; i++){
 	//	printf("Hash: %d\n", gcov_src[0].hash_table[i]);
 //	}
-//	printf("[DEBUG] num_of_hash: %d\n", gcov_src[0].hash_size);
+	printf("[DEBUG] num_of_hash: %d\n", gcov_src[0].hash_size);
 	int flag = 0;
 /*	for(int i=0; i<gcov_src[0].hash_size; i++){
 		for(int j=i+1; j<gcov_src[0].hash_size; j++){
@@ -557,20 +557,16 @@ fuzzer_main(test_config_t* config){
 					gcov_src[n_src].branch_bitmap = (char*)malloc(sizeof(char) * gcov_src[n_src].gcov_line);
 					memset(gcov_src[n_src].bitmap, 0, sizeof(char) * gcov_src[n_src].gcov_line);
 					memset(gcov_src[n_src].branch_bitmap, 0, sizeof(char) * gcov_src[n_src].gcov_line);
-					memset(gcov_src[n_src].hash_table, '0', sizeof(gcov_src[n_src].hash_table));
+				//	gcov_src[n_src].hash_size = 0;
 				}
 
-				int new_mutate = 0;
-				new_mutate =  read_gcov_coverage(fuzz_config.sources[n_src], gcov_results, i, n_src, &gcov_src[n_src], &seed[choosed]);
+				int new_mutate;
+				new_mutate =  read_gcov_coverage(fuzz_config.sources[n_src], gcov_results, i, n_src, &gcov_src[n_src]);
 				
-				printf("[DEBUG] BEFORE NEW %d\n", new_mutate);
-
 				if(new_mutate == 1 && fuzz_config.mutation>0 && fuzz_config.greybox == 1 && i >= fuzz_config.init_seed){	// TODO condition.....
 					fuzz_config.mutation++;
 					sprintf(seed[fuzz_config.mutation-1].data, "%s/input%d", config->mutation_dir, fuzz_config.mutation); 
 	
-					printf("[DEBUG] AFTER NEW\n");
-					
 					seed[fuzz_config.mutation-1].num_executed = 1;
 //					printf("[DEBUG] choosed: %d\n", choosed);
 					if(seed[choosed].num_executed > 1){

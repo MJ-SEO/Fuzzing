@@ -19,7 +19,6 @@ config_init(test_config_t * config){
     config->init_seed = 3;
 
     config->exponent = 0.8;
-    config->file_name = 0;
 
     strcpy(config->binary_path, "") ;
    

@@ -17,7 +17,7 @@ insert_random_character(char* seed, char* mutated_inp, int length, int offset, i
 	memcpy(mutated_inp, seed, sizeof(char) * length);
 	
 	for(int i=0; i<byte; i++){
-		char rand_char = rand()%96 + 32; // 32 ~ 127
+		char rand_char = rand()%95 + 32; // 32 ~ 127
 		mutated_inp[offset+i] = rand_char;
 	}
 
@@ -200,7 +200,7 @@ change_known_integer(char* seed, char* mutated_inp, int length, int offset, int 
 
 int
 insert_mutation(char* seed, char* mutated_inp, int inp_len, int offset, int byte){
-	int mutator = rand()%2+1;
+	int mutator = rand()%1+1;
 	
 	if((offset + byte) >= SEED_MAX){				 // TODO more...
 		perror("insert_mutation: offset overflow");
@@ -228,7 +228,7 @@ insert_mutation(char* seed, char* mutated_inp, int inp_len, int offset, int byte
 
 int
 change_mutation(char* seed, char* mutated_inp, int inp_len, int offset, int byte){
-	int mutator = rand()%4+1;
+	int mutator = rand()%3+1;
 	
 	if((offset + byte) > SEED_MAX){				 // TODO more...
 		perror("change_mutation: offset overflow");
@@ -293,25 +293,21 @@ mutate(char* seed, char* mutated_inp, int inp_len){
 	return len;
 }
 
+/*
+int main(){					// TEST DRIVER for mutating
+	srand((unsigned int)time(NULL));
+	int len = 0;
+	for(int i=0; i<10; i++){
+		char* seed = "https://www.google.com";
+		int length = strlen(seed);
+		char* mutated_inp = (char*)malloc(sizeof(char) * 1024);
+		memset(mutated_inp, 0, 1024);
 
-// int main(){					// TEST DRIVER for mutating
-// 	srand((unsigned int)time(NULL));
-// 	int len = 0;
-// 	for(int i=0; i<10; i++){
-// 		char* seed = "https://www.google.com";
-// 		int length = strlen(seed);
-// 		char* mutated_inp = (char*)malloc(sizeof(char) * 1024);
-// 		memset(mutated_inp, 0, 1024);
-
-// 		len = mutate(seed, mutated_inp, length);
-// 		printf("%s\n",mutated_inp);
-// 			printf("[RESULT]: ");
-// 			for(int i = 0; i < len ; i++){
-// 				printf("%d\n",mutated_inp[i]);
-// 			}
-// 			printf("(%d) / %ld\n\n", len, strlen(mutated_inp));	
+		len = mutate(seed, mutated_inp, length);
 		
-// 		free(mutated_inp);
-// 	}
-// }
-
+			printf("[RESULT]: %s(%d) / %ld\n\n", mutated_inp, len, strlen(mutated_inp));	
+		
+		free(mutated_inp);
+	}
+}
+*/
