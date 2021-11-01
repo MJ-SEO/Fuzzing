@@ -1,6 +1,0 @@
-{"wiget": {
-    "debug": "on",
-    "window": {
-        "title": "Sample Konfabulator Widget",
-        "name": "main_window",
-      "width": 5

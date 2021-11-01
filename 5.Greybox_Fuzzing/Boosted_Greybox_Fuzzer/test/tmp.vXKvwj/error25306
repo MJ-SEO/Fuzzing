@@ -1,4 +1,0 @@
-simple_parse_and_print: cJSON_Parse failed: Success
-parse_and_print_with_opt: cJSON_ParseWithOpts failed: Numerical result out of range
-parse_and_print_preallocated: cJSON_ParseWithLength failed: Numerical result out of range
-parse_and_print_preallocated: cJSON_ParseWithLength failed: Numerical result out of range

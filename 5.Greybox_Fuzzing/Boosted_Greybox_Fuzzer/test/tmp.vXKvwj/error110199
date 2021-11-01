@@ -1,2 +1,0 @@
-parse_and_print_preallocated: cJSON_PrintPreallocated failed: Success
-parse_and_print_preallocated: cJSON_PrintPreallocated failed: Invalid argument
