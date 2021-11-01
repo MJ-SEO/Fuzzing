@@ -12,12 +12,14 @@
 #include <math.h>
 
 #define DATA_MAX 8192
+#define INITAL_E 100
 
 typedef struct seed{
 	char data[DATA_MAX];   // file name
 	size_t length;
 	int num_executed;
-	long double energy;
+	int energy;
+//	long double energy;
 } seed_t;
 
 // assign energy in each seed  

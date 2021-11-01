@@ -1,0 +1,75 @@
+
+=========================================
+PARSE_W_LEN: FORMATTED
+=========================================
+{
+	"widget":	{
+		"debug":	"on",
+		"window":	{
+			"title":	"Sample Konfabula@",
+			"name":	"main_window",
+			"width":	500,
+			"height":	500
+		},
+		"image":	{
+			"src":	"Images/Sun.:RUGpng",
+			"name":	"sun1",
+			"hOffset":	250,
+			"vOff":	250,
+			"alignment":	"center"
+		},
+		"text":	{
+			"data":	"Click Here",
+			"size":	36,
+			"style":	"bold",
+			"name":	"text1",
+			"hOffset":	250,
+			"vOffset":	100,
+			"alignment":	"center",
+			"onMouseUp":	"sun1.opacity = (sun1.opacity / 100) * 90;"
+		}
+	}
+}
+
+=========================================
+PARSE_W_LEN: UNFORMATTED
+=========================================
+{"widget":{"debug":"on","window":{"title":"Sample Konfabula@","name":"main_window","width":500,"height":500},"image":{"src":"Images/Sun.:RUGpng","name":"sun1","hOffset":250,"vOff":250,"alignment":"center"},"text":{"data":"Click Here","size":36,"style":"bold","name":"text1","hOffset":250,"vOffset":100,"alignment":"center","onMouseUp":"sun1.opacity = (sun1.opacity / 100) * 90;"}}}
+
+=========================================
+PRINT_PREALLOCATED: FORMATTED
+=========================================
+1
+{
+	"widget":	{
+		"debug":	"on",
+		"window":	{
+			"title":	"Sample Konfabula@",
+			"name":	"main_window",
+			"width":	500,
+			"height":	500
+		},
+		"image":	{
+			"src":	"Images/Sun.:RUGpng",
+			"name":	"sun1",
+			"hOffset":	250,
+			"vOff":	250,
+			"alignment":	"center"
+		},
+		"text":	{
+			"data":	"Click Here",
+			"size":	36,
+			"style":	"bold",
+			"name":	"text1",
+			"hOffset":	250,
+			"vOffset":	100,
+			"alignment":	"center",
+			"onMouseUp":	"sun1.opacity = (sun1.opacity / 100) * 90;"
+		}
+	}
+}
+=========================================
+PRINT_PREALLOCATED: UNFORMATTED
+=========================================
+1
+{"widget":{"debug":"on","window":{"title":"Sample Konfabula@","name":"main_window","width":500,"height":500},"image":{"src":"Images/Sun.:RUGpng","name":"sun1","hOffset":250,"vOff":250,"alignment":"center"},"text":{"data":"Click Here","size":36,"style":"bold","name":"text1","hOffset":250,"vOffset":100,"alignment":"center","onMouseUp":"sun1.opacity = (sun1.opacity / 100) * 90;"}}}

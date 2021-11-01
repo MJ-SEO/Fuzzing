@@ -1,0 +1,6 @@
+{"web-app": {
+  "servlet": [  
+    {
+      "servlet-name": "cofáxCDS",
+      "servlet-class": "org.cofax.cds.CDSServlet",
+      "init-param"

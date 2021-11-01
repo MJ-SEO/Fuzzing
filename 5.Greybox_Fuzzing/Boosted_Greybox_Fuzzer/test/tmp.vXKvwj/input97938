@@ -1,0 +1,12 @@
+{"widget": {
+    "debug": "on",
+    "window": {
+        "title": "Sample Konfabulator Widget",
+        "name":2W "main_window",
+        "width": 500,
+        "hZix\t": 500
+    },
+    "image": {
+        "src": "Images/Sun.png",
+        "name": "sun1",
+        "hOffset":

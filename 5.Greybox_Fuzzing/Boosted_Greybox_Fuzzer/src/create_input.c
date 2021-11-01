@@ -43,7 +43,7 @@ mutational_input(char* fuzz, char* input_file, int trial){
 //	printf("[DEUBG] seed(%d): %s\n", len, seed);
 	strcpy(fuzz, seed);
 
-	for(int i=1; i<=trial; i++){
+	for(int i=0; i<trial; i++){
 		len = mutate(seed, fuzz, len);
 		strcpy(seed, fuzz);
 #ifdef DEBUG

@@ -3,7 +3,7 @@
 //#define DEBUG
 
 int 
-get_gcov_line(char* c_file, int* gcov_line_for_ratio, int* gcov_line_for_branch){
+get_gcov_line(char* c_file, int* tot_lines, int* tot_branches){
 	char gcov_file[64];
 	strcpy(gcov_file, c_file);
 	strcat(gcov_file, ".gcov");
@@ -22,13 +22,13 @@ get_gcov_line(char* c_file, int* gcov_line_for_ratio, int* gcov_line_for_branch)
 
 	while((ret = getline(&line, &size, fp)) != -1){
 		if(strstr(line, "branch") != NULL){
-			*gcov_line_for_branch = (*gcov_line_for_branch) + 1;
+			*tot_branches = (*tot_branches) + 1;
 		}
 		char* ptr = strtok(line, ":");
 		int flag = 0;
 		while(ptr != NULL){
-			if((flag == 0 && atoi(ptr) > 0 ) || (flag == 0 && strstr(ptr, "#") != NULL)){
-				*gcov_line_for_ratio = (*gcov_line_for_ratio) + 1;		
+			if((flag == 0 && atoi(ptr) > 0 ) || (flag == 0 && strstr(ptr, "#####") != NULL)){
+				*tot_lines = (*tot_lines) + 1;		
 			}
 
 			ptr = strtok(NULL, ":");
@@ -52,19 +52,14 @@ union_bits(char* dest, char* src, int lines){
 	return bitsum;
 }
 
-//read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, int lines, char* bitmap, char* branch_bitmap)
-
-
 int
-lookup(unsigned short hash_num, unsigned short* hash_table, seed_t* seed){
+lookup(unsigned short hash_num, char* hash_table, seed_t* seed){
 	
 	if(hash_table[hash_num] == '0'){
-		printf("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n");
 		hash_table[hash_num] = '1';
 		return 1;
 	}
 	else{
-		printf("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n");
 		// seed frequeny increases;
 		seed->num_executed++;
 		return 0;
@@ -148,7 +143,6 @@ read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, gcov_
 #endif
 	
 	add_seed = lookup(hashing(branch_mask), gcov_info->hash_table, seed);
-	printf("[LOOKUP] add_seed: %d\n", add_seed);
 
 //	printf("[DEBUG] size: %d\n", gcov_info->hash_size);
 //	printf("[DEBUG] ht: %u\n", gcov_info->hash_table[0]);
@@ -209,6 +203,7 @@ gcda_remove(char* c_file, char* path){
 		if(remove(gcda_path) != 0){
 			perror("gcda_remove: GCDA PATH delete failed");
 		}
+		free(gcda_path);
 	}
 
 	free(gcda_file);

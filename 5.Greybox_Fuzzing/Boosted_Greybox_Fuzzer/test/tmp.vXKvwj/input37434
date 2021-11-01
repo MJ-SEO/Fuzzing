@@ -1,0 +1,6 @@
+{"widget": {
+    "debug": "on",
+    "window": {
+        "title": "Sample Kolfabulator Widget",
+        "name": "main_window",
+      "width": 5

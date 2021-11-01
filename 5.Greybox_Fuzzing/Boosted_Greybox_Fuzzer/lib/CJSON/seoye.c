@@ -216,11 +216,11 @@ main (int argc, char * argv[])
     printf("%s", input) ;
 #endif
 
-    simple_parse_and_print(input) ;
-    parse_and_print_with_lenght(input, input_len) ;
-    parse_and_print_with_opt(input) ;
+//    simple_parse_and_print(input) ;
+//    parse_and_print_with_lenght(input, input_len) ;
+//    parse_and_print_with_opt(input) ;
     parse_and_print_with_length_opt(input, input_len) ;
-    parse_and_print_preallocated(input, input_len) ;
+//    parse_and_print_preallocated(input, input_len) ;
 
     duplicate_and_compare(input) ;
     parse_and_minify(input, input_len) ;

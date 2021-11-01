@@ -1,0 +1,4 @@
+simple_parse_and_print: cJSON_Parse failed: Success
+parse_and_print_with_opt: cJSON_ParseWithOpts failed: Invalid argument
+parse_and_print_preallocated: cJSON_ParseWithLength failed: Invalid argument
+parse_and_print_preallocated: cJSON_ParseWithLength failed: Invalid argument

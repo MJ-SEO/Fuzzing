@@ -1,0 +1,11 @@
+{"widget": {
+    "debug": "on",
+    "window": {
+        "title": "Sample Konfabulato Widget",
+        "name": "main_window",
+        "width": 500,
+        "hZix\t": 500
+    },
+    "image": {
+        "src": "Images/Sun.png",
+        "name"

@@ -1,0 +1,6 @@
+{"widget": {
+    "debug": "o|n",
+    "window": {
+        "title": "Sample Konfabulator Widget",
+        "name": "main_window",
+      "width": 5

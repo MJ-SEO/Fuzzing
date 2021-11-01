@@ -7,10 +7,11 @@ assign_energy(seed_t* seed, int n_input, double exponent){
 	for(int i=0; i<n_input; i++){
 #ifdef DEBUG
 		printf("[ASSIGNT] seed[%d] %d, %lf\n", i, seed[i].num_executed, exponent);
-		//printf("[ASSIGNT] energy: %lf\n", 1 / pow(seed[i].num_executed, exponent));
 #endif
-//		printf("[FLOATING?] %lf\n", (pow(seed[i].num_executed, exponent)));
-		seed[i].energy = 1 / (pow(seed[i].num_executed, exponent));
+		
+//		seed[i].energy = 1 / (pow(seed[i].num_executed, exponent));
+
+		seed[i].energy = INITAL_E / (pow(seed[i].num_executed, exponent));
 #ifdef DEBUG
 		printf("[ASSIGNT] seed[%d] energy: %Lf\n", i, seed[i].energy);
 #endif
@@ -62,7 +63,7 @@ convert_energy_index(double sum_energy, double* n_energy_list, int n_input){
 char*
 choose_seed(seed_t* seed, int n_input, double exponent, int* choosed){
 	assign_energy(seed, n_input, exponent);
-	double sum_energy = 0;
+/*	double sum_energy = 0;
 	double* norm_energy_list;
 	
 	norm_energy_list = normalized_energy(seed, n_input, &sum_energy);
@@ -73,11 +74,7 @@ choose_seed(seed_t* seed, int n_input, double exponent, int* choosed){
 		printf("[CHOOSE] norm[%d]: %lf\n", i, norm_energy_list[i]);
 	}
 #endif
-/*
-	for(int i=0; i<n_input; i++){
-		printf("[DEBUG] seed[%d]: %s\n", i, seed[i].data);
-	}
-*/
+
 	int index;
 	if((index = convert_energy_index(sum_energy, norm_energy_list, n_input)) == -1){
 		perror("choose_seed: convert error\n");
@@ -85,8 +82,30 @@ choose_seed(seed_t* seed, int n_input, double exponent, int* choosed){
 	}
 	seed[index].num_executed++;
 	*choosed = index;
-
+*/
 //	printf("[DEBUG] seed[%d] executed %d\n", index, seed[index].num_executed);
+
+	
+	int sum_energy = 0;
+	for(int i=0; i<n_input; i++){
+		sum_energy += seed[i].energy;
+	}
+
+	int choice = rand() % sum_energy;
+
+	int index = 0;
+
+	int accmulate = 0;
+	for(int i=0; i < n_input; i++){
+		accmulate += seed[i].energy;
+		if(choice < accmulate){
+			index = i;
+			break;
+		}
+	}
+
+	seed[index].num_executed++;
+	*choosed = index;
 
 	return seed[index].data;
 }
@@ -98,6 +117,7 @@ int main(){	 // TEST DRIVER for scheduler
 	DIR* inp_dir;
 	struct dirent* dp = NULL;
 	int n_input = 0;
+	int choosed = 0;
 
 	seed_t* seed = (seed_t*)malloc(sizeof(seed_t) * 100);	// MEMORY?
 	
@@ -115,7 +135,7 @@ int main(){	 // TEST DRIVER for scheduler
 	}
 
 	for(int i=0; i<10; i++){
-		char* chosen = choose_seed(seed, n_input, 0.5);	
+		char* chosen = choose_seed(seed, n_input, 0.5, &choosed);	
 	}
 
 	for(int i=0; i<3; i++){

@@ -202,7 +202,7 @@ int
 insert_mutation(char* seed, char* mutated_inp, int inp_len, int offset, int byte){
 	int mutator = rand()%2+1;
 	
-	if((offset + byte) >= SEED_MAX){				 // TODO more...
+	if((offset + byte) >= SEED_MAX){				
 		perror("insert_mutation: offset overflow");
 		return inp_len;	
 	}
@@ -230,7 +230,7 @@ int
 change_mutation(char* seed, char* mutated_inp, int inp_len, int offset, int byte){
 	int mutator = rand()%4+1;
 	
-	if((offset + byte) > SEED_MAX){				 // TODO more...
+	if((offset + byte) > SEED_MAX){		
 		perror("change_mutation: offset overflow");
 		return inp_len;	
 	}
