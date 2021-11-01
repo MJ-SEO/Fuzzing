@@ -32,6 +32,7 @@ mutational_input(char* fuzz, char* input_file, int trial){
 		perror("mutationl_input: File open failed");
 		exit(1);
 	}
+	
 
 	int len = 0;
 	char* seed = (char*)malloc(sizeof(char) * SEED_MAX);

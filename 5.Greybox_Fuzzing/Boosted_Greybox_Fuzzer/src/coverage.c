@@ -78,7 +78,7 @@ hashing(char* bitmap){
 }
 
 int
-read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, gcov_src_t* gcov_info, seed_t* seed){
+read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, gcov_src_t* gcov_info, seed_t* seed, int greybox){
 	char gcov_file[64];
 	strcpy(gcov_file, c_file);
 	strcat(gcov_file, ".gcov");
@@ -141,8 +141,8 @@ read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, gcov_
 	printf("[BRANCH] %s\n", branch_mask);
 	printf("[HASHING] %u\n", hashing(branch_mask));
 #endif
-	
-	add_seed = lookup(hashing(branch_mask), gcov_info->hash_table, seed);
+	if(greybox == 1)		
+		add_seed = lookup(hashing(branch_mask), gcov_info->hash_table, seed);
 
 //	printf("[DEBUG] size: %d\n", gcov_info->hash_size);
 //	printf("[DEBUG] ht: %u\n", gcov_info->hash_table[0]);

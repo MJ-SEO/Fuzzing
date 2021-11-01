@@ -8,10 +8,11 @@ assign_energy(seed_t* seed, int n_input, double exponent){
 #ifdef DEBUG
 		printf("[ASSIGNT] seed[%d] %d, %lf\n", i, seed[i].num_executed, exponent);
 #endif
-		
-//		seed[i].energy = 1 / (pow(seed[i].num_executed, exponent));
+//
+		seed[i].energy = 1 / (pow(seed[i].num_executed, exponent));
 
-		seed[i].energy = INITAL_E / (pow(seed[i].num_executed, exponent));
+//		seed[i].energy = INITAL_E / (pow(seed[i].num_executed, exponent));
+
 #ifdef DEBUG
 		printf("[ASSIGNT] seed[%d] energy: %Lf\n", i, seed[i].energy);
 #endif
@@ -19,6 +20,7 @@ assign_energy(seed_t* seed, int n_input, double exponent){
 	}
 	return 1;
 }
+
 
 double*
 normalized_energy(seed_t* seed, int n_input, double* sum_energy){
@@ -61,9 +63,10 @@ convert_energy_index(double sum_energy, double* n_energy_list, int n_input){
 }
 
 char*
-choose_seed(seed_t* seed, int n_input, double exponent, int* choosed){
+choose_seed(seed_t* seed, int n_input, double exponent, int* choosed, int greybox){
 	assign_energy(seed, n_input, exponent);
-/*	double sum_energy = 0;
+
+	double sum_energy = 0;
 	double* norm_energy_list;
 	
 	norm_energy_list = normalized_energy(seed, n_input, &sum_energy);
@@ -80,20 +83,23 @@ choose_seed(seed_t* seed, int n_input, double exponent, int* choosed){
 		perror("choose_seed: convert error\n");
 		exit(1);
 	}
-	seed[index].num_executed++;
+
+	if(greybox == 1){
+		seed[index].num_executed++;
+	}
+
 	*choosed = index;
-*/
+
 //	printf("[DEBUG] seed[%d] executed %d\n", index, seed[index].num_executed);
 
+/*
+	long double sum_energy = 0;
 	
-	int sum_energy = 0;
 	for(int i=0; i<n_input; i++){
 		sum_energy += seed[i].energy;
 	}
 
-	int choice = rand() % sum_energy;
-
-	int index = 0;
+	choice = rand() % sum_energy;
 
 	int accmulate = 0;
 	for(int i=0; i < n_input; i++){
@@ -104,9 +110,10 @@ choose_seed(seed_t* seed, int n_input, double exponent, int* choosed){
 		}
 	}
 
-	seed[index].num_executed++;
+	if(greybox == 1) seed[index].num_executed++;
+	
 	*choosed = index;
-
+*/
 	return seed[index].data;
 }
 

@@ -15,7 +15,7 @@ config_init(test_config_t * config){
 
     config->mutation_dir = 0x0;
     config->mutation = 0;
-    config->greybox = 1;
+    config->greybox = 0;
     config->init_seed = 3;
 
     config->exponent = 0.8;

@@ -534,7 +534,6 @@ fuzzer_main(test_config_t* config){
 
 	gcov_src = (gcov_src_t*)malloc(sizeof(gcov_src_t) * (fuzz_config.number_of_source));
 
-
 	clock_t t_start = clock();
 	for(int i = 0; i < fuzz_config.trial; i++){
 
@@ -543,25 +542,26 @@ fuzzer_main(test_config_t* config){
 
 		int fuzz_len;
 		int choosed;
-
+	
 		if(fuzz_config.mutation > 0){
 			if(i<fuzz_config.init_seed){
-				printf("[DEBUG] seed: %s\n", seed[i%(fuzz_config.mutation)].data);
-				fuzz_len = mutational_input(input, seed[i%(fuzz_config.mutation)].data, 0);
+				printf("[DEBUG] seed: %s\n", seed[i].data);
+				fuzz_len = mutational_input(input, seed[i].data, 0);
 			}
-			else{
-				fuzz_len = mutational_input(input, choose_seed(seed, fuzz_config.mutation, fuzz_config.exponent, &choosed), 1);
+			else
+			{
+	//			printf("[greybox???? %d]\n", fuzz_config.greybox);
+				fuzz_len = mutational_input(input, choose_seed(seed, fuzz_config.mutation, fuzz_config.exponent, &choosed, fuzz_config.greybox), 1);
 			}
 		}
 		else{
 			fuzz_len = create_input(&fuzz_config, input); // Generage Random Input
 		}
 
-
-#ifdef DEBUG	
+#ifdef DEBUG
 		printf("[Trial %d]Input: %s(%d)\n", i, input, fuzz_len);
 #endif
-
+		
 		if(fuzz_config.need_args == 1)
 			fuzz_config.cmd_args[fuzz_config.option_num + 1] = input; 
 
@@ -577,7 +577,7 @@ fuzzer_main(test_config_t* config){
 			}
 
 			int new_mutate;
-			new_mutate =  read_gcov_coverage(fuzz_config.sources[n_src], gcov_results, i, n_src, &gcov_src[n_src], &seed[choosed]);
+			new_mutate =  read_gcov_coverage(fuzz_config.sources[n_src], gcov_results, i, n_src, &gcov_src[n_src], &seed[choosed], fuzz_config.greybox);
 
 			if(new_mutate == 1 && fuzz_config.mutation>0 && fuzz_config.greybox == 1 && i >= fuzz_config.init_seed){	
 				add_seed(choosed, input, fuzz_len);

@@ -1,0 +1,4 @@
+[DEUBG] printed_json(buffered): ["Sunday", "Monday\u000b?\u0016DTuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+[DEBUG] Minifyed: ["Sunday","Monday?DTuesday","Wednesday","Thursday","Friday","Saturday"]
+[DEBUT] Number_value: nan
+[DEBUT] String_value: (null)
