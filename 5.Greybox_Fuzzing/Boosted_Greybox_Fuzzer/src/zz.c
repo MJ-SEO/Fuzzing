@@ -91,6 +91,7 @@ choose_seed(seed_t* seed, int n_input, double exponent, int* choosed, int greybo
 	*choosed = index;
 
 //	printf("[DEBUG] seed[%d] executed %d\n", index, seed[index].num_executed);
+
 /*
 	long double sum_energy = 0;
 	

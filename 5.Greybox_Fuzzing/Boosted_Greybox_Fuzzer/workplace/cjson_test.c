@@ -6,9 +6,8 @@ void
 config_setting(test_config_t* config){
 	config->mutation_dir = "./input/cjson_inp";
 	config->mutation = 1;
-	config->file_name = 1;
 
-	config->trial = 5000;
+	config->trial = 200000;
 
 	int n_src = 1;
 	config->number_of_source = n_src;

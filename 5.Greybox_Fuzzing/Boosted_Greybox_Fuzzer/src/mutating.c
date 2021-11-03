@@ -275,8 +275,13 @@ delete_mutation(char* seed, char* mutated_inp, int inp_len, int offset){
 int
 mutate(char* seed, char* mutated_inp, int inp_len){
 	int len;	
-	int offset = rand()%inp_len;
 	int mutate_mode = rand()%7+1;
+	int offset = 0;
+	if(inp_len == 0){
+		mutate_mode = 1;	
+	}else{
+		offset = rand()%inp_len;
+	}
 	int byte_size[3] = {1, 2, 4};
 	int byte = rand()%3;
 	

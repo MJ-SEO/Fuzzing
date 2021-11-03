@@ -2,9 +2,8 @@
 
 start_time=$(date +%s)
 
-for i in 1 2 3 4;
+for i in 1;
 do
-	make json
 	./jtest
 	
 	mv ./input/cjson_inp/input1 ./input/cjson_inp/temp1
