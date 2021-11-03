@@ -8,11 +8,9 @@ assign_energy(seed_t* seed, int n_input, double exponent){
 #ifdef DEBUG
 		printf("[ASSIGNT] seed[%d] %d, %lf\n", i, seed[i].num_executed, exponent);
 #endif
-//
+
 		seed[i].energy = 1 / (pow(seed[i].num_executed, exponent));
-
 //		seed[i].energy = INITAL_E / (pow(seed[i].num_executed, exponent));
-
 #ifdef DEBUG
 		printf("[ASSIGNT] seed[%d] energy: %Lf\n", i, seed[i].energy);
 #endif
@@ -43,6 +41,15 @@ int
 convert_energy_index(double sum_energy, double* n_energy_list, int n_input){
 	double randnum = (double)rand()/INT_MAX; // 0 ~ 1
 	double percentage = randnum * 100.0f; // 0 ~ 100%
+
+	double accumlate = 0;
+	for(int i=0; i< n_input; i++){
+		accumlate += n_energy_list[i] * 100.0f;
+		if(percentage < accumlate){
+			return i;
+		}
+	}
+/*
 	double cumulate[n_input];
 	
 	cumulate[0] = n_energy_list[0] * 100.0f;
@@ -58,7 +65,7 @@ convert_energy_index(double sum_energy, double* n_energy_list, int n_input){
 			if(percentage > cumulate[i-1] && percentage <= cumulate[i]) return i;
 		}
 	}
-
+*/
 	return -1;
 }
 
@@ -91,28 +98,7 @@ choose_seed(seed_t* seed, int n_input, double exponent, int* choosed, int greybo
 	*choosed = index;
 
 //	printf("[DEBUG] seed[%d] executed %d\n", index, seed[index].num_executed);
-/*
-	long double sum_energy = 0;
 	
-	for(int i=0; i<n_input; i++){
-		sum_energy += seed[i].energy;
-	}
-
-	choice = rand() % sum_energy;
-
-	int accmulate = 0;
-	for(int i=0; i < n_input; i++){
-		accmulate += seed[i].energy;
-		if(choice < accmulate){
-			index = i;
-			break;
-		}
-	}
-
-	if(greybox == 1) seed[index].num_executed++;
-	
-	*choosed = index;
-*/
 	return seed[index].data;
 }
 

@@ -17,6 +17,7 @@ static int in_pipes[2] ;
 static int out_pipes[2] ;
 static int err_pipes[2] ;
 static pid_t child_pid;
+// static char input_files[100][4096];
 static seed_t seed[8192];	// Capacity of Seed?
 
 static int gcov_flag;
@@ -58,8 +59,12 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 
 		while((dp = readdir(inp_dir)) != NULL){
 			if(dp->d_type == DT_REG){
+				//	printf("[FILE] %s\n", dp->d_name);
+				//	sprintf(input_files[n_inputs], "%s/%s", config->mutation_dir, dp->d_name);
+
 				sprintf(seed[n_inputs].data, "%s/%s", config->mutation_dir, dp->d_name);	
-				seed[n_inputs].length = strlen(dp->d_name);
+				//		printf("[Fuzz init] %s[%d]\n", seed[n_inputs].data, n_inputs);
+				seed[n_inputs].length = strlen(dp->d_name); // TODO strlen in file
 				seed[n_inputs].num_executed = 1;
 				n_inputs++;
 			}		
@@ -68,6 +73,7 @@ fuzzer_init(test_config_t * config, char* dir_name, int* flag){
 		fuzz_config.mutation = n_inputs;
 		closedir(inp_dir);
 	}
+
 
 	fuzz_config.greybox = config->greybox;
 	fuzz_config.init_seed = config->init_seed;
@@ -340,7 +346,7 @@ void add_seed(int choosed, char* input, int fuzz_len){
 	sprintf(seed[fuzz_config.mutation-1].data, "%s/input%d", fuzz_config.mutation_dir, fuzz_config.mutation); 
 
 	seed[fuzz_config.mutation-1].num_executed = 1;
-	
+	//					printf("[DEBUG] choosed: %d\n", choosed);
 	if(seed[choosed].num_executed > 1){
 		seed[choosed].num_executed -= 1;
 	}
@@ -348,14 +354,13 @@ void add_seed(int choosed, char* input, int fuzz_len){
 	char* input_name = (char*)malloc(sizeof(char)*32);
 	sprintf(input_name, "%s/input%d", fuzz_config.mutation_dir, fuzz_config.mutation);
 	FILE* new_inp_file = fopen(input_name, "wb");
-	
+	//					printf("[DEBUG] new_inp_file: %s\n", input_name);
 	if(new_inp_file == NULL){
 		perror("new_mutate: FILE Open Failed");
 	}
 #ifdef DEBUG
 	printf("[DEBUG] new_inp: %sn_srcn", input);	
 #endif		
-	
 	fwrite(input, 1, fuzz_len, new_inp_file);
 	free(input_name);
 	fclose(new_inp_file);
@@ -437,6 +442,7 @@ show_gcov(int* return_code, gcov_t** gcov_results, int trial, int n_src){
 	printf("* Branch Coverage : (%d/%d) %lf\n", gcov_results[trial-1][0].branch_union_line, gcov_src[0].tot_branches, (double)gcov_results[trial-1][0].branch_union_line / gcov_src[0].tot_branches );
 
 	printf("=====================================================================\n");
+	// TODO multiple source
 }
 
 void 
@@ -476,6 +482,37 @@ gcov_src_free(gcov_src_t* gcov_src){
 		free(gcov_src[i].branch_bitmap);
 	}
 	free(gcov_src);
+}
+
+void
+fuzz_free(test_config_t fuzz_config){
+	if(fuzz_config.cmd_args != NULL) {
+		if(fuzz_config.number_of_source > 0){
+			for(int i=0; i<fuzz_config.option_num + 3; i++){
+				free(fuzz_config.cmd_args[i]);
+			}
+		}
+		else{
+			for(int i=0; i<fuzz_config.option_num + 2; i++){
+				free(fuzz_config.cmd_args[i]);
+			}
+		}
+	}
+	else{
+		if(fuzz_config.number_of_source > 0){
+			for(int i=0; i<fuzz_config.option_num + 3; i++){
+				free(fuzz_config.cmd_args[i]);
+			}
+
+		}
+		else{
+			for(int i=0; i<fuzz_config.option_num + 2; i++){
+				free(fuzz_config.cmd_args[i]);
+			}
+		}
+	}
+
+	free(fuzz_config.cmd_args);
 }
 
 void

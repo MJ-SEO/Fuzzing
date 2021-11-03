@@ -41,7 +41,8 @@ mutational_input(char* fuzz, char* input_file, int trial){
 		len++;
 	}
 	
-//	printf("[DEUBG] seed(%d): %s\n", len, seed);
+//	if(len == 0) printf("[DEUBGzzzz] seed(%d): %s\n", len, seed);
+
 	strcpy(fuzz, seed);
 
 	for(int i=0; i<trial; i++){
@@ -56,6 +57,7 @@ mutational_input(char* fuzz, char* input_file, int trial){
 	fclose(fp);
 	return len;
 }
+
 
 /*
 

@@ -59,7 +59,6 @@ lookup(unsigned short hash_num, char* hash_table, seed_t* seed){
 		hash_table[hash_num] = '1';
 		return 1;
 	}
-
 	return 0;
 }
 
@@ -140,35 +139,12 @@ read_gcov_coverage(char* c_file, gcov_t** curr_info, int trial, int n_src, gcov_
 	if(greybox == 1)		
 		add_seed = lookup(hashing(branch_mask), gcov_info->hash_table, seed);
 
-//	printf("[DEBUG] size: %d\n", gcov_info->hash_size);
-//	printf("[DEBUG] ht: %u\n", gcov_info->hash_table[0]);
-
 	curr_info[trial][n_src].line = n_line;
-	if(trial == 0){
-		curr_info[trial][n_src].union_line = union_bits(gcov_info->bitmap, curr_mask, gcov_info->gcov_line);
-	}
-	else{
-		int before_lines = curr_info[trial-1][n_src].union_line;
-		curr_info[trial][n_src].union_line = union_bits(gcov_info->bitmap, curr_mask, gcov_info->gcov_line);
-		int after_lines = curr_info[trial][n_src].union_line;
-		if(after_lines > before_lines){	
-			//			*new_mutate = 1;	// Not use line
-		}
-	}
+	curr_info[trial][n_src].union_line = union_bits(gcov_info->bitmap, curr_mask, gcov_info->gcov_line);
 
 	curr_info[trial][n_src].branch_line = n_branch;
-	if(trial == 0){
-		curr_info[trial][n_src].branch_union_line = union_bits(gcov_info->branch_bitmap, branch_mask, gcov_info->gcov_line);
-	}
-	else{
-		int before_branch_lines = curr_info[trial-1][n_src].branch_union_line;
-		curr_info[trial][n_src].branch_union_line = union_bits(gcov_info->branch_bitmap, branch_mask, gcov_info->gcov_line);
-		int after_branch_lines = curr_info[trial][n_src].branch_union_line;
-		if(after_branch_lines > before_branch_lines){
-		//	add_seed = 1;
-		}	
-	}
-
+	curr_info[trial][n_src].branch_union_line = union_bits(gcov_info->branch_bitmap, branch_mask, gcov_info->gcov_line);
+	
 	free(curr_mask);
 	free(branch_mask);	
 	fclose(fp);
