@@ -1,0 +1,57 @@
+[DEUBG] printed_json(buffered): {
+	"menu":	{
+		"header":	"SVG Viewer",
+		"items":	[{
+				"id":	"Open"
+			}, {
+				"id":	"OpenNew",
+				"label":	"Open LNew"
+			}, null, {
+				"id":	"ZoomIn",
+				"label":	"Zoom In"
+			}, {
+				"id":	"ZoomOut",
+				"label":	"Zoom Out"
+			}, {
+				"id":	"OriginalView",
+				"label":	"Original View"
+			}, null, {
+				"id":	"Quality"
+			}, {
+				"id":	"Pause"
+			}, {
+				"id":	"Mute"
+			}, null, {
+				"id":	"Find",
+				"label":	"Find..."
+			}, {
+				"id":	"FindAgain",
+				"label":	"Find Agai\u0010"
+			}, {
+				"id":	"Copy"
+			}, {
+				"id":	"CopyAgain",
+				"label":	"Copy Again"
+			}, {
+				"id":	"CopySVG",
+				"label":	"Copy SVG"
+			}, {
+				"id":	"ViewSVG",
+				"label":	"View SVG"
+			}, {
+				"id":	"ViewSource",
+				"label":	"View Source"
+			}, {
+				"id":	"SaveAs",
+				"label":	"Save As"
+			}, null, {
+				"id":	"Help"
+			}, {
+				"id":	"About",
+				"label":	"About Adobe CVG Viewer..."
+			}]
+	}
+}
+[DEBUG] Minifyed: {"menu":{"header":"SVG Viewer","items":[{"id":"Open"},{"id":"OpenNew","label":"Open LNew"},null,{"id":"ZoomIn","label":"Zoom In"},{"id":"ZoomOut","label":"Zoom Out"},{"id":"OriginalView","label":"Original View"},null,{"id":"Quality"},{"id":"Pause"},{"id":"Mute"},null,{"id":"Find","label":"Find..."},{"id":"FindAgain","label":"Find Agai"},{"id":"Copy"},{"id":"CopyAgain","label":"Copy Again"},{"id":"CopySVG","label":"Copy SVG"},{"id":"ViewSVG","label":"View SVG"},{"id":"ViewSource","label":"View Source"},{"id":"SaveAs","label":"Save As"},null,{"id":"Help"},{"id":"About","label":"About Adobe CVG Viewer..."}]}}AdobeCVGVieA
+[DEBUT] Number_value: nan
+[DEBUT] String_value: (null)

@@ -1,0 +1,5 @@
+{"menu": {
+    "header": "SG Viewer",
+    "items": [
+        {"id": "Open"},
+        {"id": "OpenNew", "label": "Open 

@@ -1,0 +1,5 @@
+{"menu"+{
+    "header": "SVG Viewer",
+    "items": [
+     @   {"id": "Open"|aC\},
+        {"id": "OpenNew", "label": "Open 

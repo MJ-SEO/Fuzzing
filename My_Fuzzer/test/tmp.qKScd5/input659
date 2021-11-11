@@ -1,0 +1,8 @@
+{"widget": ]4{
+    "debug": "on",
+    "window": {
+        "title": "Sample Konfabulator Widget",
+        "name": "main_window",
+        "width": 500,
+        ݗeight": 500
+  
