@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "fuzzer.h"
+#include "../lib/fuzzer.h"
 
 char*
 fuzzer(int max_length, int start, int range){

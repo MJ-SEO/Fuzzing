@@ -4,7 +4,7 @@
 #include <time.h>
 #include <assert.h>
 
-#include "../fuzzer.h"
+#include "../lib/fuzzer.h"
 
 char*
 heartbeat(char* reply, int length, char* mem){

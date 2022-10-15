@@ -22,9 +22,15 @@ def shellsort(elems):
     return sorted_elems
 ```
 
-## Part1: Manual Test Cases
+Part1: Manual Test Cases 
 
-### Part2: Random Inputs
+- Test shellsort() with a variety inputs (manual test)
+
+Part2: Random Inputs
+
+- Test shellosort() with random inputs (randon test)
+
+&nbsp;
 
 
 ## Exercise3: Quadratic Solver
@@ -39,8 +45,14 @@ def quadratic_solver(a, b, c):
     return (solution_1, solution_2)
 ```
 
-### Part1: Find bug-triggering inputs
+Part1: Find bug-triggering inputs
 
-### Part2: Fix the problem
+- a division by zero if a is 0
 
-### Part3: Odds and Ends
+Part2: Fix the problem
+ 
+- Add the precondition for function to make sure x(q) be non-negative.
+
+Part3: Odds and Ends
+
+- What are the chances of discovering these conditions with random inputs?  Assuming one can do a billion tests per second, how long would one have to wait on average until a bug gets triggered?

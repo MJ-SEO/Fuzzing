@@ -33,9 +33,6 @@ child_proc(char* path){
 	close(pipes[0]);
 	close(error_pipes[0]);
 
-//	int devnull = open("/dev/null",O_RDONLY);  
-//	dup2(devnull, 0);
-
 	dup2(pipes[1], 1);
 	dup2(error_pipes[1], 2);
 
@@ -50,8 +47,6 @@ parent_proc(char* tempdir, int num){
 	
 	int exit_code;
 	pid_t term_pid = wait(&exit_code);
-//	printf("Process %d is exit with %d\n", num, exit_code);
-	
 	
 	char buf[1024];
 	ssize_t s;

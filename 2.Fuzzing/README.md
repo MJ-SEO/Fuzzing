@@ -1,8 +1,8 @@
 # Fuzzing: Breaking Things with Random Inputs
 
-[Reference Site](https://www.fuzzingbook.org/html/Fuzzer.html)
 
-## [A Simple Fuzzer (Copy in C)](https://github.com/MJ-SEO/Fuzzing/blob/master/2.Fuzzing/fuzzer.c)
+### **A Simple Fuzzer**
+<br/>
 
 ``` python
 def fuzzer(max_length=100, char_start=32, char_range=32):
@@ -14,26 +14,50 @@ def fuzzer(max_length=100, char_start=32, char_range=32):
         out += chr(random.randrange(char_start, char_start + char_range))
     return out	
 ```
----
 
-## [Fuzzing_External_Programs](https://github.com/MJ-SEO/Fuzzing/tree/master/2.Fuzzing/Fuzzing_External_Programs)
+This is the very naive Fuzzer that made a random input. (actually, it is no more than random input generator)
 
-``` python
-program = "bc"
-with open(FILE, "w") as f:
-    f.write("2 + 2\n")
-result = subprocess.run([program, FILE],
-                        stdin=subprocess.DEVNULL,
-                        stdout=subprocess.PIPE,
-                        stderr=subprocess.PIPE,
-                        universal_newlines=True)
-```
+It'll be improved and complicated while this study progress more and more.
 
-- Reference : [bc calculator](https://man7.org/linux/man-pages/man1/bc.1p.html)
+By executing ```test/simple_fuzzer.c```, you can get a randomly generated input.
+
+<br/>
 
 ---
 
-## [Bugs_Fuzzers_Find](https://github.com/MJ-SEO/Fuzzing/tree/master/2.Fuzzing/Bugs_Fuzzers_Find)
+
+### **Fuzzing_External_Programs**
+
+<br/>
+
+
+This part handle how to "Fuzzing" external program.
+
+I used unnamed Pipes and Fork
+
+When you execute ```test/long_running_fuzzing```, it "Fuzzing" the target program 100 times.
+
+It means that it repeats 100 time the processes that creates random input, executes target program and makes output files.
+
+
+
+- Target program : [bc calculator](https://man7.org/linux/man-pages/man1/bc.1p.html)
+
+- Used: dup2, fork()
+
+
+
+<br/>
+
+---
+
+### **Bugs_Fuzzers_Find**
+
+<br/>
+
+```test/bugs_test.c``` contains scenarios that find bugs with Fuzzing.
+
+It is the list of the sort of bugs Fuzzing could find. 
 
 1. Buffer Overflows
 
@@ -41,9 +65,13 @@ result = subprocess.run([program, FILE],
 
 3. Rogue Numbers
 
+<br/>
+
 ---
 
-## [Catching_Errors](https://github.com/MJ-SEO/Fuzzing/tree/master/2.Fuzzing/Catching_Errors)
+### **Catching_Errors**
+
+<br/>
 
 1. Generic Checkers
 
@@ -53,6 +81,7 @@ result = subprocess.run([program, FILE],
 
 2. Program-Specific Checkers
 
+<br/>
 
 ---
 
