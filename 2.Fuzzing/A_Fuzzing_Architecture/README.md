@@ -40,23 +40,23 @@ with configuration in ```test_cat.c```
 
 > ./cat_test
 
-> [Random Input] ggUWOrpo[ge1;olkf^
-> <br/> [Random Input] u]pUo_n_ugjXr^\hb_gj
-> <br/>[Random Input] ]qbWr[f
-> <br/>[Random Input] e\ddoXfi_mY
-> <br/>[Random Input] Uj^jlW[i\adic^mu
-> <br/>[Random Input] \[sistYe^pisZgorgsel_r
-> <br/>[Random Input] uhiYmd
-> <br/>[Random Input] jcpWjhj_cr_pfijo
-> <br/>[Random Input] pnrbsgoiYZa\krnt`Vph*
-> <br/>[Random Input] dWb^q\ilnc]s
-> <br/>
-> <br/>==========Fuzzer Summary===========
-> <br/>Number of Tests: 10
-> <br/>No_dat_Failures: 0
-> <br/>No_8bit_Failures: 0
-> <br/>No_backslash_d_Failures: 0
-> <br/>Normal cases: 10
-> <br/>===================================
+```
+[Random Input] ggUWOrpo[ge1;olkf^
+[Random Input] u]pUo_n_ugjXr^\hb_gj
+[Random Input] ]qbWr[f
+[Random Input] e\ddoXfi_mY
+[Random Input] Uj^jlW[i\adic^mu
+[Random Input] \[sistYe^pisZgorgsel_r
+[Random Input] uhiYmd
+[Random Input] jcpWjhj_cr_pfijo
+[Random Input] pnrbsgoiYZa\krnt`Vph*
+[Random Input] dWb^q\ilnc]s
 
-
+==========Fuzzer Summary===========
+Number of Tests: 10
+No_dat_Failures: 0
+No_8bit_Failures: 0
+No_backslash_d_Failures: 0
+Normal cases: 10
+===================================
+```
