@@ -44,13 +44,13 @@ with configuration in ```test_cat.c```
 > <br/> [Random Input] u]pUo_n_ugjXr^\hb_gj
 > <br/>[Random Input] ]qbWr[f
 > <br/>[Random Input] e\ddoXfi_mY
-> <br/>[Random Input] Uj^d`jlW[i\adic^mu
+> <br/>[Random Input] Uj^jlW[i\adic^mu
 > <br/>[Random Input] \[sistYe^pisZgorgsel_r
 > <br/>[Random Input] uhiYmd
 > <br/>[Random Input] jcpWjhj_cr_pfijo
-> <br/>[Random Input] pnrbsgoiYZa\krnt`Vpho`
+> <br/>[Random Input] pnrbsgoiYZa\krnt`Vph*
 > <br/>[Random Input] dWb^q\ilnc]s
-<br/>
+> <br/>
 > <br/>==========Fuzzer Summary===========
 > <br/>Number of Tests: 10
 > <br/>No_dat_Failures: 0
