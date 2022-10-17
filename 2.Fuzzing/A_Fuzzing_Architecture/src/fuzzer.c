@@ -169,32 +169,6 @@ get_info(test_config_t * config, char* input, int input_size, char* dir_name, in
 	return exit_code;
 }
 
-
-void
-run_gcov(char* target){
-	pid_t gcov_child = fork();
-	
-	printf("[DEBUG] targer:%s\n", target);
-
-	if(gcov_child == 0){
-		execl("/usr/bin/gcov", "gcov", target, NULL);
-		perror("run_gcov: Execution Error!");
-		return;
-	}
-	else if(gcov_child > 0){
-		int exit_code;
-		wait(&exit_code);
-		if(exit_code != 0){
-			perror("GCOV Execute Error!");
-			return;
-		}
-	}
-	else{
-		perror("run_gcov: Fork Error!");
-		exit(1);
-	}
-}
-
 int
 run(test_config_t* config, char* input, int input_size, char* dir_name, int file_num, int gcov_flag){
 	if (pipe(in_pipes) != 0 || pipe(out_pipes) != 0 || pipe(err_pipes) != 0) {
@@ -216,10 +190,6 @@ run(test_config_t* config, char* input, int input_size, char* dir_name, int file
 	else {
 		perror("Fork Error\n") ;
 		exit(1) ;
-	}
-	
-	if(gcov_flag == 1){
-		run_gcov(config->source);
 	}
 
 	return return_code;
@@ -273,7 +243,7 @@ fuzzer_main(test_config_t* config){
 		
 		int fuzz_len = create_input(&fuzz_config, input);
 		
-		printf("[Random] %s\n", input);
+		printf("[Random Input] %s\n", input);
 
 		return_code[i] = run(&fuzz_config, input, fuzz_len, dir_name, i, gcov_flag);
 		free(input);
@@ -281,7 +251,7 @@ fuzzer_main(test_config_t* config){
 		fuzz_config.oracle(dir_name, i, prog_results, return_code[i]);
 	}
 
-	//show_result(return_code, prog_results, fuzz_config.trial);
+//	show_result(return_code, prog_results, fuzz_config.trial);
 	show_stat(return_code, fuzz_config.trial);
 	free(prog_results);
 	free(return_code);

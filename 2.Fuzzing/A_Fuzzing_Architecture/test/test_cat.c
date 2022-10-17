@@ -72,7 +72,7 @@ config_setting(test_config_t* config){
 	config->f_max_len = 30;
 	
 	config->f_char_start = 32;
-	config->f_char_start = 24;
+	config->f_char_start = 85;
 
 	char* options[4] = {"-b"};
 	config->cmd_args = options;

@@ -4,7 +4,7 @@ This is the repository for studying [The Fuzzing Book](https://www.fuzzingbook.o
 
 Originally, the example codes in [The Fuzzing Book](https://www.fuzzingbook.org/) were implemeted in Python.
 
-In this study, I try to make a Fuzzing framework with C.
+In this study, I tried to make a Fuzzing framework with C.
 
 &nbsp;
 

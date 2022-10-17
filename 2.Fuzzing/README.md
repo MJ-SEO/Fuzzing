@@ -75,15 +75,49 @@ It is the list of the sort of bugs Fuzzing could find.
 
 1. Generic Checkers
 
-	Checking Memory Accesses
+	- Checking Memory Accesses
+    
+    <br/>
+    
+    ```test/general_memory.c``` is the simple program to practice LLVM memory sanitizer to check out-of-bound momory access.
+
+
+    > clang -fsanitize=address -g -o program general_memory.c
+    > ./program 99; echo $? <br/>
+    > ./program 110;
+
+    <br/>
 	
-	Information Leaks	
+	- Information Leaks	
+
+    <br/>
+
+    ```test/general_leaks.c``` is the simple [HeartBleed-Bug](https://heartbleed.com/) test senario with fuzzing
+
+
+<br/>
 
 2. Program-Specific Checkers
+
+    ```test/general_leaks.c``` is the simple testing senario for specific program.
 
 <br/>
 
 ---
 
+<br/>
+
 ## [A Fuzzing Architecture](https://github.com/MJ-SEO/Fuzzing/tree/master/2.Fuzzing/A_Fuzzing_Architecture)
 
+<br/>
+
+This is the first Fuzzing framework with whole functions handled by above. 
+
+It contains.
+
+> Simpler fuzzer <br/>
+> Executing external program <br/>
+> Long-running fuzzer <br/>
+> Detect and report bugs (Oracle) <br/>
+
+The detailed description is in the above repository.

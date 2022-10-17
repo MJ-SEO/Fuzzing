@@ -7,7 +7,7 @@
 void
 config_setting(test_config_t* config){
 	config->f_min_len = 10;
-	config->f_max_len = 100;
+	config->f_max_len = 30;
 	
 	config->f_char_start = 0;
 	config->f_char_range = 255;
