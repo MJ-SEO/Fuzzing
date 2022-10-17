@@ -25,7 +25,6 @@
 
 - ```test/test_cat.c``` is the test driver for Fuzzing Linux command ```cat``` 
 
-<br/>
 
 ---
 
@@ -41,15 +40,15 @@ with configuration in ```test_cat.c```
 
 > ./cat_test
 
-> [Random Input] _[blYk[XV]\ZnrY^jb
-> <br/> [Random Input] u]pUof`_n_ugjXr^\hb_gjdl`_oir
+> [Random Input] ggUWOrpo[ge1;olkf^
+> <br/> [Random Input] u]pUo_n_ugjXr^\hb_gj
 > <br/>[Random Input] ]qbWr[f
 > <br/>[Random Input] e\ddoXfi_mY
 > <br/>[Random Input] Uj^d`jlW[i\adic^mu
-> <br/>[Random Input] \[sistYe^pisn]\Zgorgsel_r]k
+> <br/>[Random Input] \[sistYe^pisZgorgsel_r
 > <br/>[Random Input] uhiYmd
-> <br/>[Random Input] jcpWjhje`pjf_c`r_pfijo
-> <br/>[Random Input] pnrbsgoiYZa\ouq]]krnt`Vpho`
+> <br/>[Random Input] jcpWjhj_cr_pfijo
+> <br/>[Random Input] pnrbsgoiYZa\krnt`Vpho`
 > <br/>[Random Input] dWb^q\ilnc]s
 <br/>
 > <br/>==========Fuzzer Summary===========
