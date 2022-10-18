@@ -150,10 +150,3 @@ gcda_remove(char* c_file, char* path){
 	free(gcda_file);
 }
 
-/*
-int
-main(){			// TEST DRIVER for Coverage
-	
-}
-
-*/

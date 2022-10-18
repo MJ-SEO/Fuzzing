@@ -346,15 +346,15 @@ void
 show_gcov(int* return_code, gcov_t** gcov_results, int trial, int n_src){
 	printf("===========================================Fuzzer Summary============================================\n");
 	for(int i=0; i<trial; i++){
-		printf("    \t\t\t\t\t---[Input %d]---	\n\n", i);
+		printf("    \t\t\t\t\t---[Input %d]---	\n", i);
 		for(int j=0; j<n_src; j++){
 			printf("[Source: %s] ", fuzz_config.sources[j]); 
 			printf("Line: %d/%d ", gcov_results[i][j].line, gcov_src[j].gcov_line_for_ratio);
-			printf("Union: %d ", gcov_results[i][j].union_line);
+			printf("Total: %d ", gcov_results[i][j].union_line);
 			printf("Coverage: %lf    ", (double)gcov_results[i][j].union_line/gcov_src[j].gcov_line_for_ratio);
 
 			printf("Branch: %d/%d ", gcov_results[i][j].branch_union_line, gcov_src[j].gcov_line_for_branch);
-			printf("Union: %d ", gcov_results[i][j].branch_union_line);
+			printf("Total: %d ", gcov_results[i][j].branch_union_line);
 			printf("Coverage: %lf   \n", (double)gcov_results[i][j].branch_union_line/gcov_src[j].gcov_line_for_branch);
 		}
 	}
@@ -362,25 +362,22 @@ show_gcov(int* return_code, gcov_t** gcov_results, int trial, int n_src){
 }
 
 /*
-show_gcov_stat(int* return_code, gcov_t* gcov_result, int trial){	// TODO
+void show_fuzz_result(int* return_code,  int trial){	// TODO Coverage each source
 	int pass = 0;
 	int fail = 0;
-	printf("==========================================Trial==========================================\n");
 	for(int i=1; i<=trial; i++){
 		if(return_code[i] == 0) pass++;
 		else fail++;
 	}
-	printf("=========================================================================================\n");
-	printf("\n===========================Fuzzer Summary===========================\n");
+	printf("\n===========================Fuzzing Summary===========================\n");
 	printf("* Trial : %d\n", trial);
 	printf("* Pass  : %d\n", pass);
 	printf("* Fail  : %d\n", fail);
-	printf("* Line Coverage : (%d/%d) %lf\n", gcov_result[trial].union_line, gcov_line_for_ratio, (double)gcov_result[trial].union_line / gcov_line_for_ratio);
-	printf("* Branch Coverage : (%d/%d) %lf\n", gcov_result[trial].branch_union_line, gcov_line_for_branch, (double)gcov_result[trial].branch_union_line / gcov_line_for_branch );
-	printf("=====================================================================\n");
+	printf("=======================================================================\n");
 
-}
-*/
+}*/
+
+
 void
 fuzzer_main(test_config_t* config){
 	srand((unsigned int)time(NULL));
@@ -479,9 +476,11 @@ fuzzer_main(test_config_t* config){
 	if(gcov_flag == 1){
 		show_result(return_code, prog_results, fuzz_config.trial);
 		show_gcov(return_code, gcov_results, fuzz_config.trial, fuzz_config.number_of_source);
+//		show_fuzz_result(return_code, fuzz_config.trial);	
 	}
 	else{
 		show_result(return_code, prog_results, fuzz_config.trial);
+//		show_fuzz_result(return_code, fuzz_config.trial);	
 	}
 
 	free(prog_results);
