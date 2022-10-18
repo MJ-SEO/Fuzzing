@@ -261,11 +261,11 @@ show_gcov(int* return_code, gcov_t* gcov_result, int trial){
 	for(int i=1; i<=trial; i++){
 		if(return_code[i] == 0) pass++;
 		else fail++;
-		printf("[Input %d] Line: %d/%d Union: %d Latio:%lf   Branch: %d/%d Union: %d Latio:%lf\n", i, gcov_result[i].line, gcov_line_for_ratio ,gcov_result[i].union_line, (double)gcov_result[i].union_line/gcov_line_for_ratio, gcov_result[i].branch_line, gcov_line_for_branch, gcov_result[i].branch_union_line, (double)gcov_result[i].branch_union_line/gcov_line_for_branch );
+		printf("[Input %d] Line: %d/%d Total: %d Latio:%lf   Branch: %d/%d Total: %d Latio:%lf\n", i, gcov_result[i].line, gcov_line_for_ratio ,gcov_result[i].union_line, (double)gcov_result[i].union_line/gcov_line_for_ratio, gcov_result[i].branch_line, gcov_line_for_branch, gcov_result[i].branch_union_line, (double)gcov_result[i].branch_union_line/gcov_line_for_branch );
 	}
 	printf("=========================================================================================\n");
 
-	printf("\n===========================Fuzzer Summary===========================\n");
+	printf("\n===========================Fuzzing Summary===========================\n");
 	printf("* Trial : %d\n", trial);
 	printf("* Pass  : %d\n", pass);
 	printf("* Fail  : %d\n", fail);

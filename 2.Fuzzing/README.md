@@ -21,8 +21,6 @@ It'll be improved and complicated while this study progress more and more.
 
 By executing ```test/simple_fuzzer.c```, you can get a randomly generated input.
 
-<br/>
-
 ---
 
 
@@ -46,9 +44,6 @@ It means that it repeats 100 time the processes that creates random input, execu
 - Used: dup2, fork()
 
 
-
-<br/>
-
 ---
 
 ### **Bugs_Fuzzers_Find**
@@ -65,13 +60,13 @@ It is the list of the sort of bugs Fuzzing could find.
 
 3. Rogue Numbers
 
-<br/>
+
 
 ---
 
 ### **Catching_Errors**
 
-<br/>
+
 
 1. Generic Checkers
 
@@ -95,19 +90,17 @@ It is the list of the sort of bugs Fuzzing could find.
     ```test/general_leaks.c``` is the simple [HeartBleed-Bug](https://heartbleed.com/) test senario with fuzzing
 
 
-<br/>
 
 2. Program-Specific Checkers
 
     ```test/general_leaks.c``` is the simple testing senario for specific program.
 
-<br/>
 
 ---
 
-<br/>
 
-## [A Fuzzing Architecture](https://github.com/MJ-SEO/Fuzzing/tree/master/2.Fuzzing/A_Fuzzing_Architecture)
+
+### [A Fuzzing Architecture](https://github.com/MJ-SEO/Fuzzing/tree/master/2.Fuzzing/A_Fuzzing_Architecture)
 
 <br/>
 
