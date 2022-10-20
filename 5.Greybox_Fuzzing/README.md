@@ -11,7 +11,7 @@ Basic idea is that if a input increase the code coverage, add the input in the s
 
 ---
 
-## [A Fuzzing Architecture with Greybox Mutation](https://github.com/MJ-SEO/Fuzzing/tree/master/4.Mutation_Fuzzing/Mutation_Based_Fuzzer)
+## [A Fuzzing Architecture with Greybox Mutation](https://github.com/MJ-SEO/Fuzzing/tree/master/5.Greybox_Fuzzing/Greybox_Mutation_Fuzzer)
 
 The detailed description and usage is in the above repository.
 
