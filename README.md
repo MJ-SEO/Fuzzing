@@ -19,7 +19,7 @@ According to the order below, you can find the entire concept of ```Greybox Muta
 >1. &nbsp;&nbsp;[Introduction to Software Testing](https://github.com/MJ-SEO/Fuzzing/tree/master/1.Testing)
 >
 >      - Lexical Fuzzing
-> <br/>           
+>        
 >  2. &nbsp;&nbsp;[Fuzzing: Breaking Things with Random Inputs](https://github.com/MJ-SEO/Fuzzing/tree/master/2.Fuzzing)
 >
 >  3. &nbsp;&nbsp;[Code Coverage](https://github.com/MJ-SEO/Fuzzing/tree/master/3.Code_Coverage)
