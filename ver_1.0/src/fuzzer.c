@@ -288,15 +288,13 @@ run_gcov(char* source, int idx){
 	printf("[DEBUG] run_gcov: sourcessss %s\n", s_path);
 #endif
 	if(gcov_child == 0){
+		close(1);
+		close(2);
 		if(fuzz_config.curr_dir == 1){
-			close(1);
-			close(2);
 			execl("/usr/bin/gcov", "gcov", "-b", "-c", source, NULL);
 			perror("run_gcov: Execution Error!");
 		}
 		else{
-			close(1);
-			close(2);
 			execl("/usr/bin/gcov", "gcov", "-b", "-c", s_path, NULL);
 			perror("run_gcov: Execution Error!");
 		}		

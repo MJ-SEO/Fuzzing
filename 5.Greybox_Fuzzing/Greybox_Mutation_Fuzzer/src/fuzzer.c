@@ -193,12 +193,13 @@ execute_prog(test_config_t * config, char* input, int input_size, char* dir_name
 	dup2(in_pipes[0], 0);
 	close(in_pipes[0]);
 	close(in_pipes[1]);
+	
+	dup2(out_pipes[1], 1);	
+	dup2(err_pipes[1], 2);
 
 	close(out_pipes[0]);
 	close(err_pipes[0]);
 
-	dup2(out_pipes[1], 1);	
-	dup2(err_pipes[1], 2);
 
 	if(config->need_args == 1){
 		execv(config->binary_path, config->cmd_args);
@@ -259,6 +260,7 @@ get_info(test_config_t * config, char* input, int input_size, char* dir_name, in
 		}
 	}
 
+	close(in_pipes[0]);
 	close(out_pipes[0]);
 	close(err_pipes[0]);
 
@@ -288,10 +290,14 @@ run_gcov(char* source, int idx){
 
 	if(gcov_child == 0){
 		if(fuzz_config.curr_dir == 1){
+			close(1);
+			close(2);
 			execl("/usr/bin/gcov", "gcov", "-b", "-c", source, NULL);
 			perror("run_gcov: Execution Error!");
 		}
 		else{
+			close(1);
+			close(2);
 			execl("/usr/bin/gcov", "gcov", "-b", "-c", s_path, NULL);
 			perror("run_gcov: Execution Error!");
 		}		
@@ -348,7 +354,7 @@ show_result(int* return_code, int* prog_results, int trial, double exe_time){
 
 void 
 show_gcov(int* return_code, gcov_t** gcov_results, int trial, int n_src){
-	printf("===========================================Fuzzer Summary============================================\n");
+	printf("===========================================Fuzzing Log============================================\n");
 	for(int i=0; i<trial; i++){
 		 printf("    \t\t\t\t\t---[Input %d]---\n", i);
 		for(int j=0; j<n_src; j++){
@@ -385,6 +391,7 @@ show_gcov_stat(int* return_code, gcov_t* gcov_result, int trial){	// TODO
 
 }
 */
+
 void
 fuzzer_main(test_config_t* config){
 	srand((unsigned int)time(NULL));

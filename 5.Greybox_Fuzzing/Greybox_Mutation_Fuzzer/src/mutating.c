@@ -1,8 +1,6 @@
 #include "../include/mutating.h"
 #include <time.h>
 
-#define DEBUG
-
 static int8_t interesting_8[] = { INTERESTING_8 };
 static int16_t interesting_16[] = { INTERESTING_8, INTERESTING_16 };
 static int32_t interesting_32[] = { INTERESTING_8, INTERESTING_16, INTERESTING_32 };

@@ -18,8 +18,6 @@ typedef struct seed{
 	int energy;
 } seed_t;
 
-
-
 // assign energy in each seed  
 int assign_energy(seed_t* seed, int n_input);
 
@@ -33,11 +31,4 @@ int convert_energy_index(int sum_energy, double* norm_energy_list, int n_input);
 char* choose_seed(seed_t* seed, int n_input);
 
 #endif
-
-
-
-
-
-
-
 

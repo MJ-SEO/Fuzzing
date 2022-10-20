@@ -1,0 +1,10 @@
+{"widget": {
+    "debug": "on",
+    "window": {
+        "title": "Sample Konfabulatorߨidget",
+        "name": "main_window",
+        "width": 500,
+        "height": 500
+    },
+    "image": {
+        "src": DIm
