@@ -26,7 +26,7 @@ According to the order below, you can find the entire concept of ```Greybox Muta
 >
 >   4. &nbsp;&nbsp;[Mutation-Based Fuzzing](https://github.com/MJ-SEO/Fuzzing/tree/master/4.Mutation_Fuzzing)
 >
->    5. &nbsp;&nbsp;[Greybox Fuzzing](https://github.com/MJ-SEO/Fuzzing/tree/master/5.>Greybox_Fuzzing)
+>    5. &nbsp;&nbsp;[Greybox Fuzzing](https://github.com/MJ-SEO/Fuzzing/tree/master/5.Greybox_Fuzzing)
 
 
 You can find the detail descriptions in each repository. 
